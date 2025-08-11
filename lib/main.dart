@@ -1,6 +1,8 @@
+import 'package:classroombuddy/Screens/main_Screen.dart';
 import 'package:classroombuddy/firebase_options.dart';
 import 'package:classroombuddy/Screens/login_Screen.dart';
 import 'package:classroombuddy/Screens/signup_Screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  var user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,7 +34,7 @@ class _MyAppState extends State<MyApp> {
           surface: Colors.black,
         ),
       ),
-      home: LoginScreen(),
+      home: user == null ? LoginScreen() : MainScreen(),
     );
   }
 }
