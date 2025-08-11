@@ -1,3 +1,4 @@
+import 'package:classroombuddy/controllers/login_Controller.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -121,7 +122,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             GestureDetector(
                               onTap: () {
-                                if (userForm.currentState!.validate()) {}
+                                if (userForm.currentState!.validate()) {
+                                  loginController.login(
+                                    context: context,
+                                    email: email.text,
+                                    password: password.text,
+                                  );
+                                }
                               },
 
                               child: Container(

@@ -1,3 +1,4 @@
+import 'package:classroombuddy/controllers/signup_Cotroller.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -121,7 +122,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
                             GestureDetector(
                               onTap: () {
-                                if (userForm.currentState!.validate()) {}
+                                if (userForm.currentState!.validate()) {
+                                  signupController.createAccount(
+                                    context: context,
+                                    email: email.text,
+                                    password: password.text,
+                                  );
+                                }
                               },
 
                               child: Container(
