@@ -1,6 +1,6 @@
 import 'package:classroombuddy/components/textField.dart';
 import 'package:classroombuddy/controllers/signup_Cotroller.dart';
-import 'package:classroombuddy/login_Screen.dart';
+import 'package:classroombuddy/Screens/login_Screen.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -13,6 +13,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController name = TextEditingController();
 
   var userForm = GlobalKey<FormState>();
 
@@ -52,17 +53,62 @@ class _SignupScreenState extends State<SignupScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                      
+
                               SizedBox(height: 20),
-                      
-                              textField(lebelText: "Email", obScureText: false, Controller: email, ValidatorMessage: "Email Required"),
-                      
+
+                              textField(
+                                lebelText: "Email",
+                                obScureText: false,
+                                Controller: email,
+                                ValidatorMessage: "Email Required",
+                              ),
+
                               SizedBox(height: 20),
-                      
-                              textField(lebelText: "Password", obScureText: true, Controller: password, ValidatorMessage: "Password Required"),
-                      
+
+                              textField(
+                                lebelText: "Password",
+                                obScureText: true,
+                                Controller: password,
+                                ValidatorMessage: "Password Required",
+                              ),
+
                               SizedBox(height: 20),
-                      
+
+                              TextFormField(
+                                autofocus: true,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  label: Text("Name"),
+                                  border: OutlineInputBorder(),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: const Color.fromARGB(
+                                        255,
+                                        255,
+                                        255,
+                                        255,
+                                      ),
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                controller: name,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (value) {
+                                  if (value.toString().length < 3) {
+                                    return "Enter your Name";
+                                  }
+                                },
+                              ),
+
+                              SizedBox(height: 20),
+
                               ElevatedButton(
                                 onPressed: () {
                                   if (userForm.currentState!.validate()) {
@@ -70,10 +116,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                       context: context,
                                       email: email.text,
                                       password: password.text,
+                                      name: name.text
                                     );
                                   }
                                 },
-                      
+
                                 child: Text(
                                   "Sign In",
                                   style: TextStyle(
@@ -82,7 +129,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                 ),
                               ),
-                      
+
                               SizedBox(height: 15),
                             ],
                           ),

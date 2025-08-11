@@ -1,6 +1,5 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:classroombuddy/main_Screen.dart';
+import 'package:classroombuddy/Screens/main_Screen.dart';
 import 'package:flutter/material.dart';
 
 class signupController {
@@ -9,12 +8,14 @@ class signupController {
     required BuildContext context,
     required String email,
     required String password,
+    required String name,
   }) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      // Update the displayName
+      await userCredential.user?.updateDisplayName(name);
+      await userCredential.user?.reload();
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
