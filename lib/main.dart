@@ -34,7 +34,12 @@ class _MyAppState extends State<MyApp> {
           surface: Colors.black,
         ),
       ),
-      home: user == null ? LoginScreen() : MainScreen(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          return snapshot.hasData ? const MainScreen() : LoginScreen();
+        },
+      ),
     );
   }
 }

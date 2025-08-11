@@ -114,18 +114,9 @@ class _MainScreenState extends State<MainScreen> {
                             letterSpacing: 1.2,
                           ),
                         ),
-                        _roundButton(Icons.logout, () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return LoginScreen();
-                              },
-                            ),
-                            (route) {
-                              return false;
-                            },
-                          );
+                        _roundButton(Icons.logout, () async {
+                          await FirebaseAuth.instance
+                              .signOut(); // ✅ Proper sign-out
                         }),
                       ],
                     ),
