@@ -1,4 +1,5 @@
 import 'package:classroombuddy/firebase_options.dart';
+import 'package:classroombuddy/login_Screen.dart';
 import 'package:classroombuddy/signup_Screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _MyAppState extends State<MyApp> {
           surface: Colors.black,
         ),
       ),
-      home: SignupScreen(),
+      home: LoginScreen(),
     );
   }
 }
