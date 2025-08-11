@@ -21,13 +21,12 @@ class _SignupScreenState extends State<SignupScreen> {
         key: userForm,
         child: Stack(
           children: [
-            SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(30),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: SingleChildScrollView(
                     child: Container(
                       height: 400,
                       width: double.infinity,
@@ -43,15 +42,15 @@ class _SignupScreenState extends State<SignupScreen> {
                           children: [
                             SizedBox(height: 15),
                             Text(
-                              "Verify Yourself",
+                              "SignUp",
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-
+                                
                             SizedBox(height: 20),
-
+                                
                             TextFormField(
                               autofocus: true,
                               decoration: InputDecoration(
@@ -61,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   borderSide: BorderSide(color: Colors.white),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-
+                                
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: const Color.fromARGB(
@@ -83,9 +82,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 }
                               },
                             ),
-
+                                
                             SizedBox(height: 20),
-
+                                
                             TextFormField(
                               autofocus: true,
                               obscureText: true,
@@ -117,9 +116,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 }
                               },
                             ),
-
+                                
                             SizedBox(height: 20),
-
+                                
                             GestureDetector(
                               onTap: () {
                                 if (userForm.currentState!.validate()) {
@@ -130,7 +129,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   );
                                 }
                               },
-
+                                
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 12,
@@ -142,7 +141,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                   borderRadius: BorderRadius.circular(20),
                                   color: Colors.white.withOpacity(.3),
-
+                                
                                   boxShadow: [
                                     BoxShadow(
                                       color: const Color.fromARGB(
@@ -161,22 +160,22 @@ class _SignupScreenState extends State<SignupScreen> {
                                     ),
                                   ],
                                 ),
-
+                                
                                 child: Text(
-                                  "Proceed",
+                                  "Sign In",
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ),
                             ),
-
+                                
                             SizedBox(height: 15),
                           ],
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),

@@ -71,4 +71,5 @@ class DefaultFirebaseOptions {
     authDomain: 'classroombuddy-bc928.firebaseapp.com',
     storageBucket: 'classroombuddy-bc928.firebasestorage.app',
   );
+
 }

@@ -15,9 +15,6 @@ class signupController {
         email: email,
         password: password,
       );
-
-      // here we use pushand remove until instead of pus or push replacement to remove the back button from dashboard page, as we can olny replace one screen that we chnage to login page at sigup page
-      // so we use pushAndRemoveUntil here, and it requires (route){ return 'boolean' } (if true then it ll show bback button and give access to previous page anf if it is false then it ll chnage the dashboard screen to main screen)
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -26,7 +23,7 @@ class signupController {
           },
         ),
         (route) {
-          return false; // nned here coz of pushAndRemoveUntil. set to false as we dont need the back button at dashboard page
+          return false;
         },
       );
 
