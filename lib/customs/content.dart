@@ -90,7 +90,7 @@ class Content extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 onTap: onTap,
                 child: Container(
-                  height: 70,
+                  height: 90,
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.3), // slightly transparent
                     borderRadius: BorderRadius.circular(20),
@@ -114,13 +114,14 @@ class Content extends StatelessWidget {
                             MainAxisSize.min, // shrink Column height to content
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(icon,color: Colors.white,),
+                          Icon(icon,color: Colors.white,size: 32,),
                           SizedBox(height: 6,),
                           Text(
                             text,
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
+                              fontSize: 18,
                             ),
                           ),
                         ],

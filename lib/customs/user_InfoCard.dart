@@ -1,3 +1,4 @@
+import 'package:classroombuddy/components/gradientColor.dart';
 import 'package:flutter/material.dart';
 
 class UserInfoCard extends StatelessWidget {
@@ -22,20 +23,19 @@ class UserInfoCard extends StatelessWidget {
           children: [
             const Text(
               "WELCOME ,",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24,letterSpacing: 1.4),
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  child: Text(
-                    name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.5,
-                    ),
+                  child: GradientText(
+                    text: name,
+                    textSize: 60,
+                    textFamily: '',
+                    
+                    
+                    
                   ),
                 ),
                  
