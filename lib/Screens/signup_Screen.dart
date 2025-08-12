@@ -33,7 +33,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 Padding(
                   padding: const EdgeInsets.all(30),
                   child: Container(
-                    height: MediaQuery.of(context).size.height * .6,
+                    height: MediaQuery.of(context).size.height * 1,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(.1),

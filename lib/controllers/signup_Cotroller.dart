@@ -53,6 +53,7 @@ class signupController {
         ),
       );
     } catch (e) {
+      print(e);
       // message after if any error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
