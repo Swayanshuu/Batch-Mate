@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:classroombuddy/Screens/login_Screen.dart';
+import 'package:classroombuddy/customs/content.dart';
 import 'package:classroombuddy/customs/user_InfoCard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,15 +33,7 @@ class _MainScreenState extends State<MainScreen> {
 
                   const SizedBox(height: 15),
 
-                  Container(
-                    height: MediaQuery.of(context).size.height * .2,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(.5),
-                      border: Border.all(color: Colors.white, width: .5),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
+                  Content(),
 
                   const SizedBox(height: 15),
 
