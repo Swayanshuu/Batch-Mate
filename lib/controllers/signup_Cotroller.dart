@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:classroombuddy/Screens/main_Screen.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ class signupController {
     required String email,
     required String password,
     required String name,
+    required String batchId,
   }) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -16,6 +18,15 @@ class signupController {
       // Update the displayName
       await userCredential.user?.updateDisplayName(name);
       await userCredential.user?.reload();
+
+          // Save batchId to Firestore under user document
+    await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+      'batchCode': batchId,
+      'name': name,
+      'email': email,
+    });
+
+    
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(

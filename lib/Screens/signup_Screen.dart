@@ -14,6 +14,7 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController name = TextEditingController();
+  TextEditingController batchID = TextEditingController();
 
   var userForm = GlobalKey<FormState>();
 
@@ -52,27 +53,27 @@ class _SignupScreenState extends State<SignupScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                                  
+
                           SizedBox(height: 20),
-                                  
+
                           textField(
                             lebelText: "Email",
                             obScureText: false,
                             Controller: email,
                             ValidatorMessage: "Email Required",
                           ),
-                                  
+
                           SizedBox(height: 20),
-                                  
+
                           textField(
                             lebelText: "Password",
                             obScureText: true,
                             Controller: password,
                             ValidatorMessage: "Password Required",
                           ),
-                                  
+
                           SizedBox(height: 20),
-                                  
+
                           TextFormField(
                             autofocus: true,
                             obscureText: false,
@@ -83,7 +84,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 borderSide: BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                                  
+
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: const Color.fromARGB(
@@ -105,9 +106,44 @@ class _SignupScreenState extends State<SignupScreen> {
                               }
                             },
                           ),
-                                  
+
                           SizedBox(height: 20),
-                                  
+
+                          TextFormField(
+                            autofocus: true,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              label: Text("batch id"),
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: const Color.fromARGB(
+                                    255,
+                                    255,
+                                    255,
+                                    255,
+                                  ),
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            controller: batchID,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if (value.toString().length == 0) {
+                                return "enter your batch id";
+                              }
+                            },
+                          ),
+
+                          SizedBox(height: 20),
+
                           ElevatedButton(
                             onPressed: () {
                               if (userForm.currentState!.validate()) {
@@ -116,10 +152,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                   email: email.text,
                                   password: password.text,
                                   name: name.text,
+                                  batchId: batchID.text
                                 );
                               }
                             },
-                                  
+
                             child: Text(
                               "Sign In",
                               style: TextStyle(
@@ -128,7 +165,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
                           ),
-                                  
+
                           SizedBox(height: 15),
                         ],
                       ),

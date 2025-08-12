@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:classroombuddy/Screens/login_Screen.dart';
 import 'package:classroombuddy/customs/content.dart';
+import 'package:classroombuddy/customs/data.dart';
 import 'package:classroombuddy/customs/user_InfoCard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +16,29 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBatchCode();
+  }
+
+  String? batchCode;
+
+  Future<void> fetchBatchCode() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    if (userDoc.exists) {
+      setState(() {
+        batchCode = userDoc.get('batchCode') as String?;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +62,17 @@ class _MainScreenState extends State<MainScreen> {
 
                   const SizedBox(height: 15),
 
-                  Container(
-                    height: MediaQuery.of(context).size.height * .4,
-                    width: MediaQuery.of(context).size.width * .7,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(.5),
-                      border: Border.all(color: Colors.white, width: .5),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
+                  // Container(
+                  //   height: MediaQuery.of(context).size.height * .4,
+                  //   width: MediaQuery.of(context).size.width * .7,
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.grey.withOpacity(.5),
+                  //     border: Border.all(color: Colors.white, width: .5),
+                  //     borderRadius: BorderRadius.circular(20),
+                  //   ),
+                  // ),
+
+                  DataApi(batchID: batchCode),
 
                   const SizedBox(height: 15),
 
