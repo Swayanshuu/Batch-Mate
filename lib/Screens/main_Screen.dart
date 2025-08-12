@@ -25,6 +25,7 @@ class _MainScreenState extends State<MainScreen> {
 
   String? batchCode;
 
+  // to det the batch code from user fire store cloud
   Future<void> fetchBatchCode() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -36,6 +37,7 @@ class _MainScreenState extends State<MainScreen> {
     if (userDoc.exists) {
       setState(() {
         batchCode = userDoc.get('batchCode') as String?;
+        print(batchCode);
       });
     }
   }
@@ -62,8 +64,11 @@ class _MainScreenState extends State<MainScreen> {
 
                   const SizedBox(height: 15),
 
-                  DataApi(batchID: batchCode),
+                  batchCode == null
+                      ? const CircularProgressIndicator()
+                      : DataApi(batchID: batchCode),
 
+                  // DataApi(batchID: batchCode),
                   const SizedBox(height: 15),
 
                   Container(

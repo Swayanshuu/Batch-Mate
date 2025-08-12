@@ -17,12 +17,15 @@ class _DataApiState extends State<DataApi> {
   @override
   void initState() {
     super.initState();
+    print("Batch ID received: ${widget.batchID}");
+
     getData();
   }
 
   void getData() async {
-    
-    if (widget.batchID == null) {
+    final id = widget.batchID;
+  print("Debug batch ID: $id");
+    if (id == null || id.isEmpty) {
       setState(() {
         isLoading = false;
         errorMessage = 'No batch ID provided';
@@ -32,7 +35,7 @@ class _DataApiState extends State<DataApi> {
 
     try {
       Response response = await Dio().get(
-        "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${widget.batchID}.json",
+        "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/$id.json",
       );
 
       if (response.data != null && response.data is Map) {
@@ -62,7 +65,7 @@ class _DataApiState extends State<DataApi> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: LinearProgressIndicator())
           : errorMessage.isNotEmpty
           ? Center(child: Text(errorMessage))
           : batch == null
