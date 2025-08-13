@@ -17,14 +17,14 @@ class _DataApiState extends State<DataApi> {
   @override
   void initState() {
     super.initState();
-    print("Batch ID received: ${widget.batchID}");
+   // print("Batch ID received: ${widget.batchID}");
 
     getData();
   }
 
   void getData() async {
     final id = widget.batchID;
-  print("Debug batch ID: $id");
+  //print("Debug batch ID: $id");
     if (id == null || id.isEmpty) {
       setState(() {
         isLoading = false;
@@ -81,7 +81,7 @@ class _DataApiState extends State<DataApi> {
       children: [
         ListTile(
           title: Text(name),
-          subtitle: const Text('Batch ID: batch001'),
+          subtitle:  Text('Batch ID: ${widget.batchID ?? 'N/A'}'),
           onTap: () {
             showDialog(
               context: context,
