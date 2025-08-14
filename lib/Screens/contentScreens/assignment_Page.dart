@@ -30,20 +30,17 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
   @override
   Widget build(BuildContext context) {
     if (assignments == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text("Assignments"),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context, "refresh"); //send refresh signal
-            },
+      return WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context, "refresh"); 
+          return false; // prevent default pop (we already handled it)
+        },
+        child: Scaffold(
+          appBar: AppBar(title: const Text("Assignments"), centerTitle: true),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: LinearProgressIndicator(),
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: LinearProgressIndicator(),
         ),
       );
     }
