@@ -19,6 +19,10 @@ class _MainScreenState extends State<MainScreen> {
   final user = FirebaseAuth.instance.currentUser;
   Map<String, dynamic>? assignments;
   bool isLoading = true;
+  bool isLoadingRecent = true;
+
+  List<Map<String, String>> recentAssignment = [];
+  List<Map<String, String>> recentTimetable = [];
 
   @override
   void initState() {
@@ -39,36 +43,79 @@ class _MainScreenState extends State<MainScreen> {
           .doc(user.uid)
           .get();
 
-      if (userDoc.exists) {
-        // 1️ Get batchCode first
-        final code = userDoc.get('batchCode') as String?;
-        setState(() {
-          batchCode = code;
-        });
+      if (!userDoc.exists) return;
 
-        // 2 Fetch assignments async
-        if (code != null) {
-          final result = await ApiHelper.getAssignments(code);
-          setState(() {
-            assignments = result;
-            isLoading = false;
-          });
-        }
-        
-      }
+      // to get user batchid from firestore
+      final code = userDoc.data()?['batchCode'] as String?;
+      if (code == null) return;
+
+      ApiHelper.batchID =
+          code; // sethe batchId of apihelper to code as it is a global variable
+
+      setState(() {
+        batchCode = code;
+        isLoading = false;
+      });
+      await loadRecentData();
     } catch (e) {
       print("Error fetching batch or assignments: $e");
+      
     }
+    setState(() {
+        isLoading = false;
+        isLoadingRecent = false; // stop showing spinner
+      });
   }
 
-  // void loadAssignments() async {
-  //   if (batchCode != null) {
-  //     assignments = await ApiHelper.getAssignments(batchCode!);
-  //     setState(() {
-  //       print(assignments);
-  //     });
-  //   }
-  // }
+  Future<void> loadRecentData() async {
+    if (batchCode == null) return;
+    setState(() {
+      isLoadingRecent = true;
+    });
+
+    try {
+      // Fetch assignments
+      final assignmentsMap = await ApiHelper.getAssignments(batchCode!) ?? {};
+      // Clear previous
+      recentAssignment = [];
+      if (assignmentsMap.isNotEmpty) {
+        // Get the last entry (latest added)
+        final latestAssignment =
+            // get my assignment data first
+            // .entries = geu all my entries like a1, a2
+            // .last = my lastest entry like a3
+            // .value = extract the valu in that entry like title dueDate
+            // Casts it explicitly to a Map<String, dynamic> so Dart knows the type.
+            assignmentsMap.entries.last.value as Map<String, dynamic>;
+        recentAssignment.add({
+          "title": latestAssignment["title"] ?? "",
+          "description": latestAssignment["description"] ?? "",
+          "dueDate": latestAssignment["dueDate"] ?? "",
+          "subject": latestAssignment["subject"] ?? "",
+        });
+      }
+
+      // Fetch timetables
+      final timetableMap = await ApiHelper.getTimetables(batchCode!) ?? {};
+      recentTimetable = [];
+      if (timetableMap.isNotEmpty) {
+        final latestTimetable =
+            timetableMap.entries.last.value as Map<String, dynamic>;
+        recentTimetable.add({
+          "subject": latestTimetable["subject"] ?? "",
+          "date": latestTimetable["date"] ?? "",
+          "time": latestTimetable["time"] ?? "",
+          "room": latestTimetable["room"] ?? "",
+        });
+      }
+
+      isLoadingRecent = false;
+
+      setState(() {}); // Refresh UI
+    } catch (e) {
+      print("Error loading recent data: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,169 +123,46 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(
         children: [
           /// Scrollable main content
-          SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Column(
-                children: [
-                  const SizedBox(height: 70),
-                  // user info
-                  UserInfoCard(name: user?.displayName ?? "USER"),
+          RefreshIndicator(
+            onRefresh: loadRecentData,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 60),
+                    // user info
+                    UserInfoCard(name: user?.displayName ?? "USER"),
 
-                  const SizedBox(height: 15),
+                    const SizedBox(height: 15),
 
-                  Content(),
+                    Content(batchID: batchCode, onRefresh: loadRecentData),
 
-                  const SizedBox(height: 15),
+                    const SizedBox(height: 15),
 
-                  // batchCode == null
-                  //     ? const CircularProgressIndicator()
-                  //     : DataApi(batchID: batchCode),
+                    isLoadingRecent
+                        ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: LinearProgressIndicator(),
+                        )
+                        : recentDataContainer(),
 
-                  // DataApi(batchID: batchCode),
-                  Container(
-                    child: Column(
-                      children: [
-                        assignments == null
-                            ? LinearProgressIndicator()
-                            : ListView.builder(
-                                itemCount: assignments!.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  var a = assignments!.values.toList().reversed.elementAt(index);
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(20),
-                                      onTap: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                a['title'] ?? "Untitled",
-                                              ),
-                                              content: Column(
-                                                mainAxisSize: MainAxisSize
-                                                    .min, // this shronk the column height
-                                                children: [
-                                                  Text(
-                                                    a['description'] ??
-                                                        "No Description",
-                                                  ),
-                                                  Text(
-                                                    a['dueDate'] ??
-                                                        "No due date",
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.symmetric(
-                                          vertical: 6,
-                                          horizontal: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(
-                                            0.1,
-                                          ), // semi-transparent background
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ), // rounded corners
-                                          border: Border.all(
-                                            color: Colors.white.withOpacity(
-                                              0.3,
-                                            ),
-                                            width: 1,
-                                          ),
-                                         
-                                        ),
-                                        child: ListTile(
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                horizontal: 16,
-                                                vertical: 8,
-                                              ),
-                                          title: Text(
-                                            a['title'] ?? "Untitled",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            'Due: ${a['dueDate'] ?? "No due Date"}',
-                                            style: TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          trailing: Icon(
-                                            Icons.arrow_forward_ios,
-                                            color: Colors.white70,
-                                            size: 16,
-                                          ),
-                                          onTap: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Text(
-                                                    a['title'] ?? "Untitled",
-                                                  ),
-                                                  content: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        a['description'] ??
-                                                            "No Description",
-                                                      ),
-                                                      SizedBox(height: 8),
-                                                      Text(
-                                                        a['dueDate'] ??
-                                                            "No due date",
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                      ],
+                    const SizedBox(height: 15),
+
+                    Container(
+                      height: MediaQuery.of(context).size.height * .4,
+                      width: MediaQuery.of(context).size.width * .7,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(.5),
+                        border: Border.all(color: Colors.white, width: .5),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(height: 15),
-
-                  Container(
-                    height: MediaQuery.of(context).size.height * .4,
-                    width: MediaQuery.of(context).size.width * .7,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(.5),
-                      border: Border.all(color: Colors.white, width: .5),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-
-                  const SizedBox(height: 65),
-                ],
+                    const SizedBox(height: 65),
+                  ],
+                ),
               ),
             ),
           ),
@@ -360,6 +284,123 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget recentDataContainer() {
+    return Container(
+      //height: MediaQuery.of(context).size.height * 0.4,
+      width: MediaQuery.of(context).size.width * 0.9,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        // color: Colors.grey.withOpacity(0.5),
+        border: Border.all(color: Colors.white, width: 0.5),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: (recentAssignment.isEmpty && recentTimetable.isEmpty)
+          ? const Center(child: CircularProgressIndicator(color: Colors.white))
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (recentAssignment.isNotEmpty) ...[
+                    const Text(
+                      "Latest Assignment",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 255, 0, 0),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(
+                          255,
+                          51,
+                          51,
+                          51,
+                        ).withOpacity(.7),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.white.withOpacity(.7)),
+                      ),
+
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              recentAssignment[0]["title"] ?? "",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              recentAssignment[0]['subject'] ?? "N/A",
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "Due: ${recentAssignment[0]["dueDate"]} \n${recentAssignment[0]["description"]?.replaceAll('\n', ' ')}",
+                              style: const TextStyle(color: Colors.white70),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                  if (recentTimetable.isNotEmpty) ...[
+                    const SizedBox(height: 15),
+                    const Text(
+                      "Latest Timetable",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 255, 0, 0),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(
+                          255,
+                          51,
+                          51,
+                          51,
+                        ).withOpacity(.7),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.white.withOpacity(.7)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              recentTimetable[0]["subject"] ?? "",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "${recentTimetable[0]["date"]} | ${recentTimetable[0]["time"]} | ${recentTimetable[0]["room"]}",
+                              style: const TextStyle(color: Colors.white70),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
     );
   }
 }

@@ -4,6 +4,8 @@ class ApiHelper {
   static const String baseUrl =
       "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches";
 
+      static String? batchID;
+
   static Future<Map<String, dynamic>?> fetchBatchChild(
     String batchID,
     String childName,

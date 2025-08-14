@@ -1,10 +1,19 @@
 import 'dart:ui';
 
+import 'package:classroombuddy/Screens/contentScreens/assignment_Page.dart';
+import 'package:classroombuddy/Screens/contentScreens/timetable_Page.dart';
 import 'package:flutter/material.dart';
 
-class Content extends StatelessWidget {
-  const Content({super.key});
+class Content extends StatefulWidget {
+  final String? batchID;
+  final VoidCallback onRefresh;
+  const Content({super.key, required this.batchID, required this.onRefresh});
 
+  @override
+  State<Content> createState() => _ContentState();
+}
+
+class _ContentState extends State<Content> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -13,7 +22,27 @@ class Content extends StatelessWidget {
         Row(
           children: [
             content_Container(
-              onTap: () {},
+              onTap: () {
+                if (widget.batchID != null) {
+                  //  Ensuring batchID is available
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return TimetablePage();
+                      },
+                    ),
+                  ).then((value) {
+                    if (value == "refresh") {
+                      widget.onRefresh();
+                    }
+                  });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Batch ID not loaded yet")),
+                  );
+                }
+              },
               text: "Time table",
               icon: Icons.calendar_view_day_rounded,
               rightPadding: 0,
@@ -22,7 +51,30 @@ class Content extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             content_Container(
-              onTap: () {},
+              onTap: () {
+                if (widget.batchID != null) {
+                  //  Ensuring batchID is available
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AssignmentsPage();
+                      },
+                    ),
+                  ).then((value) {
+                    if (value == "refresh") {
+                      widget.onRefresh();
+                    }
+                  });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.orange,
+                      content: Text("Batch ID not loaded yet! wait a second",style: TextStyle(color: Colors.white),)),
+                  );
+                }
+              },
               text: "Assignments",
               icon: Icons.assignment,
               rightPadding: 10,
@@ -114,8 +166,8 @@ class Content extends StatelessWidget {
                             MainAxisSize.min, // shrink Column height to content
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(icon,color: Colors.white,size: 32,),
-                          SizedBox(height: 6,),
+                          Icon(icon, color: Colors.white, size: 32),
+                          SizedBox(height: 6),
                           Text(
                             text,
                             style: const TextStyle(
