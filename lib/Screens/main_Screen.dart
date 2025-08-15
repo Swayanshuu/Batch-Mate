@@ -4,6 +4,7 @@ import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:classroombuddy/customs/content.dart';
 import 'package:classroombuddy/customs/data.dart';
 import 'package:classroombuddy/customs/user_InfoCard.dart';
+import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -59,12 +60,11 @@ class _MainScreenState extends State<MainScreen> {
       await loadRecentData();
     } catch (e) {
       print("Error fetching batch or assignments: $e");
-      
     }
     setState(() {
-        isLoading = false;
-        isLoadingRecent = false; // stop showing spinner
-      });
+      isLoading = false;
+      isLoadingRecent = false; // stop showing spinner
+    });
   }
 
   Future<void> loadRecentData() async {
@@ -120,6 +120,36 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        //backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        child: ListView(
+          padding: EdgeInsets.all(0),
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.grey.withOpacity(.5)),
+              child: Text(
+                "Menu",
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text("Profile"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text("Settings"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Logout"),
+              onTap: () async {},
+            ),
+          ],
+        ),
+      ),
       body: Stack(
         children: [
           /// Scrollable main content
@@ -143,9 +173,9 @@ class _MainScreenState extends State<MainScreen> {
 
                     isLoadingRecent
                         ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: LinearProgressIndicator(),
-                        )
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: LinearProgressIndicator(),
+                          )
                         : recentDataContainer(),
 
                     const SizedBox(height: 15),
@@ -199,7 +229,88 @@ class _MainScreenState extends State<MainScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _roundButton(Icons.menu, () {}),
+                        Builder(
+                          builder: (context) {
+                            return _roundButton(Icons.menu, () {
+                              // Scaffold.of(context).openDrawer();
+
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor:
+                                    Colors.transparent, // allow blur to show
+                                // barrierColor: Colors.black.withOpacity(
+                                //   0.2,
+                                // ), // dim effect
+                                builder: (context) {
+                                  return Stack(
+                                    children: [
+                                      //  Background Blur Layer
+                                      Positioned.fill(
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                            sigmaX:5,
+                                            sigmaY:5,
+                                          ),
+                                          child: Container(
+                                            // color: Colors.black.withOpacity(0),
+                                          ), // transparent to only blur
+                                        ),
+                                      ),
+
+                                      // 🔹 Draggable Bottom Sheet
+                                      DraggableScrollableSheet(
+                                        initialChildSize: 0.5,
+                                        minChildSize: 0.5,
+                                        maxChildSize: 0.95,
+                                        expand: false,
+                                        builder: (context, scrollController) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(255, 0, 0, 0).withOpacity(
+                                                0.9,
+                                              ),
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                                topRight: Radius.circular(20),
+                                              ),
+                                            ),
+                                            child: ListView.builder(
+                                              controller: scrollController,
+                                              itemCount: 50,
+                                              itemBuilder: (context, index) =>
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(20),
+                                                        color: const Color.fromARGB(255, 46, 46, 46)
+                                                      ),
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: Column(
+                                                          children: [
+                                                            Text("Shibu $index"),
+                                                            Text("Shibu $index"),
+                                                            Text("Shibu $index"),
+                                                            Text("Shibu $index"),
+                                                                                                            
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            });
+                          },
+                        ),
                         Text(
                           "App Name",
                           style: const TextStyle(
@@ -216,7 +327,7 @@ class _MainScreenState extends State<MainScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return LoginScreen();
+                                return SplashScreen();
                               },
                             ),
                             (route) {
@@ -232,56 +343,56 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
 
-          /// Bottom blur bar
-          Positioned(
-            bottom: 6,
-            left: 12,
-            right: 12,
-            child: SafeArea(
-              bottom: true,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                  child: Container(
-                    height: 55,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                        width: 1,
-                      ),
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white.withOpacity(0.15),
-                          Colors.white.withOpacity(0.05),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _roundButton(Icons.home, () {}),
-                        Text(
-                          "Bottom Bar",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                        _roundButton(Icons.settings, () {}),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // /// Bottom blur bar
+          // Positioned(
+          //   bottom: 6,
+          //   left: 12,
+          //   right: 12,
+          //   child: SafeArea(
+          //     bottom: true,
+          //     child: ClipRRect(
+          //       borderRadius: BorderRadius.circular(20),
+          //       child: BackdropFilter(
+          //         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          //         child: Container(
+          //           height: 55,
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(20),
+          //             border: Border.all(
+          //               color: Colors.white.withOpacity(0.3),
+          //               width: 1,
+          //             ),
+          //             gradient: LinearGradient(
+          //               colors: [
+          //                 Colors.white.withOpacity(0.15),
+          //                 Colors.white.withOpacity(0.05),
+          //               ],
+          //               begin: Alignment.topLeft,
+          //               end: Alignment.bottomRight,
+          //             ),
+          //           ),
+          //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          //           child: Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: [
+          //               _roundButton(Icons.home, () {}),
+          //               Text(
+          //                 "Bottom Bar",
+          //                 style: const TextStyle(
+          //                   color: Colors.white,
+          //                   fontSize: 20,
+          //                   fontWeight: FontWeight.bold,
+          //                   letterSpacing: 1.2,
+          //                 ),
+          //               ),
+          //               _roundButton(Icons.settings, () {}),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
