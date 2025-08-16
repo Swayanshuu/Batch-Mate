@@ -1,7 +1,4 @@
-import 'package:classroombuddy/Screens/main_Screen.dart';
 import 'package:classroombuddy/firebase_options.dart';
-import 'package:classroombuddy/Screens/login_Screen.dart';
-import 'package:classroombuddy/Screens/signup_Screen.dart';
 import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

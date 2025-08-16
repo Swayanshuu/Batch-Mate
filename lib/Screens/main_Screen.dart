@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:chewie/chewie.dart';
 import 'package:classroombuddy/Screens/login_Screen.dart';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:classroombuddy/customs/content.dart';
@@ -8,6 +9,7 @@ import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -26,8 +28,10 @@ class _MainScreenState extends State<MainScreen> {
   List<Map<String, String>> recentTimetable = [];
 
   @override
+  @override
   void initState() {
     super.initState();
+
     fetchBatchCode();
   }
 
@@ -152,6 +156,24 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: Stack(
         children: [
+          Positioned.fill(
+            child: Image.asset("assets/image/hm6.gif", fit: BoxFit.cover),
+          ),
+
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 10,
+                sigmaY: 10,
+              ), // Adjust blur value here
+              child: Container(
+                color: Colors.black.withOpacity(
+                  0.8,
+                ), // Optional: darkens and makes blur visible
+              ),
+            ),
+          ),
+
           /// Scrollable main content
           RefreshIndicator(
             onRefresh: loadRecentData,
@@ -249,8 +271,8 @@ class _MainScreenState extends State<MainScreen> {
                                       Positioned.fill(
                                         child: BackdropFilter(
                                           filter: ImageFilter.blur(
-                                            sigmaX:5,
-                                            sigmaY:5,
+                                            sigmaX: 5,
+                                            sigmaY: 5,
                                           ),
                                           child: Container(
                                             // color: Colors.black.withOpacity(0),
@@ -267,9 +289,12 @@ class _MainScreenState extends State<MainScreen> {
                                         builder: (context, scrollController) {
                                           return Container(
                                             decoration: BoxDecoration(
-                                              color: const Color.fromARGB(255, 0, 0, 0).withOpacity(
-                                                0.9,
-                                              ),
+                                              color: const Color.fromARGB(
+                                                255,
+                                                0,
+                                                0,
+                                                0,
+                                              ).withOpacity(0.9),
                                               borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(20),
                                                 topRight: Radius.circular(20),
@@ -280,21 +305,43 @@ class _MainScreenState extends State<MainScreen> {
                                               itemCount: 50,
                                               itemBuilder: (context, index) =>
                                                   Padding(
-                                                    padding: const EdgeInsets.all(8.0),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          8.0,
+                                                        ),
                                                     child: Container(
                                                       decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(20),
-                                                        color: const Color.fromARGB(255, 46, 46, 46)
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              20,
+                                                            ),
+                                                        color:
+                                                            const Color.fromARGB(
+                                                              255,
+                                                              46,
+                                                              46,
+                                                              46,
+                                                            ),
                                                       ),
                                                       child: Padding(
-                                                        padding: const EdgeInsets.all(8.0),
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                              8.0,
+                                                            ),
                                                         child: Column(
                                                           children: [
-                                                            Text("Shibu $index"),
-                                                            Text("Shibu $index"),
-                                                            Text("Shibu $index"),
-                                                            Text("Shibu $index"),
-                                                                                                            
+                                                            Text(
+                                                              "Shibu $index",
+                                                            ),
+                                                            Text(
+                                                              "Shibu $index",
+                                                            ),
+                                                            Text(
+                                                              "Shibu $index",
+                                                            ),
+                                                            Text(
+                                                              "Shibu $index",
+                                                            ),
                                                           ],
                                                         ),
                                                       ),
@@ -342,57 +389,6 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           ),
-
-          // /// Bottom blur bar
-          // Positioned(
-          //   bottom: 6,
-          //   left: 12,
-          //   right: 12,
-          //   child: SafeArea(
-          //     bottom: true,
-          //     child: ClipRRect(
-          //       borderRadius: BorderRadius.circular(20),
-          //       child: BackdropFilter(
-          //         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          //         child: Container(
-          //           height: 55,
-          //           decoration: BoxDecoration(
-          //             borderRadius: BorderRadius.circular(20),
-          //             border: Border.all(
-          //               color: Colors.white.withOpacity(0.3),
-          //               width: 1,
-          //             ),
-          //             gradient: LinearGradient(
-          //               colors: [
-          //                 Colors.white.withOpacity(0.15),
-          //                 Colors.white.withOpacity(0.05),
-          //               ],
-          //               begin: Alignment.topLeft,
-          //               end: Alignment.bottomRight,
-          //             ),
-          //           ),
-          //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //           child: Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               _roundButton(Icons.home, () {}),
-          //               Text(
-          //                 "Bottom Bar",
-          //                 style: const TextStyle(
-          //                   color: Colors.white,
-          //                   fontSize: 20,
-          //                   fontWeight: FontWeight.bold,
-          //                   letterSpacing: 1.2,
-          //                 ),
-          //               ),
-          //               _roundButton(Icons.settings, () {}),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
