@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:classroombuddy/Screens/contentScreens/assignment_Page.dart';
+import 'package:classroombuddy/Screens/contentScreens/notice_Screen.dart';
 import 'package:classroombuddy/Screens/contentScreens/timetable_Page.dart';
 import 'package:flutter/material.dart';
 
@@ -87,7 +88,30 @@ class _ContentState extends State<Content> {
         Row(
           children: [
             content_Container(
-              onTap: () {},
+              onTap: () {
+                if (widget.batchID != null) {
+                  //  Ensuring batchID is available
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return NoticePage();
+                      },
+                    ),
+                  ).then((value) {
+                    if (value == "refresh") {
+                      widget.onRefresh();
+                    }
+                  });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.orange,
+                      content: Text("Batch ID not loaded yet! wait a second",style: TextStyle(color: Colors.white),)),
+                  );
+                }
+              },
               text: "Notices",
               icon: Icons.notifications,
               rightPadding: 0,

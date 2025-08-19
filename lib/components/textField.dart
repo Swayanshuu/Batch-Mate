@@ -16,7 +16,7 @@ class textField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      autofocus: true,
+      autofocus: false,
       obscureText: obScureText,
       decoration: InputDecoration(
         label: Text(lebelText),
