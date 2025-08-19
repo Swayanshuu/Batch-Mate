@@ -28,7 +28,7 @@ class ApiHelper {
   }
 
   static Future<Map<String, dynamic>?> getTimetables(String batchID) {
-    return fetchBatchChild(batchID, "timetables");
+    return fetchBatchChild(batchID, "timetable");
   }
 
   static Future<Map<String, dynamic>?> getNotifications(String batchID) {

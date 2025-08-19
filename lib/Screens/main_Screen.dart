@@ -25,19 +25,16 @@ class _MainScreenState extends State<MainScreen> {
   bool isLoadingRecent = true;
 
   List<Map<String, String>> recentAssignment = [];
-  List<Map<String, String>> recentTimetable = [];
+  List<Map<String, dynamic>> recentTimetable = [];
 
-  @override
   @override
   void initState() {
     super.initState();
-
     fetchBatchCode();
   }
 
   String? batchCode;
 
-  // to get the batch code from user fire store cloud
   Future<void> fetchBatchCode() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -50,29 +47,30 @@ class _MainScreenState extends State<MainScreen> {
 
       if (!userDoc.exists) return;
 
-      // to get user batchid from firestore
       final code = userDoc.data()?['batchCode'] as String?;
       if (code == null) return;
 
-      ApiHelper.batchID =
-          code; // sethe batchId of apihelper to code as it is a global variable
+      ApiHelper.batchID = code;
 
       setState(() {
         batchCode = code;
         isLoading = false;
       });
+
       await loadRecentData();
     } catch (e) {
       print("Error fetching batch or assignments: $e");
     }
+
     setState(() {
       isLoading = false;
-      isLoadingRecent = false; // stop showing spinner
+      isLoadingRecent = false;
     });
   }
 
   Future<void> loadRecentData() async {
     if (batchCode == null) return;
+
     setState(() {
       isLoadingRecent = true;
     });
@@ -80,16 +78,10 @@ class _MainScreenState extends State<MainScreen> {
     try {
       // Fetch assignments
       final assignmentsMap = await ApiHelper.getAssignments(batchCode!) ?? {};
-      // Clear previous
-      recentAssignment = [];
+      recentAssignment.clear();
+
       if (assignmentsMap.isNotEmpty) {
-        // Get the last entry (latest added)
         final latestAssignment =
-            // get my assignment data first
-            // .entries = geu all my entries like a1, a2
-            // .last = my lastest entry like a3
-            // .value = extract the valu in that entry like title dueDate
-            // Casts it explicitly to a Map<String, dynamic> so Dart knows the type.
             assignmentsMap.entries.last.value as Map<String, dynamic>;
         recentAssignment.add({
           "title": latestAssignment["title"] ?? "",
@@ -101,21 +93,30 @@ class _MainScreenState extends State<MainScreen> {
 
       // Fetch timetables
       final timetableMap = await ApiHelper.getTimetables(batchCode!) ?? {};
-      recentTimetable = [];
+      recentTimetable.clear(); // use class-level variable
+
       if (timetableMap.isNotEmpty) {
         final latestTimetable =
             timetableMap.entries.last.value as Map<String, dynamic>;
+
+        final subjects = (latestTimetable["subjects"] as List<dynamic>? ?? []);
+
         recentTimetable.add({
-          "subject": latestTimetable["subject"] ?? "",
           "date": latestTimetable["date"] ?? "",
-          "time": latestTimetable["time"] ?? "",
-          "room": latestTimetable["room"] ?? "",
+          "subjects": subjects.map((s) {
+            final subMap = s as Map<String, dynamic>? ?? {};
+            return {
+              "subject": subMap["subject"] ?? "",
+              "time": subMap["time"] ?? "",
+              "room": subMap["room"] ?? "",
+            };
+          }).toList(),
         });
       }
 
-      isLoadingRecent = false;
-
-      setState(() {}); // Refresh UI
+      setState(() {
+        isLoadingRecent = false;
+      });
     } catch (e) {
       print("Error loading recent data: $e");
     }
@@ -124,57 +125,17 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        //backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        child: ListView(
-          padding: EdgeInsets.all(0),
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.grey.withOpacity(.5)),
-              child: Text(
-                "Menu",
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text("Profile"),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text("Settings"),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text("Logout"),
-              onTap: () async {},
-            ),
-          ],
-        ),
-      ),
       body: Stack(
         children: [
           Positioned.fill(
             child: Image.asset("assets/image/hm6.gif", fit: BoxFit.cover),
           ),
-
           Positioned.fill(
             child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 10,
-                sigmaY: 10,
-              ), // Adjust blur value here
-              child: Container(
-                color: Colors.black.withOpacity(
-                  0.8,
-                ), // Optional: darkens and makes blur visible
-              ),
+              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              child: Container(color: Colors.black.withOpacity(0.85)),
             ),
           ),
-
-          /// Scrollable main content
           RefreshIndicator(
             onRefresh: loadRecentData,
             child: SafeArea(
@@ -184,24 +145,17 @@ class _MainScreenState extends State<MainScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 60),
-                    // user info
                     UserInfoCard(name: user?.displayName ?? "USER"),
-
                     const SizedBox(height: 15),
-
                     Content(batchID: batchCode, onRefresh: loadRecentData),
-
                     const SizedBox(height: 15),
-
                     isLoadingRecent
                         ? Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: LinearProgressIndicator(),
                           )
                         : recentDataContainer(),
-
                     const SizedBox(height: 15),
-
                     Container(
                       height: MediaQuery.of(context).size.height * .4,
                       width: MediaQuery.of(context).size.width * .7,
@@ -211,7 +165,6 @@ class _MainScreenState extends State<MainScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-
                     const SizedBox(height: 65),
                   ],
                 ),
@@ -219,7 +172,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
 
-          /// Top blur bar
+          //top bar
           Positioned(
             top: 6,
             left: 12,
@@ -240,8 +193,8 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                       gradient: LinearGradient(
                         colors: [
-                          Colors.white.withOpacity(0.15),
-                          Colors.white.withOpacity(0.05),
+                          const Color.fromARGB(255, 129, 129, 129).withOpacity(0.01),
+                          const Color.fromARGB(255, 0, 0, 0).withOpacity(0.6),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -254,33 +207,22 @@ class _MainScreenState extends State<MainScreen> {
                         Builder(
                           builder: (context) {
                             return _roundButton(Icons.menu, () {
-                              // Scaffold.of(context).openDrawer();
-
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
-                                backgroundColor:
-                                    Colors.transparent, // allow blur to show
-                                // barrierColor: Colors.black.withOpacity(
-                                //   0.2,
-                                // ), // dim effect
+                                backgroundColor: Colors.transparent,
                                 builder: (context) {
                                   return Stack(
                                     children: [
-                                      //  Background Blur Layer
                                       Positioned.fill(
                                         child: BackdropFilter(
                                           filter: ImageFilter.blur(
                                             sigmaX: 5,
                                             sigmaY: 5,
                                           ),
-                                          child: Container(
-                                            // color: Colors.black.withOpacity(0),
-                                          ), // transparent to only blur
+                                          child: Container(),
                                         ),
                                       ),
-
-                                      // 🔹 Draggable Bottom Sheet
                                       DraggableScrollableSheet(
                                         initialChildSize: 0.5,
                                         minChildSize: 0.5,
@@ -305,48 +247,35 @@ class _MainScreenState extends State<MainScreen> {
                                               itemCount: 50,
                                               itemBuilder: (context, index) =>
                                                   Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                          8.0,
-                                                        ),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              20,
-                                                            ),
-                                                        color:
-                                                            const Color.fromARGB(
-                                                              255,
-                                                              46,
-                                                              46,
-                                                              46,
-                                                            ),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets.all(
-                                                              8.0,
-                                                            ),
-                                                        child: Column(
-                                                          children: [
-                                                            Text(
-                                                              "Shibu $index",
-                                                            ),
-                                                            Text(
-                                                              "Shibu $index",
-                                                            ),
-                                                            Text(
-                                                              "Shibu $index",
-                                                            ),
-                                                            Text(
-                                                              "Shibu $index",
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      46,
+                                                      46,
+                                                      46,
                                                     ),
                                                   ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                      children: [
+                                                        Text("Shibu $index"),
+                                                        Text("Shibu $index"),
+                                                        Text("Shibu $index"),
+                                                        Text("Shibu $index"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
                                             ),
                                           );
                                         },
@@ -359,17 +288,17 @@ class _MainScreenState extends State<MainScreen> {
                           },
                         ),
                         Text(
-                          "App Name",
+                          "BATCH MATE",
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: 24,
+                            fontFamily: 'LeagueSpartan',
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.2,
                           ),
                         ),
                         _roundButton(Icons.logout, () async {
-                          await FirebaseAuth.instance
-                              .signOut(); // ✅ Proper sign-out
+                          await FirebaseAuth.instance.signOut();
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
@@ -377,9 +306,7 @@ class _MainScreenState extends State<MainScreen> {
                                 return SplashScreen();
                               },
                             ),
-                            (route) {
-                              return false;
-                            },
+                            (route) => false,
                           );
                         }),
                       ],
@@ -396,11 +323,9 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget recentDataContainer() {
     return Container(
-      //height: MediaQuery.of(context).size.height * 0.4,
       width: MediaQuery.of(context).size.width * 0.9,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        // color: Colors.grey.withOpacity(0.5),
         border: Border.all(color: Colors.white, width: 0.5),
         borderRadius: BorderRadius.circular(20),
       ),
@@ -423,37 +348,33 @@ class _MainScreenState extends State<MainScreen> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(
-                          255,
-                          51,
-                          51,
-                          51,
-                        ).withOpacity(.7),
+                        color: const Color.fromARGB(255, 51, 51, 51)
+                            .withOpacity(.7),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.white.withOpacity(.7)),
+                        border:
+                            Border.all(color: Colors.white.withOpacity(.7)),
                       ),
-
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              recentAssignment[0]["title"] ?? "",
+                              "Title: ${recentAssignment[0]["title"] ?? ""}",
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              recentAssignment[0]['subject'] ?? "N/A",
+                              "Subject: ${recentAssignment[0]["subject"] ?? ""}",
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              "Due: ${recentAssignment[0]["dueDate"]} \n${recentAssignment[0]["description"]?.replaceAll('\n', ' ')}",
+                              "Due: ${recentAssignment[0]["dueDate"]}",
                               style: const TextStyle(color: Colors.white70),
                             ),
                           ],
@@ -475,14 +396,11 @@ class _MainScreenState extends State<MainScreen> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(
-                          255,
-                          51,
-                          51,
-                          51,
-                        ).withOpacity(.7),
+                        color: const Color.fromARGB(255, 51, 51, 51)
+                            .withOpacity(.7),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.white.withOpacity(.7)),
+                        border:
+                            Border.all(color: Colors.white.withOpacity(.7)),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -490,16 +408,37 @@ class _MainScreenState extends State<MainScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              recentTimetable[0]["subject"] ?? "",
+                              "📅 ${recentTimetable[0]["date"] ?? ""}",
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text(
-                              "${recentTimetable[0]["date"]} | ${recentTimetable[0]["time"]} | ${recentTimetable[0]["room"]}",
-                              style: const TextStyle(color: Colors.white70),
-                            ),
+                            for (var s in (recentTimetable[0]["subjects"] ?? []))
+                              ...[
+                                Text(
+                                  "📘 Subject: ${s['subject'] ?? 'N/A'}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Text(
+                                  "🏫 Room: ${s['room'] ?? 'N/A'}",
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                Text(
+                                  "⏰ Time: ${s['time'] ?? 'N/A'}",
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                const Divider(color: Colors.grey),
+                              ]
                           ],
                         ),
                       ),

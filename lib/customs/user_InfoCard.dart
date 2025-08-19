@@ -22,8 +22,8 @@ class UserInfoCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "WELCOME ,",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24,letterSpacing: 1.4),
+              "WELCOME",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24,letterSpacing: 1.4,color: Color.fromARGB(255, 216, 209, 219)),
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -32,7 +32,7 @@ class UserInfoCard extends StatelessWidget {
                   child: GradientText(
                     text: name,
                     textSize: 60,
-                    textFamily: '',
+                    textFamily: 'Outfit',
                     
                     
                     

@@ -1,3 +1,4 @@
+import 'package:classroombuddy/Screens/contentScreens/add_Timetable.dart';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class TimetablePage extends StatefulWidget {
 }
 
 class _TimetablePageState extends State<TimetablePage> {
-  Map<String, dynamic>? assignments;
+  Map<String, dynamic>? timetables;
 
   @override
   void initState() {
@@ -19,125 +20,125 @@ class _TimetablePageState extends State<TimetablePage> {
 
   Future<void> loadTimetables() async {
     if (ApiHelper.batchID == null) {
-      print("Looks like there is no assignents");
+      print("Looks like there is no timetables");
       return;
     }
 
-    assignments = await ApiHelper.getTimetables(ApiHelper.batchID!);
+    timetables = await ApiHelper.getTimetables(ApiHelper.batchID!);
     setState(() {}); // Refresh UI
   }
 
   @override
   Widget build(BuildContext context) {
-    if (assignments == null) {
+    if (timetables == null) {
       return Scaffold(
         appBar: AppBar(title: const Text("Time Tables"), centerTitle: true),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: LinearProgressIndicator(),
-        ),
+        body: LinearProgressIndicator(),
       );
     }
 
-    if (assignments!.isEmpty) {
+    if (timetables!.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: const Text("Time Tables"), centerTitle: true),
         body: const Center(child: Text("No Time Tables found")),
       );
     }
 
-    final reversedList = assignments!.values.toList().reversed.toList();
+    final reversedList = timetables!.values.toList().reversed.toList();
 
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, "refresh");
-        return false; // prevent default pop (we already handled it)
+        return false; // prevent default pop
       },
       child: Scaffold(
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 30, right: 30),
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddTimetable()),
+              ).then((value) {
+                if (value != null) {
+                  loadTimetables(); // auto refresh
+                }
+              });
+            },
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Icon(Icons.add),
+          ),
+        ),
         appBar: AppBar(
           title: const Text("Time Tables"),
           centerTitle: true,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context, "refresh"); //  send refresh signal
+              Navigator.pop(context, "refresh");
             },
           ),
         ),
         body: RefreshIndicator(
           onRefresh: loadTimetables,
           child: ListView.builder(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.all(10),
             itemCount: reversedList.length,
             itemBuilder: (context, index) {
-              final a = reversedList[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 8,
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () {},
-                  child: Container(
-                    //margin: const EdgeInsets.all( 10),
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(
-                        255,
-                        76,
-                        76,
-                        76,
-                      ).withOpacity(.5),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300, width: 1),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          spreadRadius: 1,
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          a['date'] ?? 'No Date Mentioned',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
+              final day = reversedList[index];
+              final subjects = day['subjects'] ?? []; 
 
-                        Text(
-                          "Subject: ${a['subject'] ?? 'N/A'}",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color.fromARGB(255, 207, 207, 207),
-                          ),
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 76, 76, 76).withOpacity(.5),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300, width: 1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        spreadRadius: 1,
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        day['date'] ?? 'No Date',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 6),
+                      ),
+                      const SizedBox(height: 8),
+
+                      // loop over subjects
+                      for (var s in subjects) ...[
                         Text(
-                          "Room: ${a['room'] ?? 'N/A'}",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color.fromARGB(255, 175, 175, 175),
-                          ),
+                          "📘 Subject: ${s['subject'] ?? 'N/A'}",
+                          style: const TextStyle(color: Colors.white, fontSize: 14),
                         ),
-                        const SizedBox(height: 6),
                         Text(
-                          "Time: ${a['time'] ?? 'N/A'}",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color.fromARGB(255, 175, 175, 175),
-                          ),
+                          "🏫 Room: ${s['room'] ?? 'N/A'}",
+                          style: const TextStyle(color: Colors.grey, fontSize: 13),
                         ),
+                        Text(
+                          "⏰ Time: ${s['time'] ?? 'N/A'}",
+                          style: const TextStyle(color: Colors.grey, fontSize: 13),
+                        ),
+                        const Divider(color: Colors.grey),
                       ],
-                    ),
+                    ],
                   ),
                 ),
               );
