@@ -133,7 +133,7 @@ class _MainScreenState extends State<MainScreen> {
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: Container(color: Colors.black.withOpacity(0.85)),
+              child: Container(color: Colors.black.withOpacity(0.4)),
             ),
           ),
           RefreshIndicator(
