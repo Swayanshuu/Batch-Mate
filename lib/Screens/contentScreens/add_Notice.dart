@@ -15,7 +15,6 @@ class _AddNoticeState extends State<AddNotice> {
   final formKey = GlobalKey<FormState>();
 
   TextEditingController title = TextEditingController();
-  TextEditingController time = TextEditingController();
   TextEditingController message = TextEditingController();
 
   void addNotice() async {
@@ -31,11 +30,11 @@ class _AddNoticeState extends State<AddNotice> {
       if (!userDoc.exists) return;
 
       // to get user batchid from firestore
-      final code = userDoc.data()?['batchCode'] as String?;
+      final code = userDoc.data()?['batchCode'];
+
       if (code == null) return;
 
-      final userName = userDoc.data()?['name'] as String?;
-      if (code == null) return;
+      final userName = userDoc.data()?['name'] ?? "Unknown";
 
       Response response = await Dio().post(
         "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/$code/notifications.json",
@@ -43,11 +42,11 @@ class _AddNoticeState extends State<AddNotice> {
         data: {
           "title": title.text,
           "postedBy": userName,
-          "createdAt": time.text,
+          "createdAt": DateTime.now().toIso8601String(),
           "message": message.text,
         },
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text("Assignment added ✅")));
@@ -94,6 +93,7 @@ class _AddNoticeState extends State<AddNotice> {
                             obScureText: false,
                             Controller: title,
                           ),
+
                           // SizedBox(height: 20),
                           // textField(
                           //   lebelText: "Subject",
@@ -101,14 +101,6 @@ class _AddNoticeState extends State<AddNotice> {
                           //   obScureText: false,
                           //   Controller: postedBy,
                           // ),
-                          SizedBox(height: 20),
-                          textField(
-                            lebelText: "Crated At",
-                            ValidatorMessage: "Enter Date and Time",
-                            obScureText: false,
-                            Controller: time,
-                          ),
-                          
                           SizedBox(height: 20),
 
                           // description box
