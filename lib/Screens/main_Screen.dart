@@ -26,6 +26,7 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Map<String, String>> recentAssignment = [];
   List<Map<String, dynamic>> recentTimetable = [];
+  List<Map<String, dynamic>> recentNotice = [];
 
   @override
   void initState() {
@@ -122,6 +123,37 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  Future<void> loadRecentNotice() async {
+    if (batchCode == null) {
+      return;
+    }
+
+    setState(() {
+      isLoadingRecent = true;
+    });
+
+    final noticeMap = await ApiHelper.getNotices(batchCode!) ?? {};
+
+    try {
+      if (noticeMap.isNotEmpty) {
+        final latestNotice =
+            noticeMap.entries.last.value as Map<String, dynamic>;
+        recentNotice.add({
+          "title": latestNotice['title'] ?? "N/A",
+          "message": latestNotice['message'] ?? "No Message",
+          "createdAt": latestNotice['createdAt'],
+          "postedBy": latestNotice['postedBy'],
+        });
+      }
+
+      setState(() {
+        isLoadingRecent = false;
+      });
+    } catch (e) {
+      print("Error loading recent data: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -193,7 +225,12 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                       gradient: LinearGradient(
                         colors: [
-                          const Color.fromARGB(255, 129, 129, 129).withOpacity(0.01),
+                          const Color.fromARGB(
+                            255,
+                            129,
+                            129,
+                            129,
+                          ).withOpacity(0.01),
                           const Color.fromARGB(255, 0, 0, 0).withOpacity(0.6),
                         ],
                         begin: Alignment.topLeft,
@@ -247,35 +284,48 @@ class _MainScreenState extends State<MainScreen> {
                                               itemCount: 50,
                                               itemBuilder: (context, index) =>
                                                   Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      46,
-                                                      46,
-                                                      46,
-                                                    ),
-                                                  ),
-                                                  child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Column(
-                                                      children: [
-                                                        Text("Shibu $index"),
-                                                        Text("Shibu $index"),
-                                                        Text("Shibu $index"),
-                                                        Text("Shibu $index"),
-                                                      ],
+                                                          8.0,
+                                                        ),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              20,
+                                                            ),
+                                                        color:
+                                                            const Color.fromARGB(
+                                                              255,
+                                                              46,
+                                                              46,
+                                                              46,
+                                                            ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                              8.0,
+                                                            ),
+                                                        child: Column(
+                                                          children: [
+                                                            Text(
+                                                              "Shibu $index",
+                                                            ),
+                                                            Text(
+                                                              "Shibu $index",
+                                                            ),
+                                                            Text(
+                                                              "Shibu $index",
+                                                            ),
+                                                            Text(
+                                                              "Shibu $index",
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
                                             ),
                                           );
                                         },
@@ -348,11 +398,14 @@ class _MainScreenState extends State<MainScreen> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 51, 51, 51)
-                            .withOpacity(.7),
+                        color: const Color.fromARGB(
+                          255,
+                          51,
+                          51,
+                          51,
+                        ).withOpacity(.7),
                         borderRadius: BorderRadius.circular(10),
-                        border:
-                            Border.all(color: Colors.white.withOpacity(.7)),
+                        border: Border.all(color: Colors.white.withOpacity(.7)),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -396,11 +449,14 @@ class _MainScreenState extends State<MainScreen> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 51, 51, 51)
-                            .withOpacity(.7),
+                        color: const Color.fromARGB(
+                          255,
+                          51,
+                          51,
+                          51,
+                        ).withOpacity(.7),
                         borderRadius: BorderRadius.circular(10),
-                        border:
-                            Border.all(color: Colors.white.withOpacity(.7)),
+                        border: Border.all(color: Colors.white.withOpacity(.7)),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -414,31 +470,31 @@ class _MainScreenState extends State<MainScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            for (var s in (recentTimetable[0]["subjects"] ?? []))
-                              ...[
-                                Text(
-                                  "📘 Subject: ${s['subject'] ?? 'N/A'}",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
+                            for (var s
+                                in (recentTimetable[0]["subjects"] ?? [])) ...[
+                              Text(
+                                "📘 Subject: ${s['subject'] ?? 'N/A'}",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
                                 ),
-                                Text(
-                                  "🏫 Room: ${s['room'] ?? 'N/A'}",
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13,
-                                  ),
+                              ),
+                              Text(
+                                "🏫 Room: ${s['room'] ?? 'N/A'}",
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
                                 ),
-                                Text(
-                                  "⏰ Time: ${s['time'] ?? 'N/A'}",
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13,
-                                  ),
+                              ),
+                              Text(
+                                "⏰ Time: ${s['time'] ?? 'N/A'}",
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
                                 ),
-                                const Divider(color: Colors.grey),
-                              ]
+                              ),
+                              const Divider(color: Colors.grey),
+                            ],
                           ],
                         ),
                       ),
