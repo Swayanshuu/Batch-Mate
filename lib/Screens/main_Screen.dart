@@ -1,15 +1,11 @@
 import 'dart:ui';
-import 'package:chewie/chewie.dart';
-import 'package:classroombuddy/Screens/login_Screen.dart';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:classroombuddy/customs/content.dart';
-import 'package:classroombuddy/customs/data.dart';
 import 'package:classroombuddy/customs/user_InfoCard.dart';
 import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -380,7 +376,7 @@ class _MainScreenState extends State<MainScreen> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: (recentAssignment.isEmpty && recentTimetable.isEmpty)
-          ? const Center(child: CircularProgressIndicator(color: Colors.white))
+          ? const Center(child: Text("Looks Like there is nothing!"))
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
