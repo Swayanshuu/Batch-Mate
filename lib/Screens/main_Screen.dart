@@ -184,15 +184,17 @@ class _MainScreenState extends State<MainScreen> {
                           )
                         : recentDataContainer(),
                     const SizedBox(height: 15),
-                    Container(
-                      height: MediaQuery.of(context).size.height * .4,
-                      width: MediaQuery.of(context).size.width * .7,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(.5),
-                        border: Border.all(color: Colors.white, width: .5),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
+                    isLoadingRecent
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: LinearProgressIndicator(),
+                          )
+                        : isLoadingRecent
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: LinearProgressIndicator(),
+                          )
+                        : recentNoticeContainer(),
                     const SizedBox(height: 65),
                   ],
                 ),
@@ -510,6 +512,9 @@ class _MainScreenState extends State<MainScreen> {
         border: Border.all(color: Colors.white, width: 0.5),
         borderRadius: BorderRadius.circular(20),
       ),
+      child: recentNotice.isEmpty
+          ? Text("Looks like there is no notices yet!")
+          : Column(),
     );
   }
 }
