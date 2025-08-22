@@ -501,6 +501,17 @@ class _MainScreenState extends State<MainScreen> {
             ),
     );
   }
+
+  Widget recentNoticeContainer() {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white, width: 0.5),
+        borderRadius: BorderRadius.circular(20),
+      ),
+    );
+  }
 }
 
 Widget _roundButton(IconData icon, VoidCallback onTap) {
