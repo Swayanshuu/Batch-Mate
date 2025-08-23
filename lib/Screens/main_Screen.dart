@@ -1,3 +1,7 @@
+// ignore: duplicate_ignore
+// ignore: file_names
+// ignore_for_file: avoid_print, deprecated_member_use, use_build_context_synchronously, unnecessary_to_list_in_spreads, file_names
+
 import 'dart:ui';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:classroombuddy/customs/content.dart';
