@@ -6,6 +6,7 @@ import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -55,6 +56,7 @@ class _MainScreenState extends State<MainScreen> {
       });
 
       await loadRecentData();
+      await loadRecentNotice();
     } catch (e) {
       print("Error fetching batch or assignments: $e");
     }
@@ -132,14 +134,30 @@ class _MainScreenState extends State<MainScreen> {
 
     try {
       if (noticeMap.isNotEmpty) {
-        final latestNotice =
-            noticeMap.entries.last.value as Map<String, dynamic>;
-        recentNotice.add({
-          "title": latestNotice['title'] ?? "N/A",
-          "message": latestNotice['message'] ?? "No Message",
-          "createdAt": latestNotice['createdAt'],
-          "postedBy": latestNotice['postedBy'],
-        });
+        // Convert to list for easy handling
+        final noticeList = noticeMap.entries.toList();
+
+        // Take last 5 notices (or fewer if less than 5 available)
+        final latestNotices = noticeList
+            .sublist(
+              noticeList.length >= 5 ? noticeList.length - 5 : 0,
+              noticeList.length,
+            )
+            .reversed // reverse so newest comes first
+            .toList();
+
+        // Clear old recentNotice before adding
+        recentNotice.clear();
+
+        for (var entry in latestNotices) {
+          final data = entry.value as Map<String, dynamic>;
+          recentNotice.add({
+            "title": data['title'] ?? "N/A",
+            "message": data['message'] ?? "No Message",
+            "createdAt": data['createdAt'],
+            "postedBy": data['postedBy'],
+          });
+        }
       }
 
       setState(() {
@@ -147,6 +165,9 @@ class _MainScreenState extends State<MainScreen> {
       });
     } catch (e) {
       print("Error loading recent data: $e");
+      setState(() {
+        isLoadingRecent = false;
+      });
     }
   }
 
@@ -165,7 +186,10 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           RefreshIndicator(
-            onRefresh: loadRecentData,
+            onRefresh: () async {
+              await loadRecentData();
+              await loadRecentNotice();
+            },
             child: SafeArea(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -378,128 +402,131 @@ class _MainScreenState extends State<MainScreen> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: (recentAssignment.isEmpty && recentTimetable.isEmpty)
-          ? const Center(child: Text("Looks Like there is nothing!"))
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (recentAssignment.isNotEmpty) ...[
-                    const Text(
-                      "Latest Assignment",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 255, 0, 0),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+          ? const Column(
+              children: [
+                Text("Looks like thers is nothing added!"),
+                Text("Add Assignments and Timetables!!!"),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (recentAssignment.isNotEmpty) ...[
+                  const Text(
+                    "Latest Assignment",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 255, 0, 0),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(
+                        255,
+                        51,
+                        51,
+                        51,
+                      ).withOpacity(.7),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white.withOpacity(.7)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Title: ${recentAssignment[0]["title"] ?? ""}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "Subject: ${recentAssignment[0]["subject"] ?? ""}",
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "Due: ${recentAssignment[0]["dueDate"]}",
+                            style: const TextStyle(color: Colors.white70),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 5),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(
-                          255,
-                          51,
-                          51,
-                          51,
-                        ).withOpacity(.7),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.white.withOpacity(.7)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                  ),
+                ],
+                if (recentTimetable.isNotEmpty) ...[
+                  const SizedBox(height: 15),
+                  const Text(
+                    "Latest Timetable",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 255, 0, 0),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(
+                        255,
+                        51,
+                        51,
+                        51,
+                      ).withOpacity(.7),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white.withOpacity(.7)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "📅 ${recentTimetable[0]["date"] ?? ""}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          for (var s
+                              in (recentTimetable[0]["subjects"] ?? [])) ...[
                             Text(
-                              "Title: ${recentAssignment[0]["title"] ?? ""}",
+                              "📘 Subject: ${s['subject'] ?? 'N/A'}",
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
                               ),
                             ),
                             Text(
-                              "Subject: ${recentAssignment[0]["subject"] ?? ""}",
+                              "🏫 Room: ${s['room'] ?? 'N/A'}",
                               style: const TextStyle(
                                 color: Colors.grey,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
                               ),
                             ),
                             Text(
-                              "Due: ${recentAssignment[0]["dueDate"]}",
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                  if (recentTimetable.isNotEmpty) ...[
-                    const SizedBox(height: 15),
-                    const Text(
-                      "Latest Timetable",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 255, 0, 0),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(
-                          255,
-                          51,
-                          51,
-                          51,
-                        ).withOpacity(.7),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.white.withOpacity(.7)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "📅 ${recentTimetable[0]["date"] ?? ""}",
+                              "⏰ Time: ${s['time'] ?? 'N/A'}",
                               style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                                fontSize: 13,
                               ),
                             ),
-                            for (var s
-                                in (recentTimetable[0]["subjects"] ?? [])) ...[
-                              Text(
-                                "📘 Subject: ${s['subject'] ?? 'N/A'}",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              Text(
-                                "🏫 Room: ${s['room'] ?? 'N/A'}",
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
-                                ),
-                              ),
-                              Text(
-                                "⏰ Time: ${s['time'] ?? 'N/A'}",
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
-                                ),
-                              ),
-                              const Divider(color: Colors.grey),
-                            ],
+                            const Divider(color: Colors.grey),
                           ],
-                        ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ],
-              ),
+              ],
             ),
     );
   }
@@ -512,9 +539,71 @@ class _MainScreenState extends State<MainScreen> {
         border: Border.all(color: Colors.white, width: 0.5),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: recentNotice.isEmpty
-          ? Text("Looks like there is no notices yet!")
-          : Column(),
+      child: (recentNotice.isEmpty)
+          ? const Center(child: Text("Looks like there are no notices yet!"))
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Latest Notices",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 0, 0),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Loop through all recent notices
+                ...recentNotice.map((notice) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.all(8),
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(
+                        255,
+                        51,
+                        51,
+                        51,
+                      ).withOpacity(.7),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white.withOpacity(.7)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Title: ${notice["title"] ?? ""}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "Message: ${notice["message"] ?? ""}",
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "Created At: ${notice['createdAt'] != null ? DateFormat('dd MMM yyyy, hh:mm a').format(DateTime.parse(notice['createdAt'])) : 'N/A'}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color.fromARGB(255, 175, 175, 175),
+                          ),
+                        ),
+                        Text(
+                          "Posted By: ${notice["postedBy"] ?? ""}",
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ],
+            ),
     );
   }
 }
