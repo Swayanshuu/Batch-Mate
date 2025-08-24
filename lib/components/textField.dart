@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, must_be_immutable, body_might_complete_normally_nullable, camel_case_types, file_names
+
 import 'package:flutter/material.dart';
 
 class textField extends StatelessWidget {

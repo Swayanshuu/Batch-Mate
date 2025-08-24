@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, use_build_context_synchronously, unnecessary_null_comparison
+
 import 'package:classroombuddy/components/textField.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';

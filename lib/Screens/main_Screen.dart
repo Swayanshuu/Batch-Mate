@@ -247,7 +247,7 @@ class _MainScreenState extends State<MainScreen> {
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.3),
-                        width: 1,
+                        width: .5,
                       ),
                       gradient: LinearGradient(
                         colors: [

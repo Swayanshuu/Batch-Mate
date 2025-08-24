@@ -1,5 +1,6 @@
 import 'package:classroombuddy/components/gradientColor.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer_text/shimmer_text.dart';
 
 class UserInfoCard extends StatelessWidget {
   final String name;
@@ -18,27 +19,30 @@ class UserInfoCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4),
         child: Column(
-         // mainAxisAlignment: MainAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               "WELCOME",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24,letterSpacing: 1.4,color: Color.fromARGB(255, 216, 209, 219)),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                letterSpacing: 1.4,
+                color: Color.fromARGB(255, 216, 209, 219),
+              ),
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  child: GradientText(
+                  child: ShimmerText(
                     text: name,
                     textSize: 60,
                     textFamily: 'Outfit',
-                    
-                    
-                    
+                    duration: Duration(seconds: 3),
+                    letterspacing: 1.4,
                   ),
                 ),
-                 
               ],
             ),
           ],
