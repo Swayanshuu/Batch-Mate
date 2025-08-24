@@ -24,19 +24,24 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-
         brightness: Brightness.dark,
         scaffoldBackgroundColor: Colors.black, // Main background
         canvasColor: Colors.black, // Drawer, modal, etc.
         fontFamily: 'Outfit',
         colorScheme: const ColorScheme.dark(
-          
           // ignore: deprecated_member_use
-          background: Color.fromARGB(255, 57, 57, 57),
+          background: Colors.black,
           surface: Colors.black,
         ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: const Color.fromARGB(255, 21, 21, 21),
+          // elevation: 0, // remove shadow if you want flat look
+          // titleTextStyle: TextStyle(),
+          shape: Border(bottom: BorderSide(color: Colors.white.withOpacity(.5),width: 1)),
+        ),
       ),
-      home: SplashScreen()
+
+      home: SplashScreen(),
     );
   }
 }
