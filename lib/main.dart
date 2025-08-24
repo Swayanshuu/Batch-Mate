@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, duplicate_ignore
 
 import 'package:classroombuddy/firebase_options.dart';
 import 'package:classroombuddy/Screens/splash_Screen.dart';

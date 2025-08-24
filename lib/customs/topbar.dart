@@ -34,9 +34,9 @@ class _TopBarState extends State<TopBar> {
                 ),
                 gradient: LinearGradient(
                   colors: [
-                    const Color.fromARGB(255, 22, 22, 22).withOpacity(0.6),
-                    const Color.fromARGB(255, 152, 152, 152).withOpacity(0.01),
-                    const Color.fromARGB(255, 20, 20, 20).withOpacity(0.6),
+                    const Color.fromARGB(255, 35, 35, 35).withOpacity(0.6),
+                    const Color.fromARGB(255, 129, 129, 129).withOpacity(0.01),
+                   const Color.fromARGB(255, 35, 35, 35).withOpacity(0.6),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,

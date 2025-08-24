@@ -7,12 +7,10 @@ import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:classroombuddy/customs/content.dart';
 import 'package:classroombuddy/customs/topbar.dart';
 import 'package:classroombuddy/customs/user_InfoCard.dart';
-import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shimmer_text/shimmer_text.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:animated_gradient_text/animated_gradient_text.dart';
 
@@ -230,7 +228,7 @@ class _MainScreenState extends State<MainScreen> {
                         : Column(
                             children: [
                               recentDataContainer(),
-                              const SizedBox(height: 15),
+                              const SizedBox(height: 5),
                               recentNoticeContainer(),
                             ],
                           ),
@@ -251,7 +249,6 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget recentDataContainer() {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.9,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 70, 70, 70).withOpacity(.4),
@@ -419,7 +416,6 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget recentNoticeContainer() {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.9,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 70, 70, 70).withOpacity(.4),
