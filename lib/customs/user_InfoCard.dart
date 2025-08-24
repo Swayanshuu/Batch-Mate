@@ -1,4 +1,3 @@
-import 'package:classroombuddy/components/gradientColor.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer_text/shimmer_text.dart';
 
