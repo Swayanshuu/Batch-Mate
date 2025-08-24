@@ -22,12 +22,12 @@ class UserInfoCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "WELCOME",
+              "Welcome",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 24,
-                letterSpacing: 1.4,
-                color: Color.fromARGB(255, 216, 209, 219),
+                fontSize: 18,
+                letterSpacing: 2,
+                color: Color.fromARGB(255, 221, 221, 221),
               ),
             ),
             Row(
@@ -36,14 +36,17 @@ class UserInfoCard extends StatelessWidget {
                 Expanded(
                   child: ShimmerText(
                     text: name,
-                    textSize: 60,
-                    textFamily: 'Outfit',
-                    duration: Duration(seconds: 3),
+                    textSize: 50,
+                    textColor: Color.fromARGB(255, 255, 255, 255),
+                    shiningColor: Color(0xFF424242),
+                    textFamily: 'Sora',
+                    duration: Duration(seconds: 9),
                     letterspacing: 1.4,
                   ),
                 ),
               ],
             ),
+            Center(child: Text("Hmm! Nothings to do?  Check Assignments 👻"))
           ],
         ),
       ),

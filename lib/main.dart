@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:classroombuddy/firebase_options.dart';
 import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,9 +27,9 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.black, // Main background
+        scaffoldBackgroundColor: const Color.fromARGB(255, 10, 10, 10), // Main background
         canvasColor: Colors.black, // Drawer, modal, etc.
-        fontFamily: 'Outfit',
+        fontFamily: 'Sora',
         colorScheme: const ColorScheme.dark(
           // ignore: deprecated_member_use
           background: Colors.black,
@@ -37,8 +39,10 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: const Color.fromARGB(255, 21, 21, 21),
           // elevation: 0, // remove shadow if you want flat look
           // titleTextStyle: TextStyle(),
-          shape: Border(bottom: BorderSide(color: Colors.white.withOpacity(.5),width: 1)),
-        ),
+          shape: Border(
+            bottom: BorderSide(color: Colors.white.withOpacity(.5), width: 1),
+          ),
+      ),
       ),
 
       home: SplashScreen(),

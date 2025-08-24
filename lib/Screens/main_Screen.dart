@@ -5,12 +5,16 @@
 import 'dart:ui';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:classroombuddy/customs/content.dart';
+import 'package:classroombuddy/customs/topbar.dart';
 import 'package:classroombuddy/customs/user_InfoCard.dart';
 import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer_text/shimmer_text.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:animated_gradient_text/animated_gradient_text.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -137,6 +141,8 @@ class _MainScreenState extends State<MainScreen> {
     final noticeMap = await ApiHelper.getNotices(batchCode!) ?? {};
 
     try {
+      // Clear First
+      recentNotice.clear();
       if (noticeMap.isNotEmpty) {
         // Convert to list for easy handling
         final noticeList = noticeMap.entries.toList();
@@ -149,9 +155,6 @@ class _MainScreenState extends State<MainScreen> {
             )
             .reversed // reverse so newest comes first
             .toList();
-
-        // Clear old recentNotice before adding
-        recentNotice.clear();
 
         for (var entry in latestNotices) {
           final data = entry.value as Map<String, dynamic>;
@@ -203,26 +206,35 @@ class _MainScreenState extends State<MainScreen> {
                     const SizedBox(height: 60),
                     UserInfoCard(name: user?.displayName ?? "USER"),
                     const SizedBox(height: 15),
-                    Content(batchID: batchCode, onRefresh: loadRecentData),
+                    Content(
+                      batchID: batchCode,
+                      onRefresh: () {
+                        loadRecentData();
+                        loadRecentNotice();
+                        setState(() {});
+                      },
+                    ),
                     const SizedBox(height: 15),
+
                     isLoadingRecent
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: LinearProgressIndicator(),
+                        ? Skeletonizer(
+                            enabled: true,
+                            child: Column(
+                              children: [
+                                recentDataContainer(),
+                                const SizedBox(height: 15),
+                                recentNoticeContainer(),
+                              ],
+                            ),
                           )
-                        : recentDataContainer(),
-                    const SizedBox(height: 15),
-                    isLoadingRecent
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: LinearProgressIndicator(),
-                          )
-                        : isLoadingRecent
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: LinearProgressIndicator(),
-                          )
-                        : recentNoticeContainer(),
+                        : Column(
+                            children: [
+                              recentDataContainer(),
+                              const SizedBox(height: 15),
+                              recentNoticeContainer(),
+                            ],
+                          ),
+
                     const SizedBox(height: 65),
                   ],
                 ),
@@ -231,167 +243,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
 
           //top bar
-          Positioned(
-            top: 6,
-            left: 12,
-            right: 12,
-            child: SafeArea(
-              top: true,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                  child: Container(
-                    height: 55,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                        width: .5,
-                      ),
-                      gradient: LinearGradient(
-                        colors: [
-                          const Color.fromARGB(
-                            255,
-                            129,
-                            129,
-                            129,
-                          ).withOpacity(0.01),
-                          const Color.fromARGB(255, 0, 0, 0).withOpacity(0.6),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Builder(
-                          builder: (context) {
-                            return _roundButton(Icons.menu, () {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                builder: (context) {
-                                  return Stack(
-                                    children: [
-                                      Positioned.fill(
-                                        child: BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                            sigmaX: 5,
-                                            sigmaY: 5,
-                                          ),
-                                          child: Container(),
-                                        ),
-                                      ),
-                                      DraggableScrollableSheet(
-                                        initialChildSize: 0.5,
-                                        minChildSize: 0.5,
-                                        maxChildSize: 0.95,
-                                        expand: false,
-                                        builder: (context, scrollController) {
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                255,
-                                                0,
-                                                0,
-                                                0,
-                                              ).withOpacity(0.9),
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(20),
-                                                topRight: Radius.circular(20),
-                                              ),
-                                            ),
-                                            child: ListView.builder(
-                                              controller: scrollController,
-                                              itemCount: 50,
-                                              itemBuilder: (context, index) =>
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                          8.0,
-                                                        ),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              20,
-                                                            ),
-                                                        color:
-                                                            const Color.fromARGB(
-                                                              255,
-                                                              46,
-                                                              46,
-                                                              46,
-                                                            ),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets.all(
-                                                              8.0,
-                                                            ),
-                                                        child: Column(
-                                                          children: [
-                                                            Text(
-                                                              "Shibu $index",
-                                                            ),
-                                                            Text(
-                                                              "Shibu $index",
-                                                            ),
-                                                            Text(
-                                                              "Shibu $index",
-                                                            ),
-                                                            Text(
-                                                              "Shibu $index",
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            });
-                          },
-                        ),
-                        Text(
-                          "BATCH MATE",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontFamily: 'LeagueSpartan',
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                        _roundButton(Icons.logout, () async {
-                          await FirebaseAuth.instance.signOut();
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return SplashScreen();
-                              },
-                            ),
-                            (route) => false,
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          TopBar(),
         ],
       ),
     );
@@ -402,7 +254,11 @@ class _MainScreenState extends State<MainScreen> {
       width: MediaQuery.of(context).size.width * 0.9,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 0.5),
+        color: const Color.fromARGB(255, 70, 70, 70).withOpacity(.4),
+        border: Border.all(
+          color: const Color.fromARGB(255, 154, 154, 154),
+          width: 0.5,
+        ),
         borderRadius: BorderRadius.circular(20),
       ),
       child: (recentAssignment.isEmpty && recentTimetable.isEmpty)
@@ -416,13 +272,18 @@ class _MainScreenState extends State<MainScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (recentAssignment.isNotEmpty) ...[
-                  const Text(
-                    "Latest Assignment",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 255, 0, 0),
+                  const AnimatedGradientText(
+                    text: "Lastest Assignment",
+                    textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 24,
                     ),
+                    colors: [
+                      // Off-white
+                      Color(0xFFBDBDBD), // Silver gray
+                      Color(0xFF424242), // Dark gray / almost black
+                      Color(0xFFBDBDBD), // Silver gray
+                    ],
                   ),
                   const SizedBox(height: 5),
                   Container(
@@ -434,8 +295,16 @@ class _MainScreenState extends State<MainScreen> {
                         51,
                         51,
                       ).withOpacity(.7),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white.withOpacity(.7)),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: const Color.fromARGB(
+                          255,
+                          97,
+                          97,
+                          97,
+                        ).withOpacity(.7),
+                        width: 0.5
+                      ),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -467,13 +336,18 @@ class _MainScreenState extends State<MainScreen> {
                 ],
                 if (recentTimetable.isNotEmpty) ...[
                   const SizedBox(height: 15),
-                  const Text(
-                    "Latest Timetable",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 255, 0, 0),
+                  const AnimatedGradientText(
+                    text: "Lastest Time table",
+                    textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 24,
                     ),
+                    colors: [
+                      // Off-white
+                      Color(0xFFBDBDBD), // Silver gray
+                      Color(0xFF424242), // Dark gray / almost black
+                      Color(0xFFBDBDBD), // Silver gray
+                    ],
                   ),
                   const SizedBox(height: 5),
                   Container(
@@ -485,8 +359,16 @@ class _MainScreenState extends State<MainScreen> {
                         51,
                         51,
                       ).withOpacity(.7),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white.withOpacity(.7)),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: const Color.fromARGB(
+                          255,
+                          97,
+                          97,
+                          97,
+                        ).withOpacity(.7),
+                        width: 0.5
+                      ),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -540,7 +422,11 @@ class _MainScreenState extends State<MainScreen> {
       width: MediaQuery.of(context).size.width * 0.9,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 0.5),
+        color: const Color.fromARGB(255, 70, 70, 70).withOpacity(.4),
+        border: Border.all(
+          color: const Color.fromARGB(255, 154, 154, 154),
+          width: 0.5,
+        ),
         borderRadius: BorderRadius.circular(20),
       ),
       child: (recentNotice.isEmpty)
@@ -548,13 +434,18 @@ class _MainScreenState extends State<MainScreen> {
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Latest Notices",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 255, 0, 0),
+                const AnimatedGradientText(
+                  text: "Lastest Notice",
+                  textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 24,
                   ),
+                  colors: [
+                    // Off-white
+                    Color(0xFFBDBDBD), // Silver gray
+                    Color(0xFF424242), // Dark gray / almost black
+                    Color(0xFFBDBDBD), // Silver gray
+                  ],
                 ),
                 const SizedBox(height: 10),
 
@@ -571,26 +462,28 @@ class _MainScreenState extends State<MainScreen> {
                         51,
                         51,
                       ).withOpacity(.7),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white.withOpacity(.7)),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: const Color.fromARGB(
+                          255,
+                          97,
+                          97,
+                          97,
+                        ).withOpacity(.7),
+                        width: .5,
+                      ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Title: ${notice["title"] ?? ""}",
+                          "📌 Title: ${notice["title"] ?? ""}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          "Message: ${notice["message"] ?? ""}",
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+
                         Text(
                           "Created At: ${notice['createdAt'] != null ? DateFormat('dd MMM yyyy, hh:mm a').format(DateTime.parse(notice['createdAt'])) : 'N/A'}",
                           style: const TextStyle(
@@ -610,21 +503,4 @@ class _MainScreenState extends State<MainScreen> {
             ),
     );
   }
-}
-
-Widget _roundButton(IconData icon, VoidCallback onTap) {
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(100),
-    child: Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white.withOpacity(0.5)),
-        borderRadius: BorderRadius.circular(100),
-      ),
-      alignment: Alignment.center,
-      child: Icon(icon, color: Colors.white),
-    ),
-  );
 }
