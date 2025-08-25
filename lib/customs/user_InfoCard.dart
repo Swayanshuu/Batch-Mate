@@ -1,9 +1,45 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:shimmer_text/shimmer_text.dart';
 
 class UserInfoCard extends StatelessWidget {
   final String name;
-  const UserInfoCard({super.key, required this.name});
+   UserInfoCard({super.key, required this.name});
+
+  String getGreeting() {
+  final hour = DateTime.now().hour;
+
+  if (hour >= 5 && hour < 12) {
+    return "Good Morning 🌞";
+  } else if (hour >= 12 && hour < 17) {
+    return "Good Afternoon ☀️";
+  } else if (hour >= 17 && hour < 21) {
+    return "Good Evening 🌇";
+  } else {
+    return "Good Night 🌙";
+  }
+}
+final List<String> messages = [
+  "Hmm! Nothings to do? Check Assignments 👻",
+  "Time to chill? Or maybe check your tasks 😎",
+  "Don't forget your deadlines! ⏰",
+  "Bored? How about learning something new? 📚",
+  "Take a break, but keep your brain active! 🧠",
+  "Feeling lazy? Let's conquer that assignment! 💪",
+  "Why not grab a coffee and plan your day ☕️",
+  "Tasks won’t do themselves… maybe now? 😉",
+  "You got this! Keep pushing forward 🚀",
+  "A little progress each day adds up 🌱",
+  "Assignments aren’t scary, you are! 😏",
+  "Check something productive or just chill 😴",
+  "Time flies… don’t let deadlines catch you! ⏳",
+  "Hey! A quick review never hurts 📖",
+  "Smash that task list like a pro 🏆",
+];
+
+late String currentMessage =messages[Random().nextInt(messages.length)];
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +57,8 @@ class UserInfoCard extends StatelessWidget {
           // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Welcome",
+             Text(
+              getGreeting(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -46,7 +82,7 @@ class UserInfoCard extends StatelessWidget {
                 ),
               ],
             ),
-            Center(child: Text("Hmm! Nothings to do?  Check Assignments 👻"))
+            Center(child: Text(currentMessage))
           ],
         ),
       ),

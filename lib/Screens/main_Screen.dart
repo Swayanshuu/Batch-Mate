@@ -1,6 +1,4 @@
-// ignore: duplicate_ignore
-// ignore: file_names
-// ignore_for_file: avoid_print, deprecated_member_use, use_build_context_synchronously, unnecessary_to_list_in_spreads, file_names
+// ignore_for_file: deprecated_member_use
 
 import 'dart:ui';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
@@ -23,8 +21,8 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final user = FirebaseAuth.instance.currentUser;
-  Map<String, dynamic>? assignments;
-  bool isLoading = true;
+  String? batchCode;
+
   bool isLoadingRecent = true;
 
   List<Map<String, String>> recentAssignment = [];
@@ -34,46 +32,33 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    fetchBatchCode();
+    fetchBatchAndData();
   }
 
-  String? batchCode;
-
-  Future<void> fetchBatchCode() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
+  Future<void> fetchBatchAndData() async {
     try {
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
-          .doc(user.uid)
+          .doc(user!.uid)
           .get();
-
-      if (!userDoc.exists) return;
 
       final code = userDoc.data()?['batchCode'] as String?;
       if (code == null) return;
 
       ApiHelper.batchID = code;
+      batchCode = code;
 
-      setState(() {
-        batchCode = code;
-        isLoading = false;
-      });
-
-      await loadRecentData();
-      await loadRecentNotice();
+      // Fetch all data at once
+      await fetchAllData();
     } catch (e) {
       print("Error fetching batch or assignments: $e");
+      setState(() {
+        isLoadingRecent = false;
+      });
     }
-
-    setState(() {
-      isLoading = false;
-      isLoadingRecent = false;
-    });
   }
 
-  Future<void> loadRecentData() async {
+  Future<void> fetchAllData() async {
     if (batchCode == null) return;
 
     setState(() {
@@ -81,34 +66,28 @@ class _MainScreenState extends State<MainScreen> {
     });
 
     try {
-      // Fetch assignments
+      // Load Assignments
       final assignmentsMap = await ApiHelper.getAssignments(batchCode!) ?? {};
-      recentAssignment.clear();
-
+      List<Map<String, String>> newAssignments = [];
       if (assignmentsMap.isNotEmpty) {
-        final latestAssignment =
+        final latest =
             assignmentsMap.entries.last.value as Map<String, dynamic>;
-        recentAssignment.add({
-          "title": latestAssignment["title"] ?? "",
-          "description": latestAssignment["description"] ?? "",
-          "dueDate": latestAssignment["dueDate"] ?? "",
-          "subject": latestAssignment["subject"] ?? "",
+        newAssignments.add({
+          "title": latest["title"] ?? "",
+          "description": latest["description"] ?? "",
+          "dueDate": latest["dueDate"] ?? "",
+          "subject": latest["subject"] ?? "",
         });
       }
 
-      // Fetch timetables
+      // Load Timetable
       final timetableMap = await ApiHelper.getTimetables(batchCode!) ?? {};
-      recentTimetable.clear(); // use class-level variable
-
+      List<Map<String, dynamic>> newTimetable = [];
       if (timetableMap.isNotEmpty) {
-        final latestTimetable =
-            timetableMap.entries.last.value as Map<String, dynamic>;
-
-        final subjects = (latestTimetable["subjects"] as List<dynamic>? ?? []);
-
-        recentTimetable.add({
-          "date": latestTimetable["date"] ?? "",
-          "subjects": subjects.map((s) {
+        final latest = timetableMap.entries.last.value as Map<String, dynamic>;
+        newTimetable.add({
+          "date": latest["date"] ?? "",
+          "subjects": (latest["subjects"] as List<dynamic>? ?? []).map((s) {
             final subMap = s as Map<String, dynamic>? ?? {};
             return {
               "subject": subMap["subject"] ?? "",
@@ -119,44 +98,21 @@ class _MainScreenState extends State<MainScreen> {
         });
       }
 
-      setState(() {
-        isLoadingRecent = false;
-      });
-    } catch (e) {
-      print("Error loading recent data: $e");
-    }
-  }
-
-  Future<void> loadRecentNotice() async {
-    if (batchCode == null) {
-      return;
-    }
-
-    setState(() {
-      isLoadingRecent = true;
-    });
-
-    final noticeMap = await ApiHelper.getNotices(batchCode!) ?? {};
-
-    try {
-      // Clear First
-      recentNotice.clear();
+      // Load Notices
+      final noticeMap = await ApiHelper.getNotices(batchCode!) ?? {};
+      List<Map<String, dynamic>> newNotices = [];
       if (noticeMap.isNotEmpty) {
-        // Convert to list for easy handling
-        final noticeList = noticeMap.entries.toList();
-
-        // Take last 5 notices (or fewer if less than 5 available)
-        final latestNotices = noticeList
+        final latestNotices = noticeMap.entries
+            .toList()
             .sublist(
-              noticeList.length >= 5 ? noticeList.length - 5 : 0,
-              noticeList.length,
+              noticeMap.length >= 5 ? noticeMap.length - 5 : 0,
+              noticeMap.length,
             )
-            .reversed // reverse so newest comes first
+            .reversed
             .toList();
-
         for (var entry in latestNotices) {
           final data = entry.value as Map<String, dynamic>;
-          recentNotice.add({
+          newNotices.add({
             "title": data['title'] ?? "N/A",
             "message": data['message'] ?? "No Message",
             "createdAt": data['createdAt'],
@@ -165,11 +121,15 @@ class _MainScreenState extends State<MainScreen> {
         }
       }
 
+      // Update all state at once
       setState(() {
+        recentAssignment = newAssignments;
+        recentTimetable = newTimetable;
+        recentNotice = newNotices;
         isLoadingRecent = false;
       });
     } catch (e) {
-      print("Error loading recent data: $e");
+      print("Error loading data: $e");
       setState(() {
         isLoadingRecent = false;
       });
@@ -191,10 +151,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           RefreshIndicator(
-            onRefresh: () async {
-              await loadRecentData();
-              await loadRecentNotice();
-            },
+            onRefresh: fetchAllData,
             child: SafeArea(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -202,18 +159,16 @@ class _MainScreenState extends State<MainScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 60),
+
+                    // User info card
                     UserInfoCard(name: user?.displayName ?? "USER"),
                     const SizedBox(height: 15),
-                    Content(
-                      batchID: batchCode,
-                      onRefresh: () {
-                        loadRecentData();
-                        loadRecentNotice();
-                        setState(() {});
-                      },
-                    ),
+
+                    // Main content
+                    Content(batchID: batchCode, onRefresh: fetchAllData),
                     const SizedBox(height: 15),
 
+                    // Recent data & notices with skeleton
                     isLoadingRecent
                         ? Skeletonizer(
                             enabled: true,
@@ -232,7 +187,6 @@ class _MainScreenState extends State<MainScreen> {
                               recentNoticeContainer(),
                             ],
                           ),
-
                     const SizedBox(height: 65),
                   ],
                 ),
@@ -240,7 +194,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
 
-          //top bar
+          // Top bar
           TopBar(),
         ],
       ),
@@ -261,7 +215,7 @@ class _MainScreenState extends State<MainScreen> {
       child: (recentAssignment.isEmpty && recentTimetable.isEmpty)
           ? const Column(
               children: [
-                Text("Looks like thers is nothing added!"),
+                Text("Looks like there is nothing added!"),
                 Text("Add Assignments and Timetables!!!"),
               ],
             )
@@ -270,21 +224,20 @@ class _MainScreenState extends State<MainScreen> {
               children: [
                 if (recentAssignment.isNotEmpty) ...[
                   const AnimatedGradientText(
-                    text: "Lastest Assignment",
+                    text: "Latest Assignment",
                     textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
                     colors: [
-                      // Off-white
-                      Color(0xFFBDBDBD), // Silver gray
-                      Color(0xFF424242), // Dark gray / almost black
-                      Color(0xFFBDBDBD), // Silver gray
+                      Color(0xFFBDBDBD),
+                      Color(0xFF424242),
+                      Color(0xFFBDBDBD),
                     ],
                   ),
                   const SizedBox(height: 5),
                   Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(
                         255,
@@ -300,7 +253,7 @@ class _MainScreenState extends State<MainScreen> {
                           97,
                           97,
                         ).withOpacity(.7),
-                        width: 0.5
+                        width: 0.5,
                       ),
                     ),
                     child: Padding(
@@ -309,14 +262,14 @@ class _MainScreenState extends State<MainScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Title: ${recentAssignment[0]["title"] ?? ""}",
+                            "Title: ${recentAssignment[0]["title"]}",
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            "Subject: ${recentAssignment[0]["subject"] ?? ""}",
+                            "Subject: ${recentAssignment[0]["subject"]}",
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -334,21 +287,20 @@ class _MainScreenState extends State<MainScreen> {
                 if (recentTimetable.isNotEmpty) ...[
                   const SizedBox(height: 15),
                   const AnimatedGradientText(
-                    text: "Lastest Time table",
+                    text: "Latest Timetable",
                     textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
                     colors: [
-                      // Off-white
-                      Color(0xFFBDBDBD), // Silver gray
-                      Color(0xFF424242), // Dark gray / almost black
-                      Color(0xFFBDBDBD), // Silver gray
+                      Color(0xFFBDBDBD),
+                      Color(0xFF424242),
+                      Color(0xFFBDBDBD),
                     ],
                   ),
                   const SizedBox(height: 5),
                   Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(
                         255,
@@ -364,7 +316,7 @@ class _MainScreenState extends State<MainScreen> {
                           97,
                           97,
                         ).withOpacity(.7),
-                        width: 0.5
+                        width: 0.5,
                       ),
                     ),
                     child: Padding(
@@ -373,7 +325,7 @@ class _MainScreenState extends State<MainScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "📅 ${recentTimetable[0]["date"] ?? ""}",
+                            "📅 ${recentTimetable[0]["date"]}",
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -431,26 +383,23 @@ class _MainScreenState extends State<MainScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const AnimatedGradientText(
-                  text: "Lastest Notice",
+                  text: "Latest Notice",
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
                   ),
                   colors: [
-                    // Off-white
-                    Color(0xFFBDBDBD), // Silver gray
-                    Color(0xFF424242), // Dark gray / almost black
-                    Color(0xFFBDBDBD), // Silver gray
+                    Color(0xFFBDBDBD),
+                    Color(0xFF424242),
+                    Color(0xFFBDBDBD),
                   ],
                 ),
                 const SizedBox(height: 10),
-
-                // Loop through all recent notices
                 ...recentNotice.map((notice) {
                   return Container(
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.all(8),
-                    width: MediaQuery.of(context).size.width,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(
                         255,
@@ -466,29 +415,28 @@ class _MainScreenState extends State<MainScreen> {
                           97,
                           97,
                         ).withOpacity(.7),
-                        width: .5,
+                        width: 0.5,
                       ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "📌 Title: ${notice["title"] ?? ""}",
+                          "📌 Title: ${notice["title"]}",
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
                         Text(
                           "Created At: ${notice['createdAt'] != null ? DateFormat('dd MMM yyyy, hh:mm a').format(DateTime.parse(notice['createdAt'])) : 'N/A'}",
                           style: const TextStyle(
-                            fontSize: 14,
                             color: Color.fromARGB(255, 175, 175, 175),
+                            fontSize: 14,
                           ),
                         ),
                         Text(
-                          "Posted By: ${notice["postedBy"] ?? ""}",
+                          "Posted By: ${notice["postedBy"]}",
                           style: const TextStyle(color: Colors.white70),
                         ),
                       ],
