@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, file_names
 
 import 'dart:ui';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
@@ -10,7 +10,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:animated_gradient_text/animated_gradient_text.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -142,12 +141,12 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset("assets/image/hm6.gif", fit: BoxFit.cover),
+            child: Image.asset("assets/image/bg.jpg", fit: BoxFit.cover),
           ),
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-              child: Container(color: Colors.black.withOpacity(0.6)),
+              child: Container(color: Colors.black.withOpacity(0.7)),
             ),
           ),
           RefreshIndicator(
@@ -223,17 +222,14 @@ class _MainScreenState extends State<MainScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (recentAssignment.isNotEmpty) ...[
-                  const AnimatedGradientText(
-                    text: "Latest Assignment",
-                    textStyle: TextStyle(
+                  const Text(
+                     "Latest Assignment",
+                    style: TextStyle(
+                      color: Color(0xFFBDBDBD),
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
-                    colors: [
-                      Color(0xFFBDBDBD),
-                      Color(0xFF424242),
-                      Color(0xFFBDBDBD),
-                    ],
+                  
                   ),
                   const SizedBox(height: 5),
                   Container(
@@ -286,17 +282,14 @@ class _MainScreenState extends State<MainScreen> {
                 ],
                 if (recentTimetable.isNotEmpty) ...[
                   const SizedBox(height: 15),
-                  const AnimatedGradientText(
-                    text: "Latest Timetable",
-                    textStyle: TextStyle(
+                  const Text(
+                     "Latest Timetable",
+                    style: TextStyle(
+                      color: Color(0xFFBDBDBD),
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
-                    colors: [
-                      Color(0xFFBDBDBD),
-                      Color(0xFF424242),
-                      Color(0xFFBDBDBD),
-                    ],
+                  
                   ),
                   const SizedBox(height: 5),
                   Container(
@@ -382,18 +375,15 @@ class _MainScreenState extends State<MainScreen> {
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AnimatedGradientText(
-                  text: "Latest Notice",
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
+                const Text(
+                     "Latest Notices",
+                    style: TextStyle(
+                      color: Color(0xFFBDBDBD),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  
                   ),
-                  colors: [
-                    Color(0xFFBDBDBD),
-                    Color(0xFF424242),
-                    Color(0xFFBDBDBD),
-                  ],
-                ),
                 const SizedBox(height: 10),
                 ...recentNotice.map((notice) {
                   return Container(

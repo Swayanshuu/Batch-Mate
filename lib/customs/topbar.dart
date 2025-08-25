@@ -135,7 +135,7 @@ class _TopBarState extends State<TopBar> {
                       color: Color.fromARGB(255, 237, 237, 237),
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      letterSpacing: 5,
+                      letterSpacing: 2,
                     ),
                   ),
                   _roundButton(Icons.logout, () async {
