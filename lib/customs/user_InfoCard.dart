@@ -46,7 +46,7 @@ late String currentMessage =messages[Random().nextInt(messages.length)];
   @override
   Widget build(BuildContext context) {
     return Container(
-      //height: MediaQuery.of(context).size.height * 0.6,
+    //height: MediaQuery.of(context).size.height * 0.6,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.transparent,

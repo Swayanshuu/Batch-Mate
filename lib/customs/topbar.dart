@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:classroombuddy/Screens/splash_Screen.dart';
+import 'package:classroombuddy/customs/options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,7 @@ class _TopBarState extends State<TopBar> {
                   colors: [
                     const Color.fromARGB(255, 35, 35, 35).withOpacity(0.6),
                     const Color.fromARGB(255, 129, 129, 129).withOpacity(0.01),
-                   const Color.fromARGB(255, 35, 35, 35).withOpacity(0.6),
+                    const Color.fromARGB(255, 35, 35, 35).withOpacity(0.6),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -49,83 +50,9 @@ class _TopBarState extends State<TopBar> {
                   Builder(
                     builder: (context) {
                       return _roundButton(Icons.menu, () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) {
-                            return Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                      sigmaX: 5,
-                                      sigmaY: 5,
-                                    ),
-                                    child: Container(),
-                                  ),
-                                ),
-                                DraggableScrollableSheet(
-                                  initialChildSize: 0.5,
-                                  minChildSize: 0.5,
-                                  maxChildSize: 0.95,
-                                  expand: false,
-                                  builder: (context, scrollController) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                          255,
-                                          0,
-                                          0,
-                                          0,
-                                        ).withOpacity(0.9),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(20),
-                                          topRight: Radius.circular(20),
-                                        ),
-                                      ),
-                                      child: ListView.builder(
-                                        controller: scrollController,
-                                        itemCount: 50,
-                                        itemBuilder: (context, index) =>
-                                            Padding(
-                                              padding: const EdgeInsets.all(
-                                                8.0,
-                                              ),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  color: const Color.fromARGB(
-                                                    255,
-                                                    46,
-                                                    46,
-                                                    46,
-                                                  ),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                    8.0,
-                                                  ),
-                                                  child: Column(
-                                                    children: [
-                                                      Text("Shibu $index"),
-                                                      Text("Shibu $index"),
-                                                      Text("Shibu $index"),
-                                                      Text("Shibu $index"),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                        Scaffold.of(
+                          context,
+                        ).openDrawer(); // 🔥 This opens the drawer
                       });
                     },
                   ),

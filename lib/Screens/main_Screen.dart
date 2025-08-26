@@ -138,6 +138,17 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        backgroundColor: const Color.fromARGB(255, 0, 3, 23),
+        child: Column(
+          children: [
+            Container(height: 100, color: Colors.grey),
+            ListTile(leading: Icon(Icons.person), title: Text("Profile")),
+            ListTile(leading: Icon(Icons.e_mobiledata), title: Text("About")),
+            ListTile(leading: Icon(Icons.settings), title: Text("Settings")),
+          ],
+        ),
+      ),
       body: Stack(
         children: [
           Positioned.fill(
@@ -223,13 +234,12 @@ class _MainScreenState extends State<MainScreen> {
               children: [
                 if (recentAssignment.isNotEmpty) ...[
                   const Text(
-                     "Latest Assignment",
+                    "Latest Assignment",
                     style: TextStyle(
                       color: Color(0xFFBDBDBD),
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
-                  
                   ),
                   const SizedBox(height: 5),
                   Container(
@@ -283,13 +293,12 @@ class _MainScreenState extends State<MainScreen> {
                 if (recentTimetable.isNotEmpty) ...[
                   const SizedBox(height: 15),
                   const Text(
-                     "Latest Timetable",
+                    "Latest Timetable",
                     style: TextStyle(
                       color: Color(0xFFBDBDBD),
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
-                  
                   ),
                   const SizedBox(height: 5),
                   Container(
@@ -376,14 +385,13 @@ class _MainScreenState extends State<MainScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                     "Latest Notices",
-                    style: TextStyle(
-                      color: Color(0xFFBDBDBD),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
-                  
+                  "Latest Notices",
+                  style: TextStyle(
+                    color: Color(0xFFBDBDBD),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
                   ),
+                ),
                 const SizedBox(height: 10),
                 ...recentNotice.map((notice) {
                   return Container(
