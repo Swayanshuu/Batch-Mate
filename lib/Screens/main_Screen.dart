@@ -3,6 +3,7 @@
 import 'dart:ui';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:classroombuddy/customs/content.dart';
+import 'package:classroombuddy/customs/options.dart';
 import 'package:classroombuddy/customs/topbar.dart';
 import 'package:classroombuddy/customs/user_InfoCard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -133,21 +134,14 @@ class _MainScreenState extends State<MainScreen> {
         isLoadingRecent = false;
       });
     }
-  }
+} 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
         backgroundColor: const Color.fromARGB(255, 0, 3, 23),
-        child: Column(
-          children: [
-            Container(height: 100, color: Colors.grey),
-            ListTile(leading: Icon(Icons.person), title: Text("Profile")),
-            ListTile(leading: Icon(Icons.e_mobiledata), title: Text("About")),
-            ListTile(leading: Icon(Icons.settings), title: Text("Settings")),
-          ],
-        ),
+        child: Options(),
       ),
       body: Stack(
         children: [
