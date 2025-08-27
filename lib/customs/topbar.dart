@@ -1,7 +1,5 @@
 import 'dart:ui';
-
 import 'package:classroombuddy/Screens/splash_Screen.dart';
-import 'package:classroombuddy/customs/options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

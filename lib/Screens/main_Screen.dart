@@ -138,7 +138,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+  return Scaffold(
       drawer: Drawer(
         backgroundColor: const Color.fromARGB(255, 1, 2, 11),
         child: Options(),
