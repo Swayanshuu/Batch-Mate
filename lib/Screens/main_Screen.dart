@@ -140,7 +140,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
-        backgroundColor: const Color.fromARGB(255, 0, 3, 23),
+        backgroundColor: const Color.fromARGB(255, 1, 2, 11),
         child: Options(),
       ),
       body: Stack(
