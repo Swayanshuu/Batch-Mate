@@ -33,6 +33,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
+            Text(
+                    "Batch: ${userProvide.userBatch}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+            SizedBox(height: 8),
             Text(userProvide.userEmail),
             SizedBox(height: 12),
             ElevatedButton(

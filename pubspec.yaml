@@ -68,7 +68,8 @@ flutter:
   assets:
     - assets/image/hm6.gif
     - assets/image/bg.jpg
-
+    - assets/image/loginBG.jpg
+    - assets/image/logBG.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

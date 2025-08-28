@@ -24,15 +24,15 @@ class textField extends StatelessWidget {
         label: Text(lebelText),
         border: OutlineInputBorder(),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: BorderSide(color: const Color.fromARGB(255, 157, 157, 157)),
           borderRadius: BorderRadius.circular(20),
         ),
 
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: const Color.fromARGB(255, 74, 74, 74),
           ),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
       controller: Controller,
