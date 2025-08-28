@@ -50,7 +50,7 @@ class _TopBarState extends State<TopBar> {
                       return _roundButton(Icons.menu, () {
                         Scaffold.of(
                           context,
-                        ).openDrawer(); // 🔥 This opens the drawer
+                        ).openDrawer(); // This opens the drawer
                       });
                     },
                   ),

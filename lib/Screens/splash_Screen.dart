@@ -1,7 +1,9 @@
+import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/Screens/login_Screen.dart';
 import 'package:classroombuddy/Screens/main_Screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -37,6 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void OpenMainScreen() {
+    Provider.of<UserProvider>(context,listen: false);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

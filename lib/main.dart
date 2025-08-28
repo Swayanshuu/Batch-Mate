@@ -14,7 +14,9 @@ Future<void> main() async {
   runApp(
     ChangeNotifierProvider(
       create: (context) {
-        return UserProvider();
+        final userProvider = UserProvider();
+        userProvider.getDetails(); // fetch Firestore data immediately
+        return userProvider;
       },
       child: MyApp(),
     ),

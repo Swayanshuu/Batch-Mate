@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, file_names
 
 import 'dart:ui';
+import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:classroombuddy/customs/content.dart';
 import 'package:classroombuddy/customs/drawerOptions.dart';
@@ -10,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class MainScreen extends StatefulWidget {
@@ -138,6 +140,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       drawer: Drawer(
         backgroundColor: const Color.fromARGB(255, 1, 2, 11),
@@ -165,7 +168,7 @@ class _MainScreenState extends State<MainScreen> {
                     const SizedBox(height: 60),
 
                     // User info card
-                    UserInfoCard(name: user?.displayName ?? "USER"),
+                    UserInfoCard(name: userProvider.userName),
                     const SizedBox(height: 15),
 
                     // Main content
