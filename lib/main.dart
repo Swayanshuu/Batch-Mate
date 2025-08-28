@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, duplicate_ignore
 
 import 'package:classroombuddy/Provider/userProvider.dart';
+import 'package:classroombuddy/Screens/On-Boarding%20Screen/onBoardingScreen.dart';
 import 'package:classroombuddy/firebase_options.dart';
 import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -61,7 +62,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
 
-      home: SplashScreen(),
+      home: OnBoardingScreen(),
     );
   }
 }

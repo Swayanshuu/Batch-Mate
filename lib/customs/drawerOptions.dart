@@ -45,7 +45,7 @@ class _DreawerOptionsState extends State<DreawerOptions> {
                         Text(
                           userProvider.userEmail,
                           style: TextStyle(
-                            color: const Color.fromARGB(255, 139, 139, 139),
+                            color: const Color.fromARGB(255, 155, 155, 155),
                             //fontSize: 40,
                           ),
                         ),
