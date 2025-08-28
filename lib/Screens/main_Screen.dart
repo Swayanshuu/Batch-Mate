@@ -3,7 +3,7 @@
 import 'dart:ui';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:classroombuddy/customs/content.dart';
-import 'package:classroombuddy/customs/options.dart';
+import 'package:classroombuddy/customs/drawerOptions.dart';
 import 'package:classroombuddy/customs/topbar.dart';
 import 'package:classroombuddy/customs/user_InfoCard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -134,14 +134,14 @@ class _MainScreenState extends State<MainScreen> {
         isLoadingRecent = false;
       });
     }
-} 
+  }
 
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
+    return Scaffold(
       drawer: Drawer(
         backgroundColor: const Color.fromARGB(255, 1, 2, 11),
-        child: Options(),
+        child: DreawerOptions(),
       ),
       body: Stack(
         children: [

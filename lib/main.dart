@@ -14,7 +14,7 @@ Future<void> main() async {
   runApp(
     ChangeNotifierProvider(
       create: (context) {
-        return userProvider();
+        return UserProvider();
       },
       child: MyApp(),
     ),

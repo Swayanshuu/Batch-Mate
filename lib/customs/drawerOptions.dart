@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Options extends StatefulWidget {
-  const Options({super.key});
+class DreawerOptions extends StatefulWidget {
+  const DreawerOptions({super.key});
 
   @override
-  State<Options> createState() => _OptionsState();
+  State<DreawerOptions> createState() => _DreawerOptionsState();
 }
 
-class _OptionsState extends State<Options> {
+class _DreawerOptionsState extends State<DreawerOptions> {
   @override
   Widget build(BuildContext context) {
     return Column(
