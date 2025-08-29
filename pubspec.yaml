@@ -43,6 +43,7 @@ dependencies:
   shimmer_text: ^0.0.2
   skeletonizer: ^2.1.0+1
   smooth_page_indicator: ^1.2.1
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:
@@ -67,10 +68,15 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/image/hm6.gif
     - assets/image/bg.jpg
-    - assets/image/loginBG.jpg
     - assets/image/logBG.jpg
+    - assets/image/logo.png
+    - assets/image/3.jpg
+    - assets/image/Wlogoframe.png
+    - assets/image/Blogo.png
+    - assets/image/1stScreenbg.jpg
+    - assets/image/2ndScreenbg.jpg
+    - assets/image/3rdScreenbg.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

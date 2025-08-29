@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, camel_case_types, file_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:classroombuddy/Screens/main_Screen.dart';
