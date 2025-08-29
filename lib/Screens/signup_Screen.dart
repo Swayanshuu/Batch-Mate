@@ -6,6 +6,7 @@ import 'package:classroombuddy/components/textField.dart';
 import 'package:classroombuddy/controllers/signup_Cotroller.dart';
 import 'package:classroombuddy/Screens/login_Screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -40,208 +41,265 @@ class _SignupScreenState extends State<SignupScreen> {
           SafeArea(
             child: Form(
               key: userForm,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Let's get start!",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(.1),
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 91, 91, 91),
-                          width: .5,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                    child: IntrinsicHeight(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(height: 15),
+                            Column(
+                              children: [
+                                SizedBox(
+                                  height: 80,
+                                  child: Image.asset("assets/image/logo.png"),
+                                ),
+                                const Text(
+                                  "BATCH MATE",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                                const Text(
+                                  "Because every batch is a story.",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 6,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(height: 20),
                             Text(
-                              "SignUp",
+                              "Let's get start!",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 30,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-
-                            SizedBox(height: 20),
-
-                            textField(
-                              lebelText: "Email",
-                              obScureText: false,
-                              Controller: email,
-                              ValidatorMessage: "Email Required",
-                            ),
-
-                            SizedBox(height: 20),
-
-                            textField(
-                              lebelText: "Password",
-                              obScureText: true,
-                              Controller: password,
-                              ValidatorMessage: "Password Required",
-                            ),
-
-                            SizedBox(height: 20),
-
-                            TextFormField(
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                label: Text("Name"),
-                                border: OutlineInputBorder(),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                            Padding(
+                              padding: const EdgeInsets.all(30),
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(.1),
+                                  border: Border.all(
                                     color: const Color.fromARGB(
                                       255,
-                                      157,
-                                      157,
-                                      157,
+                                      91,
+                                      91,
+                                      91,
                                     ),
+                                    width: .5,
                                   ),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      SizedBox(height: 15),
+                                      Text(
+                                        "SignUp",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
 
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      74,
-                                      74,
-                                      74,
-                                    ),
+                                      SizedBox(height: 20),
+
+                                      textField(
+                                        lebelText: "Email",
+                                        obScureText: false,
+                                        Controller: email,
+                                        ValidatorMessage: "Email Required",
+                                      ),
+
+                                      SizedBox(height: 20),
+
+                                      textField(
+                                        lebelText: "Password",
+                                        obScureText: true,
+                                        Controller: password,
+                                        ValidatorMessage: "Password Required",
+                                      ),
+
+                                      SizedBox(height: 20),
+
+                                      TextFormField(
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          label: Text("Name"),
+                                          border: OutlineInputBorder(),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color.fromARGB(
+                                                255,
+                                                157,
+                                                157,
+                                                157,
+                                              ),
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                          ),
+
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color.fromARGB(
+                                                255,
+                                                74,
+                                                74,
+                                                74,
+                                              ),
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                          ),
+                                        ),
+                                        controller: name,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        validator: (value) {
+                                          if (value.toString().length < 3) {
+                                            return "Enter your Name";
+                                          }
+                                        },
+                                      ),
+
+                                      SizedBox(height: 20),
+
+                                      TextFormField(
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          label: Text("batch id"),
+                                          border: OutlineInputBorder(),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color.fromARGB(
+                                                255,
+                                                157,
+                                                157,
+                                                157,
+                                              ),
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                          ),
+
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color.fromARGB(
+                                                255,
+                                                74,
+                                                74,
+                                                74,
+                                              ),
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                          ),
+                                        ),
+                                        controller: batchID,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        validator: (value) {
+                                          if (value.toString().length == 0) {
+                                            return "enter your batch id";
+                                          }
+                                        },
+                                      ),
+
+                                      SizedBox(height: 20),
+
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          if (userForm.currentState!
+                                              .validate()) {
+                                            signupController.createAccount(
+                                              context: context,
+                                              email: email.text,
+                                              password: password.text,
+                                              name: name.text,
+                                              batchId: batchID.text,
+                                            );
+                                          }
+                                        },
+
+                                        child: Text(
+                                          "Sign In",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 15),
+                                    ],
                                   ),
-                                  borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-                              controller: name,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                if (value.toString().length < 3) {
-                                  return "Enter your Name";
-                                }
-                              },
                             ),
-
-                            SizedBox(height: 20),
-
-                            TextFormField(
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                label: Text("batch id"),
-                                border: OutlineInputBorder(),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      157,
-                                      157,
-                                      157,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Already a user?",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return LoginScreen();
+                                        },
+                                      ),
+                                      (route) {
+                                        return false;
+                                      },
+                                    );
+                                  },
+                                  child: Text(
+                                    "LogIn!",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  borderRadius: BorderRadius.circular(20),
                                 ),
-
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      74,
-                                      74,
-                                      74,
-                                    ),
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              controller: batchID,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                if (value.toString().length == 0) {
-                                  return "enter your batch id";
-                                }
-                              },
+                              ],
                             ),
-
-                            SizedBox(height: 20),
-
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                              ),
-                              onPressed: () {
-                                if (userForm.currentState!.validate()) {
-                                  signupController.createAccount(
-                                    context: context,
-                                    email: email.text,
-                                    password: password.text,
-                                    name: name.text,
-                                    batchId: batchID.text,
-                                  );
-                                }
-                              },
-
-                              child: Text(
-                                "Sign In",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 15),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Already a user?",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return LoginScreen();
-                              },
-                            ),
-                            (route) {
-                              return false;
-                            },
-                          );
-                        },
-                        child: Text(
-                          "LogIn!",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  );
+                },
               ),
             ),
           ),
