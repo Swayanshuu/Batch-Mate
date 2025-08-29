@@ -22,7 +22,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
 
     // Navigate to Signup
     Navigator.pushAndRemoveUntil(
-      context,
+    context,
       MaterialPageRoute(builder: (context) => const SignupScreen()),
       (route) => false,
     );

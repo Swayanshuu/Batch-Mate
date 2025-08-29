@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
 
-      home: OnBoardingScreen(),
+      home: SplashScreen(),
     );
   }
 }
