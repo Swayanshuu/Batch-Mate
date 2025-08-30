@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:ui';
 import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';

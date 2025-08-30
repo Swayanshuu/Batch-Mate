@@ -2,51 +2,57 @@
 
 import 'dart:math';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer_text/shimmer_text.dart';
 
 class UserInfoCard extends StatelessWidget {
   final String name;
-   UserInfoCard({super.key, required this.name});
+  UserInfoCard({super.key, required this.name});
 
   String getGreeting() {
-  final hour = DateTime.now().hour;
+    final hour = DateTime.now().hour;
 
-  if (hour >= 5 && hour < 12) {
-    return "Good Morning 🌞";
-  } else if (hour >= 12 && hour < 17) {
-    return "Good Afternoon ☀️";
-  } else if (hour >= 17 && hour < 21) {
-    return "Good Evening 🌇";
-  } else {
-    return "Good Night 🌙";
+    if (hour >= 5 && hour < 12) {
+      return "Good Morning";
+    } else if (hour >= 12 && hour < 17) {
+      return "Good Afternoon";
+    } else if (hour >= 17 && hour < 21) {
+      return "Good Evening";
+    } else {
+      return "Good Night";
+    }
   }
-}
-final List<String> messages = [
-  "Hmm! Nothings to do? Check Assignments 👻",
-  "Time to chill? Or maybe check your tasks 😎",
-  "Don't forget your deadlines! ⏰",
-  "Bored? How about learning something new? 📚",
-  "Take a break, but keep your brain active! 🧠",
-  "Feeling lazy? Let's conquer that assignment! 💪",
-  "Why not grab a coffee and plan your day ☕️",
-  "Tasks won’t do themselves… maybe now? 😉",
-  "You got this! Keep pushing forward 🚀",
-  "A little progress each day adds up 🌱",
-  "Assignments aren’t scary, you are! 😏",
-  "Check something productive or just chill 😴",
-  "Time flies… don’t let deadlines catch you! ⏳",
-  "Hey! A quick review never hurts 📖",
-  "Smash that task list like a pro 🏆",
-];
 
-late String currentMessage =messages[Random().nextInt(messages.length)];
+  final List<String> messages = [
+    "Nothing to do? Peek at your Assignments page 👻",
+    "Chill mode on? Or check your Tasks first 😎",
+    "Deadlines won’t wait… visit the Tasks page ⏰",
+    "Bored? The Learning page has surprises 📚",
+    "Take a brain break… but check the Challenges page 🧠",
+    "Feeling lazy? The Assignments page can motivate you 💪",
+    "Grab a coffee ☕️ and explore your Schedule page",
+    "Tasks aren’t gonna do themselves… maybe check Tasks now 😉",
+    "You got this! The Progress page is cheering for you 🚀",
+    "Tiny progress daily = giant wins 🌱",
+    "Assignments aren’t scary, YOU are 😏",
+    "Quick review? Visit the Notes page 📖",
+    "Smash that to-do list like a pro 🏆",
+    "Don’t open the About page… unless you want to be amazed 😲",
+    "Shh… secrets are hidden in the Settings page 😉",
+    "Only brave souls check the Profile page 🧙‍♂️",
+    "Click the Rewards page… sudden surprises await ⚡️",
+    "Curiosity unlocked: Challenges page might test you 🔓",
+    "Pro tip: visiting every page may unlock easter eggs 😎",
+    "Warning: opening the Stats page may make you proud 🚀",
+  ];
 
+  late String currentMessage = messages[Random().nextInt(messages.length)];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-    //height: MediaQuery.of(context).size.height * 0.6,
+      //height: MediaQuery.of(context).size.height * 0.6,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.transparent,
@@ -59,7 +65,7 @@ late String currentMessage =messages[Random().nextInt(messages.length)];
           // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Text(
+            Text(
               getGreeting(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -84,7 +90,13 @@ late String currentMessage =messages[Random().nextInt(messages.length)];
                 ),
               ],
             ),
-            Center(child: Text(currentMessage))
+            // Center(child: Text(currentMessage)),
+            DefaultTextStyle(
+              style: const TextStyle(fontSize: 14, color: Colors.white),
+              child: AnimatedTextKit(
+                animatedTexts: [TypewriterAnimatedText(currentMessage)],
+              ),
+            ),
           ],
         ),
       ),

@@ -82,6 +82,8 @@ flutter:
     - assets/image/3rdScreenbg.png
     - assets/image/aboutBG.jpg
     - assets/image/meAI.jpg
+    - assets/image/meAI2.jpg
+    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

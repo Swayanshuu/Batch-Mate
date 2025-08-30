@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, deprecated_member_use, unnecessary_const
 
 import 'dart:ui';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,19 +13,65 @@ class AboutScreen extends StatefulWidget {
   State<AboutScreen> createState() => _AboutScreenState();
 }
 
-// Future<void> _launchUrl(String url)async{
-// final Uri uri = Uri.parse(url);
-// if(!await launchUrl(uri, mode: LaunchMode.externalApplication)){
-//   throw 'Could not launch $url';
-// }
-// }
-
+// Launch URL helper
 Future<void> _launchUrl(String url) async {
   final Uri uri = Uri.parse(url);
   if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-    debugPrint('❌ Could not launch $url');
+    debugPrint('Could not launch $url');
   } else {
-    debugPrint('✅ Launched $url');
+    debugPrint('Launched $url');
+  }
+}
+
+// Custom Expansion Tile
+class CustomExpansionTile extends StatelessWidget {
+  final String title;
+  final Widget content;
+  final Color titleColor;
+  final Color iconColor;
+  final double padding;
+
+  const CustomExpansionTile({
+    super.key,
+    required this.title,
+    required this.content,
+    this.titleColor = Colors.white,
+    this.iconColor = Colors.white70,
+    this.padding = 8.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return universalContainer(
+      padding: padding,
+      bgColor: Colors.transparent,
+      child: ExpansionTile(
+        collapsedIconColor: const Color.fromARGB(255, 4, 0, 133),
+        iconColor: iconColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        collapsedShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        tilePadding: const EdgeInsets.all(4),
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title,
+            style: TextStyle(
+              color: titleColor,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: content,
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -37,9 +82,11 @@ class _AboutScreenState extends State<AboutScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
+          // Background image
           Positioned.fill(
             child: Image.asset("assets/image/aboutBG.jpg", fit: BoxFit.cover),
           ),
+          // Blur layer
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -57,9 +104,44 @@ class _AboutScreenState extends State<AboutScreen> {
                     const SizedBox(height: 20),
                     _socialLinks(),
                     const SizedBox(height: 20),
-                    aboutDeveloper(),
+                    CustomExpansionTile(
+                      title: "About Developer",
+                      content: Text(
+                        "17th CSE ( 2024 - 28 )\n\n"
+                        "Hey 👋 I’m Swayanshu Sarthak Sadangi.\n"
+                        "I’m just someone who loves playing around with tech and creating things that feel fun and useful.\n\n"
+                        "Most of the time you’ll find me experimenting with new ideas, breaking stuff (unintentionally 😂), and then fixing it again.\n\n"
+                        "This app is just a small part of my journey — something I made with curiosity, late-night coding, and a lot of excitement.\n"
+                        "I don’t see it as “perfect,” but more like a step forward, and I’ll keep learning and improving as I go. 🚀",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
-                    aboutApp(),
+                    CustomExpansionTile(
+                      title: "About App",
+                      content: Text(
+                        "Hey 👋 welcome to Batch Mate!\n\n"
+                        "This app is designed to make your student life easier by keeping all your assignments, timetables, and notices in one place.\n\n"
+                        "With Batch Mate, you can:\n"
+                        "• Stay on top of your classes and deadlines effortlessly.\n"
+                        "• Get instant notifications when new notices or assignments are posted.\n"
+                        "• Organize your day and plan ahead with the built-in timetable view.\n"
+                        "• Quickly find and reference past assignments or class notes.\n\n"
+                        "We believe learning should be fun, not stressful, so we’ve built this app to simplify your daily academic routine.\n\n"
+                        "Our goal is to continuously improve with your feedback, adding features that help you manage your studies smarter and faster. 🚀\n\n"
+                        "Thanks for being part of this journey — 'Batch Mate' is here to make your college experience smoother, one notification at a time!\n\n"
+                        "🐞 Found a bug or have a suggestion? Feel free to contact us anytime — your feedback helps make Batch Mate even better! 💡",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     Container(
                       height: 1,
@@ -72,59 +154,9 @@ class _AboutScreenState extends State<AboutScreen> {
                       style: TextStyle(fontSize: 14, color: Colors.white70),
                       textAlign: TextAlign.end,
                     ),
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 20),
                   ],
                 ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget aboutApp() {
-    return universalContainer(
-      padding: 8,
-      bgColor: Colors.transparent,
-      child: ExpansionTile(
-        collapsedIconColor: Colors.red,
-        iconColor: Colors.green,
-        tilePadding: EdgeInsets.all(4),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        collapsedShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "About App",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Text(
-              "Hey 👋 welcome to Batch Mate!\n\n"
-              "This app is designed to make your student life easier by keeping all your assignments, timetables, and notices in one place.\n\n"
-              "With Batch Mate, you can:\n"
-              "• Stay on top of your classes and deadlines effortlessly.\n"
-              "• Get instant notifications when new notices or assignments are posted.\n"
-              "• Organize your day and plan ahead with the built-in timetable view.\n"
-              "• Quickly find and reference past assignments or class notes.\n\n"
-              "We believe learning should be fun, not stressful, so we’ve built this app to simplify your daily academic routine.\n\n"
-              "Our goal is to continuously improve with your feedback, adding features that help you manage your studies smarter and faster. 🚀\n\n"
-              "Thanks for being part of this journey — 'Batch Mate' is here to make your college experience smoother, one notification at a time!\n\n"
-              "🐞 Found a bug or have a suggestion? Feel free to contact us anytime — your feedback helps make Batch Mate even better! 💡",
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-                height: 1.5,
               ),
             ),
           ),
@@ -138,86 +170,24 @@ class _AboutScreenState extends State<AboutScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          onPressed: () {
-            _launchUrl("https://github.com/Swayanshuu");
-          },
+          onPressed: () => _launchUrl("https://github.com/Swayanshuu"),
           icon: FaIcon(FontAwesomeIcons.github, size: 30),
         ),
         IconButton(
-          onPressed: () {
-            _launchUrl(
-              "https://www.linkedin.com/in/swayanshu-sarthak-sadangi-b6751931a/",
-            );
-          },
+          onPressed: () => _launchUrl(
+            "https://www.linkedin.com/in/swayanshu-sarthak-sadangi-b6751931a/",
+          ),
           icon: FaIcon(FontAwesomeIcons.linkedin, size: 30),
         ),
         IconButton(
-          onPressed: () {
-            _launchUrl("https://instagram.com/swayan.shuuu");
-          },
+          onPressed: () => _launchUrl("https://instagram.com/swayan.shuuu"),
           icon: FaIcon(FontAwesomeIcons.instagram, size: 30),
         ),
         IconButton(
-          onPressed: () {
-            _launchUrl("mailto:swayanshu19@gmail.com");
-          },
+          onPressed: () => _launchUrl("mailto:swayanshu19@gmail.com"),
           icon: FaIcon(Icons.mail, size: 30),
         ),
       ],
-    );
-  }
-
-  Widget aboutDeveloper() {
-    return universalContainer(
-      padding: 0,
-      bgColor: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ExpansionTile(
-          collapsedIconColor: Colors.red,
-          iconColor: Colors.green,
-          tilePadding: EdgeInsets.all(4),
-          //backgroundColor: Colors.white.withOpacity(0.05),
-          //collapsedBackgroundColor: Colors.white.withOpacity(0.05),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          collapsedShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-
-          title: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "About Developer",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Text(
-                "17th CSE ( 2024 - 28 )\n\n"
-                "Hey 👋 I’m Swayanshu Sarthak Sadangi.\n"
-                "I’m just someone who loves playing around with tech and creating things that feel fun and useful.\n\n"
-                "Most of the time you’ll find me experimenting with new ideas, breaking stuff (unintentionally 😂), and then fixing it again.\n\n"
-                "This app is just a small part of my journey — something I made with curiosity, late-night coding, and a lot of excitement.\n"
-                "I don’t see it as “perfect,” but more like a step forward, and I’ll keep learning and improving as I go. 🚀",
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
-                  height: 1.5,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -227,13 +197,12 @@ class _AboutScreenState extends State<AboutScreen> {
       padding: 4,
       child: Stack(
         children: [
-          // Background image + gradient inside ClipRRect
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Stack(
               children: [
                 Image.asset(
-                  "assets/image/meAI.jpg",
+                  "assets/image/meAI2.jpg",
                   fit: BoxFit.cover,
                   width: double.infinity,
                 ),
@@ -252,7 +221,6 @@ class _AboutScreenState extends State<AboutScreen> {
               ],
             ),
           ),
-
           Positioned(
             left: 12,
             bottom: 12,
@@ -262,7 +230,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 DefaultTextStyle(
                   style: const TextStyle(
                     fontSize: 30,
-                    color: const Color.fromARGB(255, 132, 132, 132),
+                    color: Color.fromARGB(255, 132, 132, 132),
                     fontWeight: FontWeight.bold,
                     shadows: [
                       Shadow(
@@ -327,7 +295,6 @@ class _AboutScreenState extends State<AboutScreen> {
                     fontSize: 17,
                   ),
                 ),
-
                 SizedBox(height: 8),
                 Text(
                   "Swayanshu Sarthak Sadangi",
@@ -351,28 +318,28 @@ class _AboutScreenState extends State<AboutScreen> {
       ),
     );
   }
+}
 
-  Widget universalContainer({
-    required Widget child,
-    required double padding,
-    required Color bgColor,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(padding),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.4),
-            blurRadius: 8,
-            offset: Offset(2, 2),
-          ),
-        ],
-      ),
-      child: child,
-    );
-  }
+Widget universalContainer({
+  required Widget child,
+  required double padding,
+  required Color bgColor,
+}) {
+  return Container(
+    width: double.infinity,
+    padding: EdgeInsets.all(padding),
+    decoration: BoxDecoration(
+      color: bgColor,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: Colors.white.withOpacity(0.2)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.4),
+          blurRadius: 8,
+          offset: Offset(2, 2),
+        ),
+      ],
+    ),
+    child: child,
+  );
 }
