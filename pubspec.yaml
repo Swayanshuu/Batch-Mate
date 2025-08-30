@@ -44,6 +44,8 @@ dependencies:
   skeletonizer: ^2.1.0+1
   smooth_page_indicator: ^1.2.1
   shared_preferences: ^2.5.3
+  url_launcher: ^6.3.2
+  font_awesome_flutter: ^10.10.0
 
 dev_dependencies:
   flutter_test:
