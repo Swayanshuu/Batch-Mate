@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:classroombuddy/Provider/userProvider.dart';
-import 'package:classroombuddy/Screens/edit_Screen.dart';
+import 'package:classroombuddy/Drawer%20Screens/edit_Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

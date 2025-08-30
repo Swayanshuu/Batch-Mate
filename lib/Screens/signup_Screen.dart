@@ -49,7 +49,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         minHeight: constraints.maxHeight,
                       ),
                     child: IntrinsicHeight(
-                        child: Column(
+                      child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Column(

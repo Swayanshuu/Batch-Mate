@@ -1,7 +1,8 @@
 // ignore_for_file: file_names
 
+import 'package:classroombuddy/Drawer%20Screens/about_Screen.dart';
 import 'package:classroombuddy/Provider/userProvider.dart';
-import 'package:classroombuddy/Screens/profileScreen.dart';
+import 'package:classroombuddy/Drawer%20Screens/profileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -73,9 +74,23 @@ class _DreawerOptionsState extends State<DreawerOptions> {
                     title: Text("Profile"),
                   ),
                 ),
-                ListTile(
-                  leading: Icon(Icons.ac_unit_sharp),
-                  title: Text("About"),
+
+                // About
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return AboutScreen();
+                        },
+                      ),
+                    );
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.error_outline),
+                    title: Text("About"),
+                  ),
                 ),
                 ListTile(
                   leading: Icon(Icons.settings),
