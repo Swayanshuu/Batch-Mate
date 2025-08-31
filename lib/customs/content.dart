@@ -1,9 +1,12 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:ui';
 
 import 'package:classroombuddy/Screens/contentScreens/assignment_Page.dart';
 import 'package:classroombuddy/Screens/contentScreens/notice_Screen.dart';
 import 'package:classroombuddy/Screens/contentScreens/timetable_Page.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Content extends StatefulWidget {
   final String? batchID;
@@ -40,12 +43,19 @@ class _ContentState extends State<Content> {
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Batch ID not loaded yet")),
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.orange,
+                      content: Text(
+                        "Batch ID not loaded yet! wait a second",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   );
                 }
               },
               text: "Time table",
-              icon: Icons.calendar_view_day_rounded,
+              icon: FontAwesomeIcons.calendarDay,
               rightPadding: 0,
               leftPadding: 10,
               color: Color.fromRGBO(91, 91, 91, 1), // #C0C0C0
@@ -72,12 +82,16 @@ class _ContentState extends State<Content> {
                     SnackBar(
                       behavior: SnackBarBehavior.floating,
                       backgroundColor: Colors.orange,
-                      content: Text("Batch ID not loaded yet! wait a second",style: TextStyle(color: Colors.white),)),
+                      content: Text(
+                        "Batch ID not loaded yet! wait a second",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   );
                 }
               },
               text: "Assignments",
-              icon: Icons.assignment,
+              icon: FontAwesomeIcons.tasks,
               rightPadding: 10,
               leftPadding: 0,
               color: Color.fromRGBO(44, 44, 44, 1),
@@ -108,12 +122,16 @@ class _ContentState extends State<Content> {
                     SnackBar(
                       behavior: SnackBarBehavior.floating,
                       backgroundColor: Colors.orange,
-                      content: Text("Batch ID not loaded yet! wait a second",style: TextStyle(color: Colors.white),)),
+                      content: Text(
+                        "Batch ID not loaded yet! wait a second",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   );
                 }
               },
               text: "Notices",
-              icon: Icons.notifications,
+              icon: Icons.notifications_active,
               rightPadding: 0,
               leftPadding: 10,
               color: Color.fromRGBO(44, 44, 44, 1),
@@ -124,7 +142,7 @@ class _ContentState extends State<Content> {
             content_Container(
               onTap: () {},
               text: "ChitChat",
-              icon: Icons.chat_rounded,
+              icon: FontAwesomeIcons.message,
               rightPadding: 10,
               leftPadding: 0,
               color: Color.fromRGBO(91, 91, 91, 1),
