@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:classroombuddy/components/textField.dart';
 import 'package:classroombuddy/controllers/signup_Cotroller.dart';
 import 'package:classroombuddy/Screens/login_Screen.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -48,8 +49,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       constraints: BoxConstraints(
                         minHeight: constraints.maxHeight,
                       ),
-                    child: IntrinsicHeight(
-                      child: Column(
+                      child: IntrinsicHeight(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Column(
@@ -231,9 +232,21 @@ class _SignupScreenState extends State<SignupScreen> {
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.white,
                                         ),
-                                        onPressed: () {
+                                        onPressed: () async {
                                           if (userForm.currentState!
                                               .validate()) {
+                                            // Log event to firebase analytics
+
+                                            await FirebaseAnalytics.instance
+                                                .logEvent(
+                                                  name: "signup_btn_clk",
+                                                  parameters: {
+                                                    "email": email.text,
+                                                    "batchId": batchID.text,
+                                                  },
+                                                );
+
+                                            // Proceed with signup
                                             signupController.createAccount(
                                               context: context,
                                               email: email.text,
@@ -245,7 +258,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         },
 
                                         child: Text(
-                                          "Sign In",
+                                          "Sign Up",
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.black,
