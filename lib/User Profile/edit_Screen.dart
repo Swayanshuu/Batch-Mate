@@ -1,5 +1,7 @@
 // ignore_for_file: file_names, body_might_complete_normally_nullable
 
+import 'dart:ui';
+
 import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,6 +54,7 @@ class _EditScreenState extends State<EditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Screen"),
+        centerTitle: true,
         actions: [
           InkWell(
             onTap: () {
@@ -67,35 +70,58 @@ class _EditScreenState extends State<EditScreen> {
         ],
       ),
 
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Form(
-              key: editProfileForm,
-              child: Column(
-                children: [
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Name can't be empty!";
-                      }
-                    },
-                    controller: updateName,
-                    decoration: InputDecoration(label: Text("Edit your name")),
-                  ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Batch ID can't be empty!";
-                      }
-                    },
-                    controller: updateBatch,
-                    decoration: InputDecoration(label: Text("Edit your batch")),
-                  ),
-                ],
-              ),
+          Center(
+            child: SizedBox(
+              height: 200,
+              child: Image.asset("assets/image/logo.png"),
             ),
+          ),
+          // Blur layer
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+              child: Container(color: Colors.black.withOpacity(0.7)),
+            ),
+          ),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Form(
+                  key: editProfileForm,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Name can't be empty!";
+                          }
+                        },
+                        controller: updateName,
+                        decoration: InputDecoration(
+                          label: Text("Edit your name"),
+                        ),
+                      ),
+
+                      SizedBox(height: 30),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Batch ID can't be empty!";
+                          }
+                        },
+                        controller: updateBatch,
+                        decoration: InputDecoration(
+                          label: Text("Edit your batch"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

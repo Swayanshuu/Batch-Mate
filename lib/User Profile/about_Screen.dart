@@ -46,7 +46,7 @@ class CustomExpansionTile extends StatelessWidget {
       padding: padding,
       bgColor: Colors.transparent,
       child: ExpansionTile(
-        collapsedIconColor: const Color.fromARGB(255, 4, 0, 133),
+        collapsedIconColor: const Color.fromARGB(255, 7, 98, 218),
         iconColor: iconColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         collapsedShape: RoundedRectangleBorder(
@@ -100,10 +100,14 @@ class _AboutScreenState extends State<AboutScreen> {
                 child: Column(
                   children: [
                     SizedBox(height: 20),
+                    logo(),
+                    SizedBox(height: 20),
                     developerInfoCard(),
                     const SizedBox(height: 20),
                     _socialLinks(),
                     const SizedBox(height: 20),
+
+                    // About Developer
                     CustomExpansionTile(
                       title: "About Developer",
                       content: Text(
@@ -120,7 +124,10 @@ class _AboutScreenState extends State<AboutScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 20),
+
+                    // About App
                     CustomExpansionTile(
                       title: "About App",
                       content: Text(
@@ -150,7 +157,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      "© 2025 BatchMate. All rights reserved.",
+                      "© 2025 Batch Mate. All rights reserved.",
                       style: TextStyle(fontSize: 14, color: Colors.white70),
                       textAlign: TextAlign.end,
                     ),
@@ -165,6 +172,38 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
+  Widget logo() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(height: 70, child: Image.asset("assets/image/logo.png")),
+          Column(
+            children: [
+              const Text(
+                "BATCH MATE",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  letterSpacing: 1.5,
+                ),
+              ),
+              const Text(
+                "Because every batch is a story.",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 8,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _socialLinks() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -173,16 +212,19 @@ class _AboutScreenState extends State<AboutScreen> {
           onPressed: () => _launchUrl("https://github.com/Swayanshuu"),
           icon: FaIcon(FontAwesomeIcons.github, size: 30),
         ),
+        SizedBox(width: 20),
         IconButton(
           onPressed: () => _launchUrl(
             "https://www.linkedin.com/in/swayanshu-sarthak-sadangi-b6751931a/",
           ),
           icon: FaIcon(FontAwesomeIcons.linkedin, size: 30),
         ),
+        SizedBox(width: 20),
         IconButton(
           onPressed: () => _launchUrl("https://instagram.com/swayan.shuuu"),
           icon: FaIcon(FontAwesomeIcons.instagram, size: 30),
         ),
+        SizedBox(width: 20),
         IconButton(
           onPressed: () => _launchUrl("mailto:swayanshu19@gmail.com"),
           icon: FaIcon(Icons.mail, size: 30),
@@ -192,129 +234,146 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   Widget developerInfoCard() {
-    return universalContainer(
-      bgColor: Colors.transparent,
-      padding: 4,
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Stack(
-              children: [
-                Image.asset(
-                  "assets/image/meAI2.jpg",
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [Colors.black, Colors.transparent],
-                        stops: [.2, 0.8],
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: const Color.fromARGB(255, 0, 22, 40),
+            behavior: SnackBarBehavior.floating,
+            content: Text(
+              "You discovered the mastermind behind Batch Mate! 😏",
+              style: TextStyle(color: Colors.white),
+            ),
+            duration: Duration(seconds: 2),
+            shape: ContinuousRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+        );
+      },
+      child: universalContainer(
+        bgColor: Colors.transparent,
+        padding: 4,
+        child: Stack(
+          children: [
+            // Background Image + Gradient
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Stack(
+                children: [
+                  Image.asset(
+                    "assets/image/meAI2.jpg",
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.black.withOpacity(0.85),
+                            Colors.transparent,
+                          ],
+                          stops: [0.3, 0.7],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            left: 12,
-            bottom: 12,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 30,
-                    color: Color.fromARGB(255, 132, 132, 132),
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 7.0,
-                        color: Color.fromARGB(255, 58, 58, 58),
-                        offset: Offset(0, 0),
-                      ),
-                    ],
+            // Text Overlay
+            Positioned(
+              left: 16,
+              bottom: 16,
+              right: 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DefaultTextStyle(
+                    style: const TextStyle(
+                      fontSize: 28,
+                      color: Color.fromARGB(255, 200, 200, 200),
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 8.0,
+                          color: Colors.black87,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                    child: AnimatedTextKit(
+                      animatedTexts: [
+                        TyperAnimatedText(
+                          'DESIGNED',
+                          speed: Duration(milliseconds: 100),
+                        ),
+                        TyperAnimatedText(
+                          'DEVELOPED',
+                          speed: Duration(milliseconds: 100),
+                        ),
+                        TyperAnimatedText(
+                          'CRAFTED',
+                          speed: Duration(milliseconds: 100),
+                        ),
+                        TyperAnimatedText(
+                          'INVENTED',
+                          speed: Duration(milliseconds: 100),
+                        ),
+                        TyperAnimatedText(
+                          'ENGINEERED',
+                          speed: Duration(milliseconds: 100),
+                        ),
+                        TyperAnimatedText(
+                          'HACKED',
+                          speed: Duration(milliseconds: 100),
+                        ),
+                        TyperAnimatedText(
+                          'MASTERMINDED',
+                          speed: Duration(milliseconds: 100),
+                        ),
+                        TyperAnimatedText(
+                          'ORCHESTRATED',
+                          speed: Duration(milliseconds: 100),
+                        ),
+                        TyperAnimatedText(
+                          'CODED',
+                          speed: Duration(milliseconds: 100),
+                        ),
+                        TyperAnimatedText(
+                          'THOUGHT-UP',
+                          speed: Duration(milliseconds: 100),
+                        ),
+                      ],
+                      repeatForever: true,
+                    ),
                   ),
-                  child: AnimatedTextKit(
-                    animatedTexts: [
-                      TyperAnimatedText(
-                        'DESIGNED',
-                        speed: Duration(milliseconds: 100),
-                      ),
-                      TyperAnimatedText(
-                        'DEVELOPED',
-                        speed: Duration(milliseconds: 100),
-                      ),
-                      TyperAnimatedText(
-                        'CRAFTED',
-                        speed: Duration(milliseconds: 100),
-                      ),
-                      TyperAnimatedText(
-                        'INVENTED',
-                        speed: Duration(milliseconds: 100),
-                      ),
-                      TyperAnimatedText(
-                        'ENGINEERED',
-                        speed: Duration(milliseconds: 100),
-                      ),
-                      TyperAnimatedText(
-                        'HACKED',
-                        speed: Duration(milliseconds: 100),
-                      ),
-                      TyperAnimatedText(
-                        'MASTERMINDED',
-                        speed: Duration(milliseconds: 100),
-                      ),
-                      TyperAnimatedText(
-                        'ORCHESTRATED',
-                        speed: Duration(milliseconds: 100),
-                      ),
-                      TyperAnimatedText(
-                        'CODED',
-                        speed: Duration(milliseconds: 100),
-                      ),
-                      TyperAnimatedText(
-                        'THOUGHT-UP',
-                        speed: Duration(milliseconds: 100),
-                      ),
-                    ],
-                    repeatForever: true,
+                  SizedBox(height: 6),
+                  Text(
+                    "BY",
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  "BY",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 132, 132, 132),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
+                  SizedBox(height: 8),
+                  Text(
+                    "Swayanshu Sarthak Sadangi",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: MediaQuery.of(context).size.width * 0.08,
+                    ),
                   ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  "Swayanshu Sarthak Sadangi",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: MediaQuery.of(context).size.width * 0.06,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 6,
-                        color: Colors.black54,
-                        offset: Offset(1, 1),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

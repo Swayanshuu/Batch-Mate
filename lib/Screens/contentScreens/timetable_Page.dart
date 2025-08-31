@@ -1,3 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:ui';
+
 import 'package:classroombuddy/Screens/contentScreens/add_Timetable.dart';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:flutter/material.dart';
@@ -57,12 +61,29 @@ class _TimetablePageState extends State<TimetablePage> {
           ),
         ),
         appBar: AppBar(title: const Text("Time Tables"), centerTitle: true),
-        body: Column(
+        body: Stack(
           children: [
-            LinearProgressIndicator(),
-            Spacer(),
-            Text("No Time table?"),
-            Spacer(),
+            Center(
+              child: SizedBox(
+                height: 200,
+                child: Image.asset("assets/image/logo.png"),
+              ),
+            ),
+            // Blur layer
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                child: Container(color: Colors.black.withOpacity(0.7)),
+              ),
+            ),
+            Column(
+              children: [
+                LinearProgressIndicator(),
+                Spacer(),
+                Text("No Time table?"),
+                Spacer(),
+              ],
+            ),
           ],
         ),
       );
@@ -114,89 +135,106 @@ class _TimetablePageState extends State<TimetablePage> {
             },
           ),
         ),
-        body: RefreshIndicator(
-          onRefresh: loadTimetables,
-          child: timetables!.isEmpty
-              ? const Center(child: Text("No titmetable found"))
-              : ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.all(10),
-                  itemCount: reversedList.length,
-                  itemBuilder: (context, index) {
-                    final day = reversedList[index];
-                    final subjects = day['subjects'] ?? [];
+        body: Stack(
+          children: [
+            Center(
+              child: SizedBox(
+                height: 200,
+                child: Image.asset("assets/image/logo.png"),
+              ),
+            ),
+            // Blur layer
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                child: Container(color: Colors.black.withOpacity(0.7)),
+              ),
+            ),
+            RefreshIndicator(
+              onRefresh: loadTimetables,
+              child: timetables!.isEmpty
+                  ? const Center(child: Text("No titmetable found"))
+                  : ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(10),
+                      itemCount: reversedList.length,
+                      itemBuilder: (context, index) {
+                        final day = reversedList[index];
+                        final subjects = day['subjects'] ?? [];
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 8,
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(
-                            255,
-                            76,
-                            76,
-                            76,
-                          ).withOpacity(.5),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 8,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              spreadRadius: 1,
-                              blurRadius: 6,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              day['date'] ?? 'No Date',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                          child: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(
+                                255,
+                                76,
+                                76,
+                                76,
+                              ).withOpacity(.5),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                                width: 1,
                               ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  spreadRadius: 1,
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  day['date'] ?? 'No Date',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
 
-                            // loop over subjects
-                            for (var s in subjects) ...[
-                              Text(
-                                "📘 Subject: ${s['subject'] ?? 'N/A'}",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              Text(
-                                "🏫 Room: ${s['room'] ?? 'N/A'}",
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
-                                ),
-                              ),
-                              Text(
-                                "⏰ Time: ${s['time'] ?? 'N/A'}",
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
-                                ),
-                              ),
-                              const Divider(color: Colors.grey),
-                            ],
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                                // loop over subjects
+                                for (var s in subjects) ...[
+                                  Text(
+                                    "📘 Subject: ${s['subject'] ?? 'N/A'}",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  Text(
+                                    "🏫 Room: ${s['room'] ?? 'N/A'}",
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  Text(
+                                    "⏰ Time: ${s['time'] ?? 'N/A'}",
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  const Divider(color: Colors.grey),
+                                ],
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
         ),
       ),
     );

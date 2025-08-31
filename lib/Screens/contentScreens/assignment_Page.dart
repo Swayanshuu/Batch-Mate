@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:classroombuddy/Screens/contentScreens/add_Assignment.dart';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +22,10 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
   }
 
   Future<void> loadAssignments() async {
-    
     if (ApiHelper.batchID == null) {
       debugPrint("No batch ID found, cannot load assignments.");
       return;
     }
-    
 
     setState(() => isLoading = true);
 
@@ -94,17 +94,34 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
             ? LinearProgressIndicator() //  proper loader
             : assignments.isEmpty
             ? const Center(child: Text("No assignments found"))
-            : RefreshIndicator(
-                onRefresh: loadAssignments, //  pull to refresh
-                child: ListView.builder(
-                  physics:  BouncingScrollPhysics(),
-                  padding: const EdgeInsets.all(10),
-                  itemCount: assignments.length,
-                  itemBuilder: (context, index) {
-                    final assignment = assignments[index];
-                    return _buildAssignmentCard(assignment);
-                  },
-                ),
+            : Stack(
+                children: [
+                  Center(
+                    child: SizedBox(
+                      height: 200,
+                      child: Image.asset("assets/image/logo.png"),
+                    ),
+                  ),
+                  // Blur layer
+                  Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                      child: Container(color: Colors.black.withOpacity(0.7)),
+                    ),
+                  ),
+                  RefreshIndicator(
+                    onRefresh: loadAssignments, //  pull to refresh
+                    child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(10),
+                      itemCount: assignments.length,
+                      itemBuilder: (context, index) {
+                        final assignment = assignments[index];
+                        return _buildAssignmentCard(assignment);
+                      },
+                    ),
+                  ),
+                ],
               ),
       ),
     );
@@ -115,7 +132,7 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-       // onTap: () {},
+        // onTap: () {},
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(

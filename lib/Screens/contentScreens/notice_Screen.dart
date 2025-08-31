@@ -1,3 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:ui';
+
 import 'package:classroombuddy/Screens/contentScreens/add_Notice.dart';
 import 'package:classroombuddy/apidata.dart/api_Helper.dart';
 import 'package:flutter/material.dart';
@@ -93,17 +97,34 @@ class _NoticePageState extends State<NoticePage> {
             ? LinearProgressIndicator() //  proper loader
             : notices.isEmpty
             ? const Center(child: Text("No Notice found"))
-            : RefreshIndicator(
-                onRefresh: loadNotices, //  pull to refresh
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  padding: const EdgeInsets.all(10),
-                  itemCount: notices.length,
-                  itemBuilder: (context, index) {
-                    final notice = notices[index];
-                    return _buildNoticeCard(notice);
-                  },
-                ),
+            : Stack(
+                children: [
+                  Center(
+                    child: SizedBox(
+                      height: 200,
+                      child: Image.asset("assets/image/logo.png"),
+                    ),
+                  ),
+                  // Blur layer
+                  Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                      child: Container(color: Colors.black.withOpacity(0.7)),
+                    ),
+                  ),
+                  RefreshIndicator(
+                    onRefresh: loadNotices, //  pull to refresh
+                    child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(10),
+                      itemCount: notices.length,
+                      itemBuilder: (context, index) {
+                        final notice = notices[index];
+                        return _buildNoticeCard(notice);
+                      },
+                    ),
+                  ),
+                ],
               ),
       ),
     );
