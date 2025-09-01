@@ -2,7 +2,7 @@
 
 import 'dart:ui';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:classroombuddy/Screens/signup_Screen.dart';
+import 'package:classroombuddy/Screens/authScreens/signup_Screen.dart';
 import 'package:flutter/material.dart';
 
 class ThirdScreen extends StatefulWidget {

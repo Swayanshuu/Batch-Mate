@@ -1,4 +1,6 @@
 
+// ignore_for_file: camel_case_types, use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:classroombuddy/Screens/main_Screen.dart';
 import 'package:flutter/material.dart';

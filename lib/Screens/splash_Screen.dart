@@ -2,7 +2,7 @@
 
 import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/Screens/On-Boarding%20Screen/onBoardingScreen.dart';
-import 'package:classroombuddy/Screens/login_Screen.dart';
+import 'package:classroombuddy/Screens/authScreens/login_Screen.dart';
 import 'package:classroombuddy/Screens/main_Screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
