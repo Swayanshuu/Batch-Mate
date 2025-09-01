@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, deprecated_member_use, use_build_context_synchronously
 
 import 'dart:ui';
+import 'package:classroombuddy/Screens/authScreens/google_signInScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:classroombuddy/Screens/authScreens/signup_Screen.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
     // Navigate to Signup
     Navigator.pushAndRemoveUntil(
     context,
-      MaterialPageRoute(builder: (context) => const SignupScreen()),
+      MaterialPageRoute(builder: (context) => const GoogleSigninscreen()),
       (route) => false,
     );
   }

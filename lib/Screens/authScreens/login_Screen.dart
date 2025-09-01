@@ -3,7 +3,7 @@
 import 'dart:ui';
 
 import 'package:classroombuddy/components/textField.dart';
-import 'package:classroombuddy/Services/login_Controller.dart';
+import 'package:classroombuddy/Screens/authScreens/Services/login_Controller.dart';
 import 'package:classroombuddy/Screens/authScreens/signup_Screen.dart';
 import 'package:flutter/material.dart';
 

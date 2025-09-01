@@ -38,24 +38,49 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> fetchBatchAndData() async {
     try {
+      final authUser = FirebaseAuth.instance.currentUser;
+      if (authUser == null) {
+        print("No user logged in!");
+        setState(() => isLoadingRecent = false);
+        return;
+      }
+
       final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user!.uid)
+          .collection('google_users')
+          .doc(authUser.uid)
           .get();
 
-      final code = userDoc.data()?['batchCode'] as String?;
-      if (code == null) return;
+      if (!userDoc.exists) {
+        print("User doc not found in Firestore!");
+        setState(() => isLoadingRecent = false);
+        return;
+      }
+
+      final data = userDoc.data();
+
+      // Update Provider with new user data
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.userSetName = data?['Setname'] ?? "Unknown User";
+      userProvider.userName = data?['name'] ?? "?";
+      userProvider.userBatch = data?['batchID'] ?? "";
+      userProvider.userPhotoUrl = data?['photoUrl'] ?? "";
+      userProvider.userUID = authUser.uid;
+      userProvider.notifyListeners();
+
+      userProvider.getDetails();
+      final code = data?['batchID'] as String?;
+      if (code == null) {
+        setState(() => isLoadingRecent = false);
+        return;
+      }
 
       ApiHelper.batchID = code;
       batchCode = code;
 
-      // Fetch all data at once
       await fetchAllData();
     } catch (e) {
       print("Error fetching batch or assignments: $e");
-      setState(() {
-        isLoadingRecent = false;
-      });
+      setState(() => isLoadingRecent = false);
     }
   }
 
@@ -163,7 +188,7 @@ class _MainScreenState extends State<MainScreen> {
                     const SizedBox(height: 60),
 
                     // User info card
-                    UserInfoCard(name: userProvider.userName),
+                    UserInfoCard(name: userProvider.userSetName),
                     const SizedBox(height: 15),
 
                     // Main content

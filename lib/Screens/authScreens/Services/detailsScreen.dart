@@ -1,33 +1,21 @@
-// ignore_for_file: file_names, body_might_complete_normally_nullable, prefer_is_empty, deprecated_member_use, use_build_context_synchronously
-
 import 'dart:ui';
 
-import 'package:classroombuddy/components/textField.dart';
-import 'package:classroombuddy/Screens/authScreens/Services/signup_Cotroller.dart';
-import 'package:classroombuddy/Screens/authScreens/login_Screen.dart';
+import 'package:classroombuddy/Screens/main_Screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class DetailsPage extends StatelessWidget {
+  final User user;
+  DetailsPage({super.key, required this.user});
 
-  @override
-  State<SignupScreen> createState() => _SignupScreenState();
-}
-
-class _SignupScreenState extends State<SignupScreen> {
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController batchID = TextEditingController();
-
   var userForm = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Positioned.fill(
@@ -110,31 +98,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       SizedBox(height: 15),
-                                      Text(
-                                        "SignUp",
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-
-                                      SizedBox(height: 20),
-
-                                      textField(
-                                        lebelText: "Email",
-                                        obScureText: false,
-                                        Controller: email,
-                                        ValidatorMessage: "Email Required",
-                                      ),
-
-                                      SizedBox(height: 20),
-
-                                      textField(
-                                        lebelText: "Password",
-                                        obScureText: true,
-                                        Controller: password,
-                                        ValidatorMessage: "Password Required",
-                                      ),
 
                                       SizedBox(height: 20),
 
@@ -236,29 +199,38 @@ class _SignupScreenState extends State<SignupScreen> {
                                           if (userForm.currentState!
                                               .validate()) {
                                             // Log event to firebase analytics
-
                                             await FirebaseAnalytics.instance
                                                 .logEvent(
                                                   name: "signup_btn_clk",
-                                                  parameters: {
-                                                    "email": email.text,
-                                                    "batchId": batchID.text,
-                                                  },
                                                 );
 
-                                            // Proceed with signup
-                                            signupController.createAccount(
-                                              context: context,
-                                              email: email.text,
-                                              password: password.text,
-                                              name: name.text,
-                                              batchId: batchID.text,
+                                            // Save to Firestore
+                                            await FirebaseFirestore.instance
+                                                .collection("google_users")
+                                                .doc(user.uid)
+                                                .set({
+                                                  "uid": user.uid,
+                                                  "Setname": name.text,
+                                                  'name': user.displayName ?? '',
+                                                  "batchID": batchID.text,
+                                                  "provider": "google",
+                                                  "createdAt":
+                                                      FieldValue.serverTimestamp(),
+                                                }, SetOptions(merge: true));
+                                            // merge:true → updates existing doc without overwriting old fields
+
+                                            // Navigate to MainScreen
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) => MainScreen(),
+                                              ),
                                             );
                                           }
                                         },
 
                                         child: Text(
-                                          "Sign Up",
+                                          "LestGo",
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.black,
@@ -271,41 +243,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                 ),
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Already a user?",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return LoginScreen();
-                                        },
-                                      ),
-                                      (route) {
-                                        return false;
-                                      },
-                                    );
-                                  },
-                                  child: Text(
-                                    "LogIn!",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                           ],
                         ),

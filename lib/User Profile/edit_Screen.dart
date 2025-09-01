@@ -31,7 +31,7 @@ class _EditScreenState extends State<EditScreen> {
     updateName.text = Provider.of<UserProvider>(
       context,
       listen: false,
-    ).userName;
+    ).userSetName;
     updateBatch.text = Provider.of<UserProvider>(
       context,
       listen: false,
@@ -41,11 +41,12 @@ class _EditScreenState extends State<EditScreen> {
 
   void updateData() {
     Map<String, dynamic> datToUpdate = {
-      "name": updateName.text,
-      "batchCode": updateBatch.text,
+      "Setname": updateName.text,
+      "batchID": updateBatch.text,
     };
-    db.collection("users").doc(authUser!.uid).update(datToUpdate);
+    db.collection("google_users").doc(authUser!.uid).update(datToUpdate, );
     Provider.of<UserProvider>(context, listen: false).getDetails();
+    setState(() {});
     Navigator.pop(context);
   }
 

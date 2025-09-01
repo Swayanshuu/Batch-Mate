@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "754971893832",
+    "firebase_url": "https://classroombuddy-bc928-default-rtdb.firebaseio.com",
+    "project_id": "classroombuddy-bc928",
+    "storage_bucket": "classroombuddy-bc928.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754971893832:android:9ea04fb60d7ff039c5f87d",
+        "android_client_info": {
+          "package_name": "com.example.classroombuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754971893832-5b78ujp19sil2qqp5lohh1tj316s7336.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.classroombuddy",
+            "certificate_hash": "83bf330a86ad58b310a912a58208dc67ca961bb9"
+          }
+        },
+        {
+          "client_id": "754971893832-eojllqndu79r5paeppu48tm8m56uuf3g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3zkIB9ThDUviH7FFbE-skwZSaHHCAkyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754971893832-eojllqndu79r5paeppu48tm8m56uuf3g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "754971893832-29p1hpfmjpm230k0aonfqne9cshqlvlj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.classroombuddy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
