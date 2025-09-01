@@ -2,8 +2,8 @@
 
 import 'dart:ui';
 import 'package:classroombuddy/User%20Profile/about_Screen.dart';
-import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/User%20Profile/edit_Screen.dart';
+import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  Widget _optionRow({required IconData icon, required String text, VoidCallback? onTap}) {
+  Widget _optionRow({
+  required IconData icon,
+    required String text,
+    VoidCallback? onTap,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Material(
@@ -39,7 +43,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Icon(icon, color: Colors.white, size: 30),
                 const SizedBox(width: 12),
-                Text(text, style: const TextStyle(fontSize: 18, color: Colors.white)),
+                Text(
+                  text,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
               ],
             ),
           ),
@@ -50,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var userProvide = Provider.of<UserProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -58,127 +65,148 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: const Text("PROFILE", style: TextStyle(letterSpacing: 1.5)),
         centerTitle: true,
       ),
-      body: Stack(
-        children: [
-          // Logo background
-          Center(
-            child: SizedBox(
-              height: 200,
-              child: Image.asset("assets/image/logo.png"),
-            ),
-          ),
-          // Blur overlay
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-              child: Container(color: Colors.black.withOpacity(0.7)),
-            ),
-          ),
-          Center(
-            child: Column(
+      body: userProvider.isLoading
+          ? const Center(child: CircularProgressIndicator(color: Colors.white))
+          : Stack(
               children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        // Profile Card
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 17, 17, 17),
-                              border: Border.all(
-                                  color: Colors.white.withOpacity(0.3), width: 0.5),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 20),
-                                  CircleAvatar(
-                                    radius: 40,
-                                    backgroundColor: const Color.fromARGB(255, 85, 85, 85),
-                                    backgroundImage: userProvide.userPhotoUrl.isNotEmpty
-                                        ? NetworkImage(userProvide.userPhotoUrl)
-                                        : null,
-                                    child: userProvide.userPhotoUrl.isEmpty
-                                        ? const Icon(Icons.person, color: Colors.white, size: 40)
-                                        : null,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    userProvide.userSetName,
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    "Batch: ${userProvide.userBatch}",
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  (userProvide.userEmail == "?" || userProvide.userEmail == "")
-                                      ? const SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                      : Text(
-                                          userProvide.userEmail,
-                                          style: const TextStyle(color: Colors.white),
-                                        ),
-                                  const SizedBox(height: 20),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        // Edit Profile
-                        _optionRow(
-                          icon: Icons.person,
-                          text: "Edit Profile",
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => EditScreen()),
-                            );
-                          },
-                        ),
-
-                        // About
-                        _optionRow(
-                          icon: Icons.error_outline,
-                          text: "About",
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => AboutScreen()),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                // Logo background
+                Center(
+                  child: SizedBox(
+                    height: 200,
+                    child: Image.asset("assets/image/logo.png"),
                   ),
                 ),
-                // Copyright
-                const Text(
-                  "© 2025 Batch Mate. All rights reserved.",
-                  style: TextStyle(fontSize: 12, color: Colors.white70),
-                  textAlign: TextAlign.end,
+                // Blur overlay
+                Positioned.fill(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                    child: Container(color: Colors.black.withOpacity(0.7)),
+                  ),
                 ),
-                const SizedBox(height: 60),
+                Center(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              // Profile Card
+                              Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      17,
+                                      17,
+                                      17,
+                                    ),
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.3),
+                                      width: 0.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: 20),
+                                        CircleAvatar(
+                                          radius: 40,
+                                          backgroundColor: const Color.fromARGB(
+                                            255,
+                                            85,
+                                            85,
+                                            85,
+                                          ),
+                                          backgroundImage:
+                                              userProvider
+                                                  .userPhotoUrl
+                                                  .isNotEmpty
+                                              ? NetworkImage(
+                                                  userProvider.userPhotoUrl,
+                                                )
+                                              : null,
+                                          child:
+                                              userProvider.userPhotoUrl.isEmpty
+                                              ? const Icon(
+                                                  Icons.person,
+                                                  color: Colors.white,
+                                                  size: 40,
+                                                )
+                                              : null,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          userProvider.userSetName,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          "Batch: ${userProvider.userBatch}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          userProvider.userEmail,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              // Edit Profile
+                              _optionRow(
+                                icon: Icons.person,
+                                text: "Edit Profile",
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => EditScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              // About
+                              _optionRow(
+                                icon: Icons.error_outline,
+                                text: "About",
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => AboutScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Text(
+                        "© 2025 Batch Mate. All rights reserved.",
+                        style: TextStyle(fontSize: 12, color: Colors.white70),
+                        textAlign: TextAlign.end,
+                      ),
+                      const SizedBox(height: 60),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

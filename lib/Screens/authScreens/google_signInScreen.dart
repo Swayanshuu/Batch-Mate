@@ -34,22 +34,25 @@ class _GoogleSigninscreenState extends State<GoogleSigninscreen> {
 
         if (user != null) {
           //  Check if user exists in Firestore
+          print("User UID: ${user.uid}");
           final docSnapshot = await FirebaseFirestore.instance
               .collection("google_users")
               .doc(user.uid)
               .get();
+          print("Doc exists? ${docSnapshot.exists}");
 
-          if (docSnapshot.exists) {
+          final data = docSnapshot.data();
+          if (data == null || data["name"] == null || data["batchID"] == null) {
             // Existing user -> go to MainScreen
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => MainScreen()),
+              MaterialPageRoute(builder: (context) => DetailsPage(user: user)),
             );
           } else {
             // New user -> go to Details page
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => DetailsPage(user: user)),
+              MaterialPageRoute(builder: (context) => MainScreen()),
             );
           }
         }
@@ -147,7 +150,10 @@ class _GoogleSigninscreenState extends State<GoogleSigninscreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    icon: Image.asset("assets/image/google_logo.png", height: 24),
+                    icon: Image.asset(
+                      "assets/image/google_logo.png",
+                      height: 24,
+                    ),
                     label: const Text(
                       "Sign in with Google",
                       style: TextStyle(fontSize: 16),
