@@ -1,3 +1,5 @@
+// ignore_for_file: body_might_complete_normally_nullable, deprecated_member_use, must_be_immutable, prefer_is_empty, use_build_context_synchronously, file_names
+
 import 'dart:ui';
 
 import 'package:classroombuddy/Screens/main_Screen.dart';

@@ -146,6 +146,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                         ),
                                         const SizedBox(height: 8),
+                                         Text(
+                                          userProvider.userName,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
                                         Text(
                                           "Batch: ${userProvider.userBatch}",
                                           style: const TextStyle(

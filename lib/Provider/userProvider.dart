@@ -10,7 +10,7 @@ class UserProvider extends ChangeNotifier {
   String userPhotoUrl = "?";
   String userUID = "?";
 
-  bool isLoading = true; // 🔥 indicates loading state
+  bool isLoading = true; // indicates loading state
 
   /// Fetches user details from Firestore
   Future<void> getDetails() async {
@@ -34,7 +34,7 @@ class UserProvider extends ChangeNotifier {
         final data = docSnapshot.data()!;
         userName = data["name"] ?? "";
         userSetName = data["Setname"] ?? "";
-        userEmail = data["email"] ?? "";
+        userEmail = data["email"] ?? authUser.email;
         userBatch = data["batchID"] ?? "";
         userPhotoUrl = data["photoUrl"] ?? "";
         userUID = authUser.uid;
@@ -57,7 +57,7 @@ class UserProvider extends ChangeNotifier {
 
   /// Resets all user fields (useful on logout)
   void resetDetails() {
-    userName = "?";
+  userName = "?";
     userSetName = "?";
     userEmail = "?";
     userBatch = "?";

@@ -1,11 +1,10 @@
-// ignore_for_file: file_names, unnecessary_null_comparison, use_build_context_synchronously
+// ignore_for_file: file_names, unnecessary_null_comparison, use_build_context_synchronously, deprecated_member_use
 
 import 'dart:ui';
-import 'package:classroombuddy/Screens/authScreens/Services/detailsScreen.dart';
+import 'package:classroombuddy/Screens/Services/auth_Services/Controllers/detailsScreen.dart';
 import 'package:classroombuddy/Screens/main_Screen.dart';
-import 'package:classroombuddy/Screens/authScreens/Services/google_auth.dart';
+import 'package:classroombuddy/Screens/Services/auth_Services/Controllers/google_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class GoogleSigninscreen extends StatefulWidget {

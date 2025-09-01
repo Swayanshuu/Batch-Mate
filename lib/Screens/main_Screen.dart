@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, file_names
+// ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, file_names, invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member, use_build_context_synchronously
 
 import 'dart:ui';
 import 'package:classroombuddy/Provider/userProvider.dart';

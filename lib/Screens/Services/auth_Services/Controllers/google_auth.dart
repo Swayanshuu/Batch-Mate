@@ -73,7 +73,7 @@ class GoogleAuthService {
           await userDoc.set({
             'uid': user.uid,
             'name': user.displayName ?? '',
-            'email  ': user.email,
+            'email': user.email,
             'photoUrl': user.photoURL ?? '',
             'provider': 'google',
             'createdAt': FieldValue.serverTimestamp(),
