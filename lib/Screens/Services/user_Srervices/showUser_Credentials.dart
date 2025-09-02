@@ -1,7 +1,8 @@
+// ignore_for_file: deprecated_member_use, file_names
+
 import 'dart:ui';
 
 import 'package:classroombuddy/Provider/userProvider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,8 @@ class ShowUserCredentials extends StatefulWidget {
 class _ShowUserCredentialsState extends State<ShowUserCredentials> {
   @override
   Widget build(BuildContext context) {
+    var userCredential = Provider.of<UserProvider>(context);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -35,18 +38,120 @@ class _ShowUserCredentialsState extends State<ShowUserCredentials> {
 
           SafeArea(
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 20),
-                  Text(
-                    "Your Details:",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                  ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 20),
+                    Text(
+                      "Your Details",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 20),
 
-                  SizedBox(height: 30),
-                  _userDeatils(),
-                ],
+                    // User Card
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color.fromARGB(
+                              255,
+                              15,
+                              15,
+                              15,
+                            ).withOpacity(0.5),
+                            const Color.fromARGB(
+                              255,
+                              93,
+                              93,
+                              93,
+                            ).withOpacity(0.5),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(25),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.6),
+                          width: 0.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 10,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              85,
+                              85,
+                              85,
+                            ),
+                            backgroundImage:
+                                userCredential.userPhotoUrl.isNotEmpty
+                                ? NetworkImage(userCredential.userPhotoUrl)
+                                : null,
+                            child: userCredential.userPhotoUrl.isEmpty
+                                ? const Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                    size: 40,
+                                  )
+                                : null,
+                          ),
+                          _userInfoRow(
+                            Icons.person,
+                            "Name",
+                            userCredential.userName,
+                          ),
+                          _userInfoRow(
+                            Icons.email,
+                            "Email",
+                            userCredential.userEmail,
+                          ),
+                          _userInfoRow(
+                            Icons.school,
+                            "Batch",
+                            userCredential.userBatch,
+                          ),
+                          _userInfoRow(
+                            Icons.fingerprint,
+                            "UID",
+                            userCredential.userUID,
+                          ),
+                          _userInfoRow(
+                            Icons.edit,
+                            "Set Name",
+                            userCredential.userSetName,
+                          ),
+                          _userInfoRow(
+                            Icons.login,
+                            "Last Login",
+                            userCredential.userLastLogIn,
+                          ),
+                          _userInfoRow(
+                            Icons.date_range,
+                            "Created At",
+                            userCredential.createdAt,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
           ),
@@ -55,31 +160,30 @@ class _ShowUserCredentialsState extends State<ShowUserCredentials> {
     );
   }
 
-  Widget _userDeatils() {
-    var userCredential = Provider.of<UserProvider>(context);
+  Widget _userInfoRow(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(.4),
-          border: Border.all(color: Colors.red),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Text(userCredential.userName),
-              Text(userCredential.userEmail),
-              Text(userCredential.userBatch),
-              Text(userCredential.userUID),
-              Text(userCredential.userSetName),
-              Text(userCredential.userLastLogIn),
-              Text(userCredential.createdAt),
-            ],
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.white),
+          SizedBox(width: 10),
+          Text(
+            "$label: ",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.white,
+            ),
           ),
-        ),
+          SizedBox(width: 7),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 16, color: Colors.white70),
+              //overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

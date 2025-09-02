@@ -133,7 +133,7 @@ class _GoogleSigninscreenState extends State<GoogleSigninscreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 20),
 
                   // Google Sign-In Button
                   ElevatedButton(
@@ -157,7 +157,7 @@ class _GoogleSigninscreenState extends State<GoogleSigninscreen> {
                             width: 24,
                             child: CircularProgressIndicator(
                               strokeWidth: 2.5,
-                              color: Colors.black,
+                              color: const Color.fromARGB(255, 176, 176, 176),
                             ),
                           )
                         : Row(

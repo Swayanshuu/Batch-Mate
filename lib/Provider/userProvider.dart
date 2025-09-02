@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class UserProvider extends ChangeNotifier {
   String userName = "?";
@@ -13,6 +14,8 @@ class UserProvider extends ChangeNotifier {
   String createdAt = "?";
 
   bool isLoading = true; // indicates loading state
+
+  final DateFormat formatter = DateFormat('dd MMM yyyy, hh:mm a');
 
   /// Fetches user details from Firestore
   Future<void> getDetails() async {
@@ -41,10 +44,13 @@ class UserProvider extends ChangeNotifier {
         userBatch = data["batchID"] ?? "";
         userPhotoUrl = data["photoUrl"] ?? "";
         userUID = authUser.uid;
-        userLastLogIn =
-            (data["lastLogin"] as Timestamp?)?.toDate().toString().substring(0,16) ?? "?";
-        createdAt =
-            (data["createdAt"] as Timestamp?)?.toDate().toString().substring(0,16) ?? "?";
+        userLastLogIn = (data["lastLogin"] as Timestamp?) != null
+            ? formatter.format((data["lastLogin"] as Timestamp).toDate())
+            : "?";
+
+        createdAt = (data["createdAt"] as Timestamp?) != null
+            ? formatter.format((data["createdAt"] as Timestamp).toDate())
+            : "?";
       } else {
         // Optional: handle user doc not existing
         userName = "?";

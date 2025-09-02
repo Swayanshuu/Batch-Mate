@@ -77,9 +77,33 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               SizedBox(
                 height: 100,
-                child: Image.asset("assets/image/logo.png")),
-                SizedBox(height: 20,),
+                child: Image.asset("assets/image/logo.png"),
+              ),
+              SizedBox(height: 20),
               LinearProgressIndicator(),
+              SizedBox(height: 20),
+              Column(
+                children: [
+                  const Text(
+                    "BATCH MATE",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                      letterSpacing: 1.5,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Text(
+                    "Because every batch is a story.",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                      letterSpacing: 1.5,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
