@@ -1,10 +1,10 @@
-// ignore_for_file: file_names, body_might_complete_normally_nullable, prefer_is_empty, deprecated_member_use, use_build_context_synchronously
+// ignore_for_file: file_names, body_might_complete_normally_nullable, prefer_is_empty, deprecated_member_use, use_build_context_synchronously, unnecessary_import
 
 import 'dart:ui';
 
+import 'package:classroombuddy/Screens/Services/auth_Services/Controllers/signup_Cotroller.dart';
+import 'package:classroombuddy/Screens/Services/auth_Services/Screens/login_Screen.dart';
 import 'package:classroombuddy/components/textField.dart';
-import 'package:classroombuddy/Screens/authScreens/Services/signup_Cotroller.dart';
-import 'package:classroombuddy/Screens/authScreens/login_Screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

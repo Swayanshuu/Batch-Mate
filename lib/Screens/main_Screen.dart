@@ -2,10 +2,10 @@
 
 import 'dart:ui';
 import 'package:classroombuddy/Provider/userProvider.dart';
-import 'package:classroombuddy/apidata.dart/api_Helper.dart';
+import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
+import 'package:classroombuddy/Screens/Services/user_Srervices/userGreeting_Service.dart';
 import 'package:classroombuddy/customs/content.dart';
 import 'package:classroombuddy/customs/topbar.dart';
-import 'package:classroombuddy/customs/user_InfoCard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -188,7 +188,7 @@ class _MainScreenState extends State<MainScreen> {
                     const SizedBox(height: 60),
 
                     // User info card
-                    UserInfoCard(name: userProvider.userSetName),
+                    UserGreetingCard(name: userProvider.userSetName),
                     const SizedBox(height: 15),
 
                     // Main content

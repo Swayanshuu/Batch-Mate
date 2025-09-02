@@ -9,6 +9,8 @@ class UserProvider extends ChangeNotifier {
   String userBatch = "?";
   String userPhotoUrl = "?";
   String userUID = "?";
+  String userLastLogIn = "?";
+  String createdAt = "?";
 
   bool isLoading = true; // indicates loading state
 
@@ -32,12 +34,17 @@ class UserProvider extends ChangeNotifier {
 
       if (docSnapshot.exists && docSnapshot.data() != null) {
         final data = docSnapshot.data()!;
+
         userName = data["name"] ?? "";
         userSetName = data["Setname"] ?? "";
         userEmail = data["email"] ?? authUser.email;
         userBatch = data["batchID"] ?? "";
         userPhotoUrl = data["photoUrl"] ?? "";
         userUID = authUser.uid;
+        userLastLogIn =
+            (data["lastLogin"] as Timestamp?)?.toDate().toString().substring(0,16) ?? "?";
+        createdAt =
+            (data["createdAt"] as Timestamp?)?.toDate().toString().substring(0,16) ?? "?";
       } else {
         // Optional: handle user doc not existing
         userName = "?";
@@ -46,6 +53,7 @@ class UserProvider extends ChangeNotifier {
         userBatch = "?";
         userPhotoUrl = "?";
         userUID = authUser.uid;
+        userLastLogIn = "?";
       }
     } catch (e) {
       print("Error fetching user details: $e");
@@ -57,12 +65,13 @@ class UserProvider extends ChangeNotifier {
 
   /// Resets all user fields (useful on logout)
   void resetDetails() {
-  userName = "?";
+    userName = "?";
     userSetName = "?";
     userEmail = "?";
     userBatch = "?";
     userPhotoUrl = "?";
     userUID = "?";
+    userLastLogIn = "?";
     isLoading = true;
     notifyListeners();
   }

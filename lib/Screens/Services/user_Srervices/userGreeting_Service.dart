@@ -6,9 +6,9 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer_text/shimmer_text.dart';
 
-class UserInfoCard extends StatelessWidget {
+class UserGreetingCard extends StatelessWidget {
   final String name;
-  UserInfoCard({super.key, required this.name});
+  UserGreetingCard({super.key, required this.name});
 
   String getGreeting() {
     final hour = DateTime.now().hour;

@@ -2,9 +2,9 @@
 
 import 'dart:ui';
 
-import 'package:classroombuddy/Screens/contentScreens/assignment_Page.dart';
-import 'package:classroombuddy/Screens/contentScreens/notice_Screen.dart';
-import 'package:classroombuddy/Screens/contentScreens/timetable_Page.dart';
+import 'package:classroombuddy/Screens/contentScreens/Assignment/assignment_Page.dart';
+import 'package:classroombuddy/Screens/contentScreens/Notice/notice_Screen.dart';
+import 'package:classroombuddy/Screens/contentScreens/Timetable/timetable_Page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

@@ -1,8 +1,9 @@
-// ignore_for_file: file_names, deprecated_member_use
+// ignore_for_file: file_names, deprecated_member_use, unused_element
 
 import 'dart:ui';
-import 'package:classroombuddy/User%20Profile/about_Screen.dart';
-import 'package:classroombuddy/User%20Profile/edit_Screen.dart';
+import 'package:classroombuddy/Screens/Services/user_Srervices/showUser_Credentials.dart';
+import 'package:classroombuddy/Screens/User%20Profile/about_Screen.dart';
+import 'package:classroombuddy/Screens/Services/user_Srervices/editUser_Credentials.dart';
 import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _optionRow({
-  required IconData icon,
+    required IconData icon,
     required String text,
     VoidCallback? onTap,
   }) {
@@ -47,6 +48,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   text,
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _profileCard() {
+    var userProvider = Provider.of<UserProvider>(context);
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return ShowUserCredentials();
+              },
+            ),
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 17, 17, 17).withOpacity(.9),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.3),
+              width: 0.5,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                CircleAvatar(
+                  radius: 40,
+                  backgroundColor: const Color.fromARGB(255, 85, 85, 85),
+                  backgroundImage: userProvider.userPhotoUrl.isNotEmpty
+                      ? NetworkImage(userProvider.userPhotoUrl)
+                      : null,
+                  child: userProvider.userPhotoUrl.isEmpty
+                      ? const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 40,
+                        )
+                      : null,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  userProvider.userSetName,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Batch: ${userProvider.userBatch}",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  userProvider.userEmail,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -91,87 +161,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Column(
                             children: [
                               // Profile Card
-                              Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      17,
-                                      17,
-                                      17,
-                                    ),
-                                    border: Border.all(
-                                      color: Colors.white.withOpacity(0.3),
-                                      width: 0.5,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(height: 20),
-                                        CircleAvatar(
-                                          radius: 40,
-                                          backgroundColor: const Color.fromARGB(
-                                            255,
-                                            85,
-                                            85,
-                                            85,
-                                          ),
-                                          backgroundImage:
-                                              userProvider
-                                                  .userPhotoUrl
-                                                  .isNotEmpty
-                                              ? NetworkImage(
-                                                  userProvider.userPhotoUrl,
-                                                )
-                                              : null,
-                                          child:
-                                              userProvider.userPhotoUrl.isEmpty
-                                              ? const Icon(
-                                                  Icons.person,
-                                                  color: Colors.white,
-                                                  size: 40,
-                                                )
-                                              : null,
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          userProvider.userSetName,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                         Text(
-                                          userProvider.userName,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          "Batch: ${userProvider.userBatch}",
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          userProvider.userEmail,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              _profileCard(),
+
                               const SizedBox(height: 10),
                               // Edit Profile
                               _optionRow(

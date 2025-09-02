@@ -2,8 +2,8 @@
 
 import 'dart:ui';
 
-import 'package:classroombuddy/Screens/contentScreens/add_Timetable.dart';
-import 'package:classroombuddy/apidata.dart/api_Helper.dart';
+import 'package:classroombuddy/Screens/contentScreens/Timetable/add_Timetable.dart';
+import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
 import 'package:flutter/material.dart';
 
 class TimetablePage extends StatefulWidget {

@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
 import 'dart:ui';
-import 'package:classroombuddy/User%20Profile/profileScreen.dart';
+import 'package:classroombuddy/Screens/User%20Profile/profileScreen.dart';
 import 'package:classroombuddy/Screens/splash_Screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

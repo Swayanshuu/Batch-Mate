@@ -3,8 +3,8 @@
 import 'dart:ui';
 
 import 'package:classroombuddy/components/textField.dart';
-import 'package:classroombuddy/Screens/authScreens/Services/login_Controller.dart';
-import 'package:classroombuddy/Screens/authScreens/signup_Screen.dart';
+import 'package:classroombuddy/Screens/Services/auth_Services/Controllers/login_Controller.dart';
+import 'package:classroombuddy/Screens/Services/auth_Services/Screens/signup_Screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {

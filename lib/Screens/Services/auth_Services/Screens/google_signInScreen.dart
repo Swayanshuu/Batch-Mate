@@ -136,8 +136,10 @@ class _GoogleSigninscreenState extends State<GoogleSigninscreen> {
                   const SizedBox(height: 40),
 
                   // Google Sign-In Button
-                  ElevatedButton.icon(
-                    onPressed: _signInWithGoogle,
+                  ElevatedButton(
+                    onPressed: isLoading
+                        ? null
+                        : _signInWithGoogle, // Disable button while loading
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
@@ -149,14 +151,29 @@ class _GoogleSigninscreenState extends State<GoogleSigninscreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    icon: Image.asset(
-                      "assets/image/google_logo.png",
-                      height: 24,
-                    ),
-                    label: const Text(
-                      "Sign in with Google",
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    child: isLoading
+                        ? SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: Colors.black,
+                            ),
+                          )
+                        : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(
+                                "assets/image/google_logo.png",
+                                height: 24,
+                              ),
+                              const SizedBox(width: 10),
+                              const Text(
+                                "Sign in with Google",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
                   ),
                 ],
               ),
