@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, deprecated_member_use, use_build_context_synchronously
 
 import 'dart:ui';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:classroombuddy/Screens/Services/auth_Services/Screens/google_signInScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
 
     // Navigate to Signup
     Navigator.pushAndRemoveUntil(
-    context,
+      context,
       MaterialPageRoute(builder: (context) => const GoogleSigninscreen()),
       (route) => false,
     );
@@ -97,23 +98,28 @@ class _ThirdScreenState extends State<ThirdScreen> {
                 const SizedBox(height: 40),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
+                  child: AutoSizeText(
                     "Let's get started!",
+                    maxLines: 1,
+                    minFontSize: 16,
                     style: TextStyle(
                       color: Color.fromARGB(255, 233, 233, 233),
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                     // fontSize: 20,
                       letterSpacing: 1.5,
                     ),
                   ),
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
+                  child: AutoSizeText(
                     "Batchmates united — are you in?",
+                    maxLines: 2,
+                    minFontSize: 20,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                     // fontSize: 20,
                       letterSpacing: 1.5,
                     ),
                   ),

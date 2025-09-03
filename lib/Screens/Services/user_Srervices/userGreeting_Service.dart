@@ -138,13 +138,7 @@ class UserGreetingCard extends StatelessWidget {
             ),
             SizedBox(height: 10),
 
-            // DefaultTextStyle(
-            //   style: const TextStyle(fontSize: 14, color: Colors.white),
-            //   child: AnimatedTextKit(
-            //     animatedTexts: [TypewriterAnimatedText(currentMessage)],
-            //   ),
-            // ),
-            AutoSizeText(currentMessage, maxLines: 1),
+            Center(child: AutoSizeText(currentMessage, maxLines: 1,textAlign: TextAlign.center,)),
           ],
         ),
       ),
