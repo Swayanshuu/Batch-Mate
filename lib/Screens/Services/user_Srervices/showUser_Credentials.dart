@@ -112,6 +112,11 @@ class _ShowUserCredentialsState extends State<ShowUserCredentials> {
                                 : null,
                           ),
                           _userInfoRow(
+                            Icons.admin_panel_settings,
+                            "role",
+                            userCredential.userROle,
+                          ),
+                          _userInfoRow(
                             Icons.person,
                             "Name",
                             userCredential.userName,

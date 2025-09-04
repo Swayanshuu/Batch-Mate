@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 import 'package:classroombuddy/Screens/Services/user_Srervices/showUser_Credentials.dart';
+import 'package:classroombuddy/Screens/User%20Profile/aboutBatch_Screen.dart';
 import 'package:classroombuddy/Screens/User%20Profile/about_Screen.dart';
 import 'package:classroombuddy/Screens/Services/user_Srervices/editUser_Credentials.dart';
 import 'package:classroombuddy/Provider/userProvider.dart';
@@ -64,10 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 17, 17, 17).withOpacity(.9),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.3),
-            width: 0.5,
-          ),
+          border: Border.all(color: Colors.white.withOpacity(0.3), width: 0.5),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Padding(
@@ -82,11 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ? NetworkImage(userProvider.userPhotoUrl)
                     : null,
                 child: userProvider.userPhotoUrl.isEmpty
-                    ? const Icon(
-                        Icons.person,
-                        color: Colors.white,
-                        size: 40,
-                      )
+                    ? const Icon(Icons.person, color: Colors.white, size: 40)
                     : null,
               ),
               const SizedBox(height: 8),
@@ -173,6 +167,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (_) => ShowUserCredentials(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              // about batch
+                              _optionRow(
+                                icon: Icons.group,
+                                text: "About your Batch",
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => AboutBatch(),
                                     ),
                                   );
                                 },

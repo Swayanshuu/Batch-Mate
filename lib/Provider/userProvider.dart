@@ -12,7 +12,7 @@ class UserProvider extends ChangeNotifier {
   String userUID = "?";
   String userLastLogIn = "?";
   String createdAt = "?";
-
+  String userROle= "?";
   bool isLoading = true; // indicates loading state
 
   final DateFormat formatter = DateFormat('dd MMM yyyy, hh:mm a');
@@ -51,6 +51,7 @@ class UserProvider extends ChangeNotifier {
         createdAt = (data["createdAt"] as Timestamp?) != null
             ? formatter.format((data["createdAt"] as Timestamp).toDate())
             : "?";
+        userROle = data["role"];
       } else {
         // Optional: handle user doc not existing
         userName = "?";
@@ -60,6 +61,7 @@ class UserProvider extends ChangeNotifier {
         userPhotoUrl = "?";
         userUID = authUser.uid;
         userLastLogIn = "?";
+        userROle="?";
       }
     } catch (e) {
       print("Error fetching user details: $e");
@@ -78,6 +80,7 @@ class UserProvider extends ChangeNotifier {
     userPhotoUrl = "?";
     userUID = "?";
     userLastLogIn = "?";
+    userROle = "?";
     isLoading = true;
     notifyListeners();
   }

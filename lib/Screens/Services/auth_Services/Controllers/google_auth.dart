@@ -77,6 +77,7 @@ class GoogleAuthService {
             'photoUrl': user.photoURL ?? '',
             'provider': 'google',
             'createdAt': FieldValue.serverTimestamp(),
+            'role': 'User',
           });
         } else {
           // Existing user → make sure isNewUser = false
