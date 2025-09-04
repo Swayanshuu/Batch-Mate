@@ -65,6 +65,7 @@ class _MainScreenState extends State<MainScreen> {
       userProvider.userBatch = data?['batchID'] ?? "";
       userProvider.userPhotoUrl = data?['photoUrl'] ?? "";
       userProvider.userUID = authUser.uid;
+      userProvider.userROle = data?['role'] ?? "";
       userProvider.notifyListeners();
 
       userProvider.getDetails();

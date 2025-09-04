@@ -4,7 +4,7 @@ class ApiHelper {
   static const String baseUrl =
       "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches";
 
-      static String? batchID;
+  static String? batchID;
 
   static Future<Map<String, dynamic>?> fetchBatchChild(
     String batchID,
@@ -34,4 +34,12 @@ class ApiHelper {
   static Future<Map<String, dynamic>?> getNotices(String batchID) {
     return fetchBatchChild(batchID, "notifications");
   }
+
+  static Future<Map<String, dynamic>?> batchCreatedBy(String batchID) {
+    return fetchBatchChild(batchID, "craetedBy");
+  }
+   static Future<Map<String, dynamic>?> batchName(String batchID) {
+    return fetchBatchChild(batchID, "name");
+  }
+  
 }
