@@ -1,8 +1,11 @@
+import 'package:classroombuddy/Provider/userProvider.dart';
+import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
 import 'package:classroombuddy/components/textField.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddTimetable extends StatefulWidget {
   const AddTimetable({super.key});
@@ -15,6 +18,7 @@ class _AddTimetableState extends State<AddTimetable> {
   final formKey = GlobalKey<FormState>();
 
   TextEditingController date = TextEditingController();
+  TextEditingController postedBy = TextEditingController();
 
   // list of subject controllers
   List<Map<String, TextEditingController>> subjects = [
@@ -61,7 +65,11 @@ class _AddTimetableState extends State<AddTimetable> {
 
       Response response = await Dio().post(
         "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/$code/timetable.json",
-        data: {"date": date.text, "subjects": subjectData},
+        data: {
+          "date": date.text,
+          "subjects": subjectData,
+          "postedBy": postedBy.text,
+        },
       );
 
       if (response.statusCode == 200) {
@@ -75,6 +83,13 @@ class _AddTimetableState extends State<AddTimetable> {
         context,
       ).showSnackBar(SnackBar(content: Text("Error: $e")));
     }
+  }
+
+  @override
+  void initState() {
+    postedBy.text = Provider.of<UserProvider>(context, listen: false).userName;
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -97,6 +112,25 @@ class _AddTimetableState extends State<AddTimetable> {
                     ValidatorMessage: "Enter Date",
                     obScureText: false,
                     Controller: date,
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      // color: Colors.amber,
+                      border: Border.all(color: Colors.white.withOpacity(0.5)),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        children: [
+                          Text("Post By: ",style: TextStyle(fontSize: 16,color: Colors.grey[500])),
+                          SizedBox(width: 10),
+                          Text(postedBy.text, style: TextStyle(fontSize: 18)),
+                        ],
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 20),

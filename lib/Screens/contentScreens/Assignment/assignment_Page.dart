@@ -128,53 +128,55 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
   }
 
   Widget _buildAssignmentCard(Map<String, dynamic> assignment) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        // onTap: () {},
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 76, 76, 76).withOpacity(0.5),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300, width: 1),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                spreadRadius: 1,
-                blurRadius: 6,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                assignment['title'] ?? 'Untitled',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          // onTap: () {},
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 76, 76, 76).withOpacity(0.5),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300, width: 1),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  spreadRadius: 1,
+                  blurRadius: 6,
+                  offset: const Offset(0, 3),
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                "Subject: ${assignment['subject'] ?? 'N/A'}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color.fromARGB(255, 207, 207, 207),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  assignment['title'] ?? 'Untitled',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                "Due: ${assignment['dueDate'] ?? 'N/A'}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color.fromARGB(255, 175, 175, 175),
+                const SizedBox(height: 6),
+                Text(
+                  "Subject: ${assignment['subject'] ?? 'N/A'}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color.fromARGB(255, 207, 207, 207),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 6),
+                Text(
+                  "Due: ${assignment['dueDate'] ?? 'N/A'}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color.fromARGB(255, 175, 175, 175),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
