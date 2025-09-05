@@ -110,6 +110,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(context);
 
+    String batchID = userProvider.userBatch;
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -179,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => AboutBatch(),
+                                      builder: (_) => AboutBatch(batchID: batchID,),
                                     ),
                                   );
                                 },

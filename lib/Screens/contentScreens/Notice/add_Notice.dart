@@ -23,14 +23,14 @@ class _AddNoticeState extends State<AddNotice> {
 
     try {
       final userDoc = await FirebaseFirestore.instance
-          .collection('users')
+          .collection('google_users')
           .doc(user.uid)
           .get();
 
       if (!userDoc.exists) return;
 
       // to get user batchid from firestore
-      final code = userDoc.data()?['batchCode'];
+      final code = userDoc.data()?['batchID'];
 
       if (code == null) return;
 

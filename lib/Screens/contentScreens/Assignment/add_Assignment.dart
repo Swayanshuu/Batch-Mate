@@ -22,20 +22,31 @@ class _AddAssignmentState extends State<AddAssignment> {
   TextEditingController description = TextEditingController();
 
   void addAssignment() async {
+    print("addAssignment() started");
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+    if (user == null) {
+      print("user null");
+      return;
+    }
 
     try {
       final userDoc = await FirebaseFirestore.instance
-          .collection('users')
+          .collection('google_users')
           .doc(user.uid)
           .get();
 
-      if (!userDoc.exists) return;
+      if (!userDoc.exists) {
+        print("User doc not found!");
+        return;
+      }
 
       // to get user batchid from firestore
-      final code = userDoc.data()?['batchCode'] as String?;
-      if (code == null) return;
+      final code = userDoc.data()?['batchID'] as String?;
+      if (code == null) {
+        print("No batch code found!");
+        return;
+      }
+      print("Batch Code: $code");
 
       final userName = userDoc.data()?['name'] as String?;
       if (code == null) return;
@@ -52,10 +63,13 @@ class _AddAssignmentState extends State<AddAssignment> {
         },
       );
       if (response.statusCode == 200) {
+        print("Status 200Ok");
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text("Assignment added ✅")));
       }
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.data}");
 
       Navigator.pop(context, "refresh");
     } catch (e) {
@@ -112,7 +126,7 @@ class _AddAssignmentState extends State<AddAssignment> {
                             obScureText: false,
                             Controller: dueDate,
                           ),
-                          
+
                           SizedBox(height: 20),
 
                           // description box
@@ -145,6 +159,7 @@ class _AddAssignmentState extends State<AddAssignment> {
                             ),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
+                                print("Submit button clicked");
                                 addAssignment();
                                 // send back to AssignmentsPage
                               }

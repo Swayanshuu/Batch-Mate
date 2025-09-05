@@ -41,13 +41,13 @@ class _AddTimetableState extends State<AddTimetable> {
 
     try {
       final userDoc = await FirebaseFirestore.instance
-          .collection('users')
+          .collection('google_users')
           .doc(user.uid)
           .get();
 
       if (!userDoc.exists) return;
 
-      final code = userDoc.data()?['batchCode'] as String?;
+      final code = userDoc.data()?['batchID'] as String?;
       if (code == null) return;
 
       // convert subjects controllers to json

@@ -6,16 +6,14 @@ class ApiHelper {
 
   static String? batchID;
 
-  static Future<Map<String, dynamic>?> fetchBatchChild(
+  static Future<dynamic> fetchBatchChild(
     String batchID,
     String childName,
   ) async {
     try {
       final url = "$baseUrl/$batchID/$childName.json";
       final response = await Dio().get(url);
-      if (response.data != null && response.data is Map) {
-        return Map<String, dynamic>.from(response.data);
-      }
+      return response.data;
     } catch (e) {
       print("Error fetching $childName: $e");
     }
@@ -23,23 +21,30 @@ class ApiHelper {
   }
 
   // Shortcuts
-  static Future<Map<String, dynamic>?> getAssignments(String batchID) {
-    return fetchBatchChild(batchID, "assignments");
-  }
+static Future<String?> batchName(String batchID) async {
+  final data = await fetchBatchChild(batchID, "name");
+  return data is String ? data : null;
+}
 
-  static Future<Map<String, dynamic>?> getTimetables(String batchID) {
-    return fetchBatchChild(batchID, "timetable");
-  }
+static Future<String?> batchCreatedBy(String batchID) async {
+  final data = await fetchBatchChild(batchID, "createdBy");
+  return data is String ? data : null;
+}
 
-  static Future<Map<String, dynamic>?> getNotices(String batchID) {
-    return fetchBatchChild(batchID, "notifications");
-  }
+// Maps
+static Future<Map<String, dynamic>?> getAssignments(String batchID) async {
+  final data = await fetchBatchChild(batchID, "assignments");
+  return data is Map ? Map<String, dynamic>.from(data) : null;
+}
 
-  static Future<Map<String, dynamic>?> batchCreatedBy(String batchID) {
-    return fetchBatchChild(batchID, "craetedBy");
-  }
-   static Future<Map<String, dynamic>?> batchName(String batchID) {
-    return fetchBatchChild(batchID, "name");
-  }
-  
+static Future<Map<String, dynamic>?> getTimetables(String batchID) async {
+  final data = await fetchBatchChild(batchID, "timetable");
+  return data is Map ? Map<String, dynamic>.from(data) : null;
+}
+
+static Future<Map<String, dynamic>?> getNotices(String batchID) async {
+  final data = await fetchBatchChild(batchID, "notifications");
+  return data is Map ? Map<String, dynamic>.from(data) : null;
+}
+
 }
