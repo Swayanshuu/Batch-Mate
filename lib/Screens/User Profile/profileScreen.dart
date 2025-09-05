@@ -1,10 +1,10 @@
 // ignore_for_file: file_names, deprecated_member_use, unused_element
 
 import 'dart:ui';
-import 'package:classroombuddy/Screens/Services/user_Srervices/showUser_Credentials.dart';
+import 'package:classroombuddy/Screens/User%20Profile/user_Srervices/showUser_Credentials.dart';
 import 'package:classroombuddy/Screens/User%20Profile/aboutBatch_Screen.dart';
 import 'package:classroombuddy/Screens/User%20Profile/about_Screen.dart';
-import 'package:classroombuddy/Screens/Services/user_Srervices/editUser_Credentials.dart';
+import 'package:classroombuddy/Screens/User%20Profile/user_Srervices/editUser_Credentials.dart';
 import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

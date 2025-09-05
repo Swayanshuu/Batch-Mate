@@ -3,7 +3,7 @@
 import 'dart:ui';
 import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
-import 'package:classroombuddy/Screens/Services/user_Srervices/userGreeting_Service.dart';
+import 'package:classroombuddy/Screens/User%20Profile/user_Srervices/userGreeting_Service.dart';
 import 'package:classroombuddy/customs/content.dart';
 import 'package:classroombuddy/customs/topbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

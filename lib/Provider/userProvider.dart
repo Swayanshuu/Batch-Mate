@@ -46,7 +46,7 @@ class UserProvider extends ChangeNotifier {
         userUID = authUser.uid;
         userLastLogIn = (data["lastLogin"] as Timestamp?) != null
             ? formatter.format((data["lastLogin"] as Timestamp).toDate())
-            : "?";
+            : createdAt;
 
         createdAt = (data["createdAt"] as Timestamp?) != null
             ? formatter.format((data["createdAt"] as Timestamp).toDate())
