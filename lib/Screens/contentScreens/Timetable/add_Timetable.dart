@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
 import 'package:classroombuddy/components/textField.dart';

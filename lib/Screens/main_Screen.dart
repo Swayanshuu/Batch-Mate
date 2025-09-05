@@ -104,6 +104,7 @@ class _MainScreenState extends State<MainScreen> {
           "description": latest["description"] ?? "",
           "dueDate": latest["dueDate"] ?? "",
           "subject": latest["subject"] ?? "",
+          // "postedBy": latest["postedBy"] ?? "",
         });
       }
 
@@ -303,6 +304,10 @@ class _MainScreenState extends State<MainScreen> {
                             "Due: ${recentAssignment[0]["dueDate"]}",
                             style: const TextStyle(color: Colors.white70),
                           ),
+                          //  Text(
+                          //   "postedBy: ${recentAssignment[0]["postedBy"]}",
+                          //   style: const TextStyle(color: Colors.white70),
+                          // ),
                         ],
                       ),
                     ),
