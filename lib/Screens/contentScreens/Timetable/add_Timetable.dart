@@ -1,7 +1,6 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously, file_names
 
 import 'package:classroombuddy/Provider/userProvider.dart';
-import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
 import 'package:classroombuddy/components/textField.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -90,7 +89,6 @@ class _AddTimetableState extends State<AddTimetable> {
   @override
   void initState() {
     postedBy.text = Provider.of<UserProvider>(context, listen: false).userName;
-    // TODO: implement initState
     super.initState();
   }
 

@@ -89,13 +89,6 @@ class _TimetablePageState extends State<TimetablePage> {
       );
     }
 
-    // if (timetables!.isEmpty) {
-    //   return Scaffold(
-    //     appBar: AppBar(title: const Text("Time Tables"), centerTitle: true),
-    //     body: const Center(child: Text("No Time Tables found")),
-    //   );
-    // }
-
     final reversedList = timetables!.values.toList().reversed.toList();
 
     return WillPopScope(
@@ -150,91 +143,160 @@ class _TimetablePageState extends State<TimetablePage> {
                 child: Container(color: Colors.black.withOpacity(0.7)),
               ),
             ),
-            RefreshIndicator(
-              onRefresh: loadTimetables,
-              child: timetables!.isEmpty
-                  ? const Center(child: Text("No titmetable found"))
-                  : ListView.builder(
-                      physics: const BouncingScrollPhysics(),
+            timetables!.isEmpty
+                ? const Center(child: Text("No titmetable found"))
+                : RefreshIndicator(
+                    onRefresh: loadTimetables,
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.all(10),
                       itemCount: reversedList.length,
                       itemBuilder: (context, index) {
                         final day = reversedList[index];
                         final subjects = day['subjects'] ?? [];
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 8,
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(
-                                255,
-                                76,
-                                76,
-                                76,
-                              ).withOpacity(.5),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: Colors.grey.shade300,
-                                width: 1,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  spreadRadius: 1,
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  day['date'] ?? 'No Date',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-
-                                // loop over subjects
-                                for (var s in subjects) ...[
-                                  Text(
-                                    "📘 Subject: ${s['subject'] ?? 'N/A'}",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  Text(
-                                    "🏫 Room: ${s['room'] ?? 'N/A'}",
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  Text(
-                                    "⏰ Time: ${s['time'] ?? 'N/A'}",
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  const Divider(color: Colors.grey),
-                                ],
-                              ],
-                            ),
-                          ),
-                        );
+                        return _buildTimetableCard(day, subjects);
                       },
                     ),
-            ),
+                  ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimetableCard(Map<String, dynamic> day, List<dynamic> subjects) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      child: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                backgroundColor: const Color.fromARGB(255, 61, 61, 61),
+                title: Center(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Date: ", style: const TextStyle(fontSize: 16)),
+                          SizedBox(width: 4),
+                          Text(
+                            day['date'] ?? 'No Date',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        height: 1,
+                        width: double.infinity,
+                        color: Colors.white.withOpacity(.4),
+                      ),
+                    ],
+                  ),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var s in subjects) ...[
+                      Text(
+                        "📘 Subject: ${s['subject'] ?? 'N/A'}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        "🏫 Room: ${s['room'] ?? 'N/A'}",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13,
+                        ),
+                      ),
+                      Text(
+                        "⏰ Time: ${s['time'] ?? 'N/A'}",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+
+                actions: [
+                  Center(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 49, 49, 49),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Close",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 218, 218, 218),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 76, 76, 76).withOpacity(.5),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                spreadRadius: 1,
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                day['date'] ?? 'No Date',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // loop over subjects
+              for (var s in subjects) ...[
+                Text(
+                  "📘 Subject: ${s['subject'] ?? 'N/A'}",
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                ),
+                Text(
+                  "🏫 Room: ${s['room'] ?? 'N/A'}",
+                  style: const TextStyle(color: Colors.grey, fontSize: 13),
+                ),
+                Text(
+                  "⏰ Time: ${s['time'] ?? 'N/A'}",
+                  style: const TextStyle(color: Colors.grey, fontSize: 13),
+                ),
+                const Divider(color: Colors.grey),
+              ],
+            ],
+          ),
         ),
       ),
     );

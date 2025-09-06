@@ -112,9 +112,9 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
                     ),
                   ),
                   RefreshIndicator(
-                    onRefresh: loadAssignments, //  pull to refresh
+                    onRefresh: loadAssignments,
                     child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
+                      physics: AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.all(10),
                       itemCount: assignments.length,
                       itemBuilder: (context, index) {

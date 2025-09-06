@@ -1,6 +1,4 @@
 // ignore_for_file: file_names, deprecated_member_use
-import 'dart:ui';
-
 import 'package:classroombuddy/Screens/On-Boarding%20Screen/1stScreen.dart';
 import 'package:classroombuddy/Screens/On-Boarding%20Screen/2ndScreen.dart';
 import 'package:classroombuddy/Screens/On-Boarding%20Screen/3rdScreen.dart';
