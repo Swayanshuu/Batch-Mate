@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:ui';
 
 import 'package:classroombuddy/Screens/contentScreens/Assignment/add_Assignment.dart';
@@ -133,41 +135,7 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                backgroundColor: const Color.fromARGB(255, 61, 61, 61),
-                title: Center(
-                  child: Text(
-                    assignment['title'] ?? 'Untitled',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(assignment['description']),
-                    Text(assignment['dueDate']),
-                    Text(assignment['postedBy']),
-                    Text(assignment['subject'])
-                  ],
-                ),
-
-                actions: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text("Close"),
-                  ),
-                ],
-              );
-            },
-          );
+          _alertDetails(context, assignment);
         },
         child: Container(
           padding: const EdgeInsets.all(12),
@@ -214,6 +182,135 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _alertDetails(
+    BuildContext context,
+    Map<String, dynamic> assignment,
+  ) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 61, 61, 61),
+          title: Center(
+            child: Column(
+              children: [
+                Text(
+                  assignment['title'] ?? 'Untitled',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Subject:", style: TextStyle(fontSize: 14)),
+                    const SizedBox(width: 6),
+                    Text(
+                      assignment['subject'] ?? '',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  height: 1,
+                  width: double.infinity,
+                  color: Colors.white.withOpacity(.4),
+                ),
+              ],
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Due Date
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Due Date:",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    assignment['dueDate'] ?? '',
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              // Description
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Description:",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height * 0.3,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Text(
+                        assignment['description'] ?? '',
+                        textAlign: TextAlign.start,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              // Posted By
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Posted By:",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    assignment['postedBy'] ?? '',
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+            ],
+          ),
+
+          actions: [
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 49, 49, 49),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  "Close",
+                  style: TextStyle(color: Color.fromARGB(255, 218, 218, 218)),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
