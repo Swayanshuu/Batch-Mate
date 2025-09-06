@@ -135,7 +135,7 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          _alertDetails(context, assignment);
+          _assignmentDetailsCard(context, assignment);
         },
         child: Container(
           padding: const EdgeInsets.all(12),
@@ -185,7 +185,7 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
     );
   }
 
-  Future<void> _alertDetails(
+  Future<void> _assignmentDetailsCard(
     BuildContext context,
     Map<String, dynamic> assignment,
   ) {

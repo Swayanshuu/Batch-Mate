@@ -152,10 +152,10 @@ class _TimetablePageState extends State<TimetablePage> {
                       padding: const EdgeInsets.all(10),
                       itemCount: reversedList.length,
                       itemBuilder: (context, index) {
-                        final day = reversedList[index];
-                        final subjects = day['subjects'] ?? [];
+                        final content = reversedList[index];
+                        final subjects = content['subjects'] ?? [];
 
-                        return _buildTimetableCard(day, subjects);
+                        return _buildTimetableCard(content, subjects);
                       },
                     ),
                   ),
@@ -165,7 +165,10 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 
-  Widget _buildTimetableCard(Map<String, dynamic> day, List<dynamic> subjects) {
+  Widget _buildTimetableCard(
+    Map<String, dynamic> content,
+    List<dynamic> subjects,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
       child: InkWell(
@@ -173,82 +176,7 @@ class _TimetablePageState extends State<TimetablePage> {
           showDialog(
             context: context,
             builder: (context) {
-              return AlertDialog(
-                backgroundColor: const Color.fromARGB(255, 61, 61, 61),
-                title: Center(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Date: ", style: const TextStyle(fontSize: 16)),
-                          SizedBox(width: 4),
-                          Text(
-                            day['date'] ?? 'No Date',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Container(
-                        height: 1,
-                        width: double.infinity,
-                        color: Colors.white.withOpacity(.4),
-                      ),
-                    ],
-                  ),
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (var s in subjects) ...[
-                      Text(
-                        "📘 Subject: ${s['subject'] ?? 'N/A'}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                      Text(
-                        "🏫 Room: ${s['room'] ?? 'N/A'}",
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        "⏰ Time: ${s['time'] ?? 'N/A'}",
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-
-                actions: [
-                  Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 49, 49, 49),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        "Close",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 218, 218, 218),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
+              return _timetableDetailsCard(context, content, subjects);
             },
           );
         },
@@ -271,7 +199,7 @@ class _TimetablePageState extends State<TimetablePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                day['date'] ?? 'No Date',
+                content['date'] ?? 'No Date',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -299,6 +227,137 @@ class _TimetablePageState extends State<TimetablePage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _timetableDetailsCard(
+    BuildContext context,
+    Map<String, dynamic> content,
+    List<dynamic> subjects,
+  ) {
+    return AlertDialog(
+      backgroundColor: const Color.fromARGB(255, 61, 61, 61),
+      title: Center(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Date: ", style: const TextStyle(fontSize: 16)),
+                SizedBox(width: 4),
+                Text(
+                  content['date'] ?? 'No Date',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Container(
+              height: 1,
+              width: double.infinity,
+              color: Colors.white.withOpacity(.4),
+            ),
+          ],
+        ),
+      ),
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.5,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Timetable :"),
+              SizedBox(height: 8),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.4,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var s in subjects) ...[
+                        Text(
+                          "📘 Subject: ${s['subject'] ?? 'N/A'}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          "🏫 Room: ${s['room'] ?? 'N/A'}",
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          "⏰ Time: ${s['time'] ?? 'N/A'}",
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 195, 194, 194),
+                            fontSize: 16,
+                          ),
+                        ),
+                        Container(
+                          height: 1,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          color: Colors.white.withOpacity(.4),
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Text("Posted By: "),
+                  SizedBox(width: 4),
+                  Text(
+                    content['postedBy'],
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 4),
+
+              Text(
+                "Scrool to view all subjects (If any!)",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: MediaQuery.of(context).size.width * 0.035,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      actions: [
+        Center(
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 49, 49, 49),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              "Close",
+              style: TextStyle(color: Color.fromARGB(255, 218, 218, 218)),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
