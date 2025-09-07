@@ -115,7 +115,7 @@ class _NoticePageState extends State<NoticePage> {
                   RefreshIndicator(
                     onRefresh: loadNotices, //  pull to refresh
                     child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
+                      physics: AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.all(10),
                       itemCount: notices.length,
                       itemBuilder: (context, index) {
@@ -135,7 +135,9 @@ class _NoticePageState extends State<NoticePage> {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        // onTap: () {},
+        onTap: () {
+          _noticeDetailsCard(context, notice);
+        },
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -186,6 +188,84 @@ class _NoticePageState extends State<NoticePage> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _noticeDetailsCard(
+    BuildContext context,
+    Map<String, dynamic> notice,
+  ) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 61, 61, 61),
+          title: Center(
+            child: Column(
+              children: [
+                Text(
+                  notice['title'],
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  height: 1,
+                  width: double.infinity,
+                  color: Colors.white.withOpacity(.4),
+                ),
+              ],
+            ),
+          ),
+
+          content: Column(
+            children: [
+              const SizedBox(height: 10),
+              Column(
+                children: [
+                  Text(
+                    'Message: ',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(notice['message'], style: const TextStyle(fontSize: 14)),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Column(
+                children: [
+                  Text(
+                    "Created At: ",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    notice['createdAt'],
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Column(
+                children: [
+                  Text(
+                    "Posted By :",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    notice['postedBy'],
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
     );
   }
 }
