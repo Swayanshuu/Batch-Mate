@@ -167,6 +167,10 @@ class _NoticePageState extends State<NoticePage> {
               Text(
                 "Message: ${notice['message'] ?? 'N/A'}",
                 style: const TextStyle(fontSize: 14, color: Colors.white),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis, // add .. if text is so long.
+                softWrap:
+                    false, // prevent text from wrapping to the next line, keeps it single-line with ...
               ),
               const SizedBox(height: 6),
               Text(
@@ -200,70 +204,118 @@ class _NoticePageState extends State<NoticePage> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: const Color.fromARGB(255, 61, 61, 61),
-          title: Center(
-            child: Column(
-              children: [
-                Text(
-                  notice['title'],
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+          title: Column(
+            children: [
+              Text(
+                notice['title'],
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 4),
-                Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: Colors.white.withOpacity(.4),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 8),
+
+              Container(
+                height: 1,
+                width: double.infinity,
+                color: Colors.white.withOpacity(.4),
+              ),
+            ],
           ),
 
           content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Created At: ",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        notice['createdAt'] != null
+                            ? DateFormat(
+                                'dd MMM yyyy, hh:mm a',
+                              ).format(DateTime.parse(notice['createdAt']))
+                            : 'N/A',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Posted By :",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        notice['postedBy'],
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Message: ',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 6),
-                  Text(notice['message'], style: const TextStyle(fontSize: 14)),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Column(
-                children: [
-                  Text(
-                    "Created At: ",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    notice['createdAt'],
-                    style: const TextStyle(fontSize: 14),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height * 0.3,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Text(
+                        notice['message'],
+                        style: const TextStyle(fontSize: 16,color: Color.fromARGB(255, 206, 206, 206)),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              Column(
-                children: [
-                  Text(
-                    "Posted By :",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    notice['postedBy'],
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
+
               const SizedBox(height: 10),
             ],
           ),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 49, 49, 49),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  "Close",
+                  style: TextStyle(color: Color.fromARGB(255, 218, 218, 218)),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );
