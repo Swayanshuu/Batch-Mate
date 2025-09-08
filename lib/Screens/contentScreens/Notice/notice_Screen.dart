@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:classroombuddy/Screens/contentScreens/Notice/add_Notice.dart';
 import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -139,6 +140,12 @@ class _NoticePageState extends State<NoticePage> {
           _noticeDetailsCard(context, notice);
         },
         onLongPress: () {
+          Future<void> _upadteData() async {
+            try {
+              final response = await Dio().patch("");
+            } catch (e) {}
+          }
+
           showModalBottomSheet(
             context: context,
             builder: (context) {
