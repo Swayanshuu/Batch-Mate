@@ -138,6 +138,34 @@ class _NoticePageState extends State<NoticePage> {
         onTap: () {
           _noticeDetailsCard(context, notice);
         },
+        onLongPress: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Wrap(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.edit),
+                    title: const Text("Edit"),
+                    onTap: () {
+                      Navigator.pop(context);
+                      // handle edit
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.delete),
+                    title: const Text("Delete"),
+                    onTap: () {
+                      Navigator.pop(context);
+                      // handle delete
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
+
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -290,7 +318,10 @@ class _NoticePageState extends State<NoticePage> {
                     child: SingleChildScrollView(
                       child: Text(
                         notice['message'],
-                        style: const TextStyle(fontSize: 16,color: Color.fromARGB(255, 206, 206, 206)),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Color.fromARGB(255, 206, 206, 206),
+                        ),
                       ),
                     ),
                   ),
