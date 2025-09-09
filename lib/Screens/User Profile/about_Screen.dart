@@ -2,8 +2,10 @@
 
 import 'dart:ui';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:classroombuddy/Animation/slideAnimation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatefulWidget {
@@ -97,72 +99,75 @@ class _AboutScreenState extends State<AboutScreen> {
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    logo(),
-                    SizedBox(height: 20),
-                    developerInfoCard(),
-                    const SizedBox(height: 20),
-                    _socialLinks(),
-                    const SizedBox(height: 20),
+                child: SlideFadeIn(
+                  beginOffset: Offset(0, 0.2),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      logo(),
+                      SizedBox(height: 20),
+                      developerInfoCard(),
+                      const SizedBox(height: 20),
+                      _socialLinks(),
+                      const SizedBox(height: 20),
 
-                    // About Developer
-                    CustomExpansionTile(
-                      title: "About Developer",
-                      content: Text(
-                        "17th CSE ( 2024 - 28 )\n\n"
-                        "Hey 👋 I’m Swayanshu Sarthak Sadangi.\n"
-                        "I’m just someone who loves playing around with tech and creating things that feel fun and useful.\n\n"
-                        "Most of the time you’ll find me experimenting with new ideas, breaking stuff (unintentionally 😂), and then fixing it again.\n\n"
-                        "This app is just a small part of my journey — something I made with curiosity, late-night coding, and a lot of excitement.\n"
-                        "I don’t see it as “perfect,” but more like a step forward, and I’ll keep learning and improving as I go. 🚀",
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
-                          height: 1.5,
+                      // About Developer
+                      CustomExpansionTile(
+                        title: "About Developer",
+                        content: Text(
+                          "17th CSE ( 2024 - 28 )\n\n"
+                          "Hey 👋 I’m Swayanshu Sarthak Sadangi.\n"
+                          "I’m just someone who loves playing around with tech and creating things that feel fun and useful.\n\n"
+                          "Most of the time you’ll find me experimenting with new ideas, breaking stuff (unintentionally 😂), and then fixing it again.\n\n"
+                          "This app is just a small part of my journey — something I made with curiosity, late-night coding, and a lot of excitement.\n"
+                          "I don’t see it as “perfect,” but more like a step forward, and I’ll keep learning and improving as I go. 🚀",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 16,
+                            height: 1.5,
+                          ),
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-                    // About App
-                    CustomExpansionTile(
-                      title: "About App",
-                      content: Text(
-                        "Hey 👋 welcome to Batch Mate!\n\n"
-                        "This app is designed to make your student life easier by keeping all your assignments, timetables, and notices in one place.\n\n"
-                        "With Batch Mate, you can:\n"
-                        "• Stay on top of your classes and deadlines effortlessly.\n"
-                        "• Get instant notifications when new notices or assignments are posted.\n"
-                        "• Organize your day and plan ahead with the built-in timetable view.\n"
-                        "• Quickly find and reference past assignments or class notes.\n\n"
-                        "We believe learning should be fun, not stressful, so we’ve built this app to simplify your daily academic routine.\n\n"
-                        "Our goal is to continuously improve with your feedback, adding features that help you manage your studies smarter and faster. 🚀\n\n"
-                        "Thanks for being part of this journey — 'Batch Mate' is here to make your college experience smoother, one notification at a time!\n\n"
-                        "🐞 Found a bug or have a suggestion? Feel free to contact us anytime — your feedback helps make Batch Mate even better! 💡",
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
-                          height: 1.5,
+                      // About App
+                      CustomExpansionTile(
+                        title: "About App",
+                        content: Text(
+                          "Hey 👋 welcome to Batch Mate!\n\n"
+                          "This app is designed to make your student life easier by keeping all your assignments, timetables, and notices in one place.\n\n"
+                          "With Batch Mate, you can:\n"
+                          "• Stay on top of your classes and deadlines effortlessly.\n"
+                          "• Get instant notifications when new notices or assignments are posted.\n"
+                          "• Organize your day and plan ahead with the built-in timetable view.\n"
+                          "• Quickly find and reference past assignments or class notes.\n\n"
+                          "We believe learning should be fun, not stressful, so we’ve built this app to simplify your daily academic routine.\n\n"
+                          "Our goal is to continuously improve with your feedback, adding features that help you manage your studies smarter and faster. 🚀\n\n"
+                          "Thanks for being part of this journey — 'Batch Mate' is here to make your college experience smoother, one notification at a time!\n\n"
+                          "🐞 Found a bug or have a suggestion? Feel free to contact us anytime — your feedback helps make Batch Mate even better! 💡",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 16,
+                            height: 1.5,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      height: 1,
-                      width: double.infinity,
-                      color: const Color.fromARGB(255, 78, 78, 78),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      "© 2025 Batch Mate. All rights reserved.",
-                      style: TextStyle(fontSize: 14, color: Colors.white70),
-                      textAlign: TextAlign.end,
-                    ),
-                    const SizedBox(height: 20),
-                  ],
+                      const SizedBox(height: 20),
+                      Container(
+                        height: 1,
+                        width: double.infinity,
+                        color: const Color.fromARGB(255, 78, 78, 78),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "© 2025 Batch Mate. All rights reserved.",
+                        style: TextStyle(fontSize: 14, color: Colors.white70),
+                        textAlign: TextAlign.end,
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
               ),
             ),

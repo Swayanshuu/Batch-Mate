@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:classroombuddy/Animation/slideAnimation.dart';
 import 'package:classroombuddy/Screens/contentScreens/Assignment/add_Assignment.dart';
 import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +120,10 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
                       itemCount: assignments.length,
                       itemBuilder: (context, index) {
                         final assignment = assignments[index];
-                        return _buildAssignmentCard(assignment);
+                        return SlideFadeIn(
+                          duration: Duration(milliseconds: 600),
+                          child: _buildAssignmentCard(assignment),
+                        );
                       },
                     ),
                   ),

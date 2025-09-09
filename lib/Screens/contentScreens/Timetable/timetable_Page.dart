@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:classroombuddy/Animation/slideAnimation.dart';
 import 'package:classroombuddy/Screens/contentScreens/Timetable/add_Timetable.dart';
 import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
 import 'package:flutter/material.dart';
@@ -155,7 +156,10 @@ class _TimetablePageState extends State<TimetablePage> {
                         final content = reversedList[index];
                         final subjects = content['subjects'] ?? [];
 
-                        return _buildTimetableCard(content, subjects);
+                        return SlideFadeIn(
+                          duration: Duration(milliseconds: 600),
+                          child: _buildTimetableCard(content, subjects),
+                        );
                       },
                     ),
                   ),

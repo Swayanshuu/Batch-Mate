@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:classroombuddy/Animation/slideAnimation.dart';
 import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/Screens/contentScreens/Notice/add_Notice.dart';
 import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
@@ -123,7 +124,10 @@ class _NoticePageState extends State<NoticePage> {
                       itemCount: notices.length,
                       itemBuilder: (context, index) {
                         final notice = notices[index];
-                        return _buildNoticeCard(notice);
+                        return SlideFadeIn(
+                          duration: Duration(milliseconds: 600),
+                          child: _buildNoticeCard(notice),
+                        );
                       },
                     ),
                   ),
@@ -175,7 +179,10 @@ class _NoticePageState extends State<NoticePage> {
             ],
           ).then((value) {
             if (value == 'edit') {
-              final batchId = Provider.of<UserProvider>(context,listen: false).userBatch;
+              final batchId = Provider.of<UserProvider>(
+                context,
+                listen: false,
+              ).userBatch;
               // 👇 directly put the bottom sheet here
               final titleController = TextEditingController(
                 text: notice['title'],
