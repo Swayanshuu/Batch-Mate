@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, unnecessary_brace_in_string_interps, use_build_context_synchronously
 
 import 'dart:ui';
 
@@ -145,127 +145,8 @@ class _NoticePageState extends State<NoticePage> {
         onTap: () {
           _noticeDetailsCard(context, notice);
         },
-        onLongPress: () async {
-          final RenderBox overlay =
-              Overlay.of(context).context.findRenderObject() as RenderBox;
-
-          await showMenu(
-            context: context,
-            position: RelativeRect.fromRect(
-              Offset(200, 200) & const Size(50, 50), // position of the popup
-              Offset.zero & overlay.size,
-            ),
-            items: [
-              PopupMenuItem(
-                value: 'edit',
-                child: Row(
-                  children: const [
-                    Icon(Icons.edit, size: 20),
-                    SizedBox(width: 8),
-                    Text("Edit"),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 'delete',
-                child: Row(
-                  children: const [
-                    Icon(Icons.delete, size: 20),
-                    SizedBox(width: 8),
-                    Text("Delete"),
-                  ],
-                ),
-              ),
-            ],
-          ).then((value) {
-            if (value == 'edit') {
-              final batchId = Provider.of<UserProvider>(
-                context,
-                listen: false,
-              ).userBatch;
-              // 👇 directly put the bottom sheet here
-              final titleController = TextEditingController(
-                text: notice['title'],
-              );
-              final messageController = TextEditingController(
-                text: notice['message'],
-              );
-
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                builder: (context) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom,
-                      left: 16,
-                      right: 16,
-                      top: 20,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextField(
-                          controller: titleController,
-                          decoration: const InputDecoration(
-                            labelText: "Title",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        TextField(
-                          controller: messageController,
-                          maxLines: 3,
-                          decoration: const InputDecoration(
-                            labelText: "Message",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context); // close sheet
-                              },
-                              child: const Text("Cancel"),
-                            ),
-                            const SizedBox(width: 8),
-                            ElevatedButton(
-                              onPressed: () async {
-                                try {
-                                  await Dio().patch(
-                                    "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${batchId}/notifications/${notice['id']}.json",
-                                    data: {
-                                      "title": titleController.text,
-                                      "message": messageController.text,
-                                    },
-                                  );
-                                  Navigator.pop(context); // close sheet
-                                  loadNotices(); // refresh list
-                                } catch (e) {
-                                  debugPrint("Update error: $e");
-                                }
-                              },
-                              child: const Text("Done"),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                  );
-                },
-              );
-            } else if (value == 'delete') {
-              //_deleteNotice(notice['id']);
-            }
-          });
+        onLongPress: () {
+          _onPressFun(notice);
         },
 
         child: Container(
@@ -323,6 +204,200 @@ class _NoticePageState extends State<NoticePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _onPressFun(Map<String, dynamic> notice) async {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    return await showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        Offset(200, 200) & const Size(50, 50), // position of the popup
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        PopupMenuItem(
+          value: 'edit',
+          child: Row(
+            children: const [
+              Icon(Icons.edit, size: 20),
+              SizedBox(width: 8),
+              Text("Edit"),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 'delete',
+          child: Row(
+            children: const [
+              Icon(Icons.delete, size: 20),
+              SizedBox(width: 8),
+              Text("Delete"),
+            ],
+          ),
+        ),
+      ],
+    ).then((value) {
+      if (value == 'edit') {
+        final batchId = Provider.of<UserProvider>(
+          context,
+          listen: false,
+        ).userBatch;
+        // directly put the bottom sheet here
+        final titleController = TextEditingController(text: notice['title']);
+        final messageController = TextEditingController(
+          text: notice['message'],
+        );
+
+        showModalBottomSheet(
+          backgroundColor: const Color.fromARGB(255, 33, 33, 33),
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          builder: (context) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 16,
+                right: 16,
+                top: 20,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 1),
+                  Center(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.005,
+                      width: MediaQuery.of(context).size.width * 0.1,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      labelText: "Title",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: messageController,
+                    maxLines: 3,
+                    decoration: const InputDecoration(
+                      labelText: "Message",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context); // close sheet
+                        },
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(
+                            color: Color.fromARGB(150, 244, 244, 244),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () async {
+                          try {
+                            await Dio().patch(
+                              "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${batchId}/notifications/${notice['id']}.json",
+                              data: {
+                                "title": titleController.text,
+                                "message": messageController.text,
+                              },
+                            );
+                            Navigator.pop(context); // close sheet
+                            loadNotices(); // refresh list
+                          } catch (e) {
+                            debugPrint("Update error: $e");
+                          }
+                        },
+                        child: const Text(
+                          "Done",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
+            );
+          },
+        );
+      } else if (value == 'delete') {
+        final batchId = Provider.of<UserProvider>(
+          context,
+          listen: false,
+        ).userBatch;
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 20),
+                  Center(child: Text("Are you sure want to delete?")),
+                ],
+              ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        try {
+                          Dio().delete(
+                            "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${batchId}/notifications/${notice['id']}.json",
+                          );
+                          Navigator.pop(context); // close sheet
+                          Future.delayed(Duration(milliseconds: 500));
+                          loadNotices(); // refresh list
+                        } catch (e) {
+                          debugPrint("Delete error: $e");
+                        }
+                      },
+                      child: Text(
+                        "Delete",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
   }
 
   Future<void> _noticeDetailsCard(
@@ -384,7 +459,7 @@ class _NoticePageState extends State<NoticePage> {
                     ],
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(width: 20),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

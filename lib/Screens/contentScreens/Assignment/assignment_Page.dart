@@ -3,9 +3,12 @@
 import 'dart:ui';
 
 import 'package:classroombuddy/Animation/slideAnimation.dart';
+import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/Screens/contentScreens/Assignment/add_Assignment.dart';
 import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AssignmentsPage extends StatefulWidget {
   const AssignmentsPage({super.key});
@@ -141,6 +144,9 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
         onTap: () {
           _assignmentDetailsCard(context, assignment);
         },
+        onLongPress: () {
+          _onPressFun(assignment);
+        },
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -187,6 +193,226 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _onPressFun(Map<String, dynamic> assignment) async {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    return await showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        Offset(200, 200) & const Size(50, 50), // position of the popup
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        PopupMenuItem(
+          value: 'edit',
+          child: Row(
+            children: const [
+              Icon(Icons.edit, size: 20),
+              SizedBox(width: 8),
+              Text("Edit"),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 'delete',
+          child: Row(
+            children: const [
+              Icon(Icons.delete, size: 20),
+              SizedBox(width: 8),
+              Text("Delete"),
+            ],
+          ),
+        ),
+      ],
+    ).then((value) {
+      if (value == 'edit') {
+        final batchId = Provider.of<UserProvider>(
+          context,
+          listen: false,
+        ).userBatch;
+        // directly put the bottom sheet here
+        final titleController = TextEditingController(
+          text: assignment['title'],
+        );
+        final descriptionController = TextEditingController(
+          text: assignment['description'],
+        );
+        final subjectCotroller = TextEditingController(
+          text: assignment['subject'],
+        );
+        final duedateController = TextEditingController(
+          text: assignment['dueDate'],
+        );
+
+        showModalBottomSheet(
+          backgroundColor: const Color.fromARGB(255, 33, 33, 33),
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          builder: (context) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 16,
+                right: 16,
+                top: 20,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 1),
+                  Center(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.005,
+                      width: MediaQuery.of(context).size.width * 0.1,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      labelText: "Title",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: subjectCotroller,
+                    decoration: const InputDecoration(
+                      labelText: "Subject",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: duedateController,
+                    decoration: const InputDecoration(
+                      labelText: "Due Date",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: descriptionController,
+                    maxLines: 3,
+                    decoration: const InputDecoration(
+                      labelText: "Description",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context); // close sheet
+                        },
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(
+                            color: Color.fromARGB(150, 244, 244, 244),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () async {
+                          try {
+                            await Dio().patch(
+                              "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${batchId}/assignments/${assignment['id']}.json",
+                              data: {
+                                "title": titleController.text,
+                                "message": descriptionController.text,
+                                "dueDate": duedateController.text,
+                                "subject": subjectCotroller.text,
+                              },
+                            );
+                            Navigator.pop(context); // close sheet
+                            loadAssignments(); // refresh list
+                          } catch (e) {
+                            debugPrint("Update error: $e");
+                          }
+                        },
+                        child: const Text(
+                          "Done",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
+            );
+          },
+        );
+      } else if (value == 'delete') {
+        final batchId = Provider.of<UserProvider>(
+          context,
+          listen: false,
+        ).userBatch;
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 20),
+                  Center(child: Text("Are you sure want to delete?")),
+                ],
+              ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        try {
+                          Dio().delete(
+                            "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${batchId}/assignments/${assignment['id']}.json",
+                          );
+                          Navigator.pop(context); // close sheet
+                          Future.delayed(Duration(milliseconds: 500));
+                          loadAssignments(); // refresh list
+                        } catch (e) {
+                          debugPrint("Delete error: $e");
+                        }
+                      },
+                      child: Text(
+                        "Delete",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
   }
 
   Future<void> _assignmentDetailsCard(

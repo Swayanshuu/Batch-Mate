@@ -3,9 +3,12 @@
 import 'dart:ui';
 
 import 'package:classroombuddy/Animation/slideAnimation.dart';
+import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/Screens/contentScreens/Timetable/add_Timetable.dart';
 import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TimetablePage extends StatefulWidget {
   const TimetablePage({super.key});
@@ -15,7 +18,7 @@ class TimetablePage extends StatefulWidget {
 }
 
 class _TimetablePageState extends State<TimetablePage> {
-  Map<String, dynamic>? timetables;
+  List<Map<String, dynamic>>? timetables;
 
   bool isLoading = true; // for proper loading indicator
 
@@ -27,13 +30,27 @@ class _TimetablePageState extends State<TimetablePage> {
 
   Future<void> loadTimetables() async {
     if (ApiHelper.batchID == null) {
-      print("Looks like you dont have any batch");
+      debugPrint("Looks like you don’t have any batch");
       return;
     }
+
     setState(() => isLoading = true);
 
-    timetables = await ApiHelper.getTimetables(ApiHelper.batchID!);
-    setState(() {}); // Refresh UI
+    final response = await ApiHelper.getTimetables(ApiHelper.batchID!);
+
+    if (response is Map<String, dynamic>) {
+      setState(() {
+        timetables = response.entries.map((entry) {
+          final timetable = Map<String, dynamic>.from(entry.value);
+          timetable["id"] = entry.key; // keep the firebase id
+          return timetable;
+        }).toList();
+        isLoading = false;
+      });
+    } else {
+      debugPrint("Unexpected response: $response");
+      setState(() => isLoading = false);
+    }
   }
 
   @override
@@ -90,7 +107,7 @@ class _TimetablePageState extends State<TimetablePage> {
       );
     }
 
-    final reversedList = timetables!.values.toList().reversed.toList();
+    final timetable = timetables!.toList().reversed.toList();
 
     return WillPopScope(
       onWillPop: () async {
@@ -151,9 +168,9 @@ class _TimetablePageState extends State<TimetablePage> {
                     child: ListView.builder(
                       physics: const AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.all(10),
-                      itemCount: reversedList.length,
+                      itemCount: timetable.length,
                       itemBuilder: (context, index) {
-                        final content = reversedList[index];
+                        final content = timetable[index];
                         final subjects = content['subjects'] ?? [];
 
                         return SlideFadeIn(
@@ -183,6 +200,10 @@ class _TimetablePageState extends State<TimetablePage> {
               return _timetableDetailsCard(context, content, subjects);
             },
           );
+        },
+
+        onLongPress: () {
+          _onPressFun(content, subjects);
         },
         child: Container(
           padding: const EdgeInsets.all(12),
@@ -232,6 +253,223 @@ class _TimetablePageState extends State<TimetablePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _onPressFun(
+    Map<String, dynamic> content,
+    List<dynamic> subjects,
+  ) async {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    return await showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        Offset(200, 200) & const Size(50, 50), // position of the popup
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        PopupMenuItem(
+          value: 'edit',
+          child: Row(
+            children: const [
+              Icon(Icons.edit, size: 20),
+              SizedBox(width: 8),
+              Text("Edit"),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 'delete',
+          child: Row(
+            children: const [
+              Icon(Icons.delete, size: 20),
+              SizedBox(width: 8),
+              Text("Delete"),
+            ],
+          ),
+        ),
+      ],
+    ).then((value) {
+      if (value == 'edit') {
+        final batchId = Provider.of<UserProvider>(
+          context,
+          listen: false,
+        ).userBatch;
+        // directly put the bottom sheet here
+        final dateController = TextEditingController(text: content['date']);
+        // final descriptionController = TextEditingController(
+        //   text: subjects['subject'],
+        // );
+        // final subjectCotroller = TextEditingController(text: subjects['room']);
+        // final duedateController = TextEditingController(text: subjects['time']);
+
+        showModalBottomSheet(
+          backgroundColor: const Color.fromARGB(255, 33, 33, 33),
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          builder: (context) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 16,
+                right: 16,
+                top: 20,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 1),
+                  Center(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.005,
+                      width: MediaQuery.of(context).size.width * 0.1,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  TextField(
+                    controller: dateController,
+                    decoration: const InputDecoration(
+                      labelText: "Date",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // TextField(
+                  //   controller: subjectCotroller,
+                  //   decoration: const InputDecoration(
+                  //     labelText: "Subject",
+                  //     border: OutlineInputBorder(),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 12),
+                  // TextField(
+                  //   controller: duedateController,
+                  //   decoration: const InputDecoration(
+                  //     labelText: "Due Date",
+                  //     border: OutlineInputBorder(),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 12),
+                  // TextField(
+                  //   controller: descriptionController,
+                  //   maxLines: 3,
+                  //   decoration: const InputDecoration(
+                  //     labelText: "Description",
+                  //     border: OutlineInputBorder(),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context); // close sheet
+                        },
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(
+                            color: Color.fromARGB(150, 244, 244, 244),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () async {
+                          try {
+                            await Dio().patch(
+                              "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${batchId}/timetable/${content["id"]}.json",
+                              data: {
+                                "date": dateController.text,
+                                // "message": descriptionController.text,
+                                // "dueDate": duedateController.text,
+                                // "subject": subjectCotroller.text,
+                              },
+                            );
+                            Navigator.pop(context); // close sheet
+                            loadTimetables(); // refresh list
+                          } catch (e) {
+                            debugPrint("Update error: $e");
+                          }
+                        },
+                        child: const Text(
+                          "Done",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                ],
+              ),
+            );
+          },
+        );
+      } else if (value == 'delete') {
+        final batchId = Provider.of<UserProvider>(
+          context,
+          listen: false,
+        ).userBatch;
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 20),
+                  Center(child: Text("Are you sure want to delete?")),
+                ],
+              ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        try {
+                          Dio().delete(
+                            "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${batchId}/timetable/${content['id']}.json",
+                          );
+                          Navigator.pop(context); // close sheet
+                          Future.delayed(Duration(milliseconds: 500));
+                          loadTimetables(); // refresh list
+                        } catch (e) {
+                          debugPrint("Delete error: $e");
+                        }
+                      },
+                      child: Text(
+                        "Delete",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
   }
 
   Widget _timetableDetailsCard(
