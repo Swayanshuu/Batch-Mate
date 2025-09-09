@@ -2,11 +2,13 @@
 
 import 'dart:ui';
 
+import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/Screens/contentScreens/Notice/add_Notice.dart';
 import 'package:classroombuddy/Screens/Services/API%20Data%20Services/api_Service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class NoticePage extends StatefulWidget {
   const NoticePage({super.key});
@@ -139,38 +141,124 @@ class _NoticePageState extends State<NoticePage> {
         onTap: () {
           _noticeDetailsCard(context, notice);
         },
-        onLongPress: () {
-          Future<void> _upadteData() async {
-            try {
-              final response = await Dio().patch("");
-            } catch (e) {}
-          }
+        onLongPress: () async {
+          final RenderBox overlay =
+              Overlay.of(context).context.findRenderObject() as RenderBox;
 
-          showModalBottomSheet(
+          await showMenu(
             context: context,
-            builder: (context) {
-              return Wrap(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.edit),
-                    title: const Text("Edit"),
-                    onTap: () {
-                      Navigator.pop(context);
-                      // handle edit
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.delete),
-                    title: const Text("Delete"),
-                    onTap: () {
-                      Navigator.pop(context);
-                      // handle delete
-                    },
-                  ),
-                ],
+            position: RelativeRect.fromRect(
+              Offset(200, 200) & const Size(50, 50), // position of the popup
+              Offset.zero & overlay.size,
+            ),
+            items: [
+              PopupMenuItem(
+                value: 'edit',
+                child: Row(
+                  children: const [
+                    Icon(Icons.edit, size: 20),
+                    SizedBox(width: 8),
+                    Text("Edit"),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Row(
+                  children: const [
+                    Icon(Icons.delete, size: 20),
+                    SizedBox(width: 8),
+                    Text("Delete"),
+                  ],
+                ),
+              ),
+            ],
+          ).then((value) {
+            if (value == 'edit') {
+              final batchId = Provider.of<UserProvider>(context,listen: false).userBatch;
+              // 👇 directly put the bottom sheet here
+              final titleController = TextEditingController(
+                text: notice['title'],
               );
-            },
-          );
+              final messageController = TextEditingController(
+                text: notice['message'],
+              );
+
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (context) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                      left: 16,
+                      right: 16,
+                      top: 20,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          controller: titleController,
+                          decoration: const InputDecoration(
+                            labelText: "Title",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextField(
+                          controller: messageController,
+                          maxLines: 3,
+                          decoration: const InputDecoration(
+                            labelText: "Message",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // close sheet
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: () async {
+                                try {
+                                  await Dio().patch(
+                                    "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${batchId}/notifications/${notice['id']}.json",
+                                    data: {
+                                      "title": titleController.text,
+                                      "message": messageController.text,
+                                    },
+                                  );
+                                  Navigator.pop(context); // close sheet
+                                  loadNotices(); // refresh list
+                                } catch (e) {
+                                  debugPrint("Update error: $e");
+                                }
+                              },
+                              child: const Text("Done"),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  );
+                },
+              );
+            } else if (value == 'delete') {
+              //_deleteNotice(notice['id']);
+            }
+          });
         },
 
         child: Container(
