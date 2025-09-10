@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, deprecated_member_use, unused_element
 
 import 'dart:ui';
+import 'package:classroombuddy/Screens/User%20Profile/myApps.dart';
 import 'package:classroombuddy/Screens/User%20Profile/user_Srervices/showUser_Credentials.dart';
 import 'package:classroombuddy/Screens/User%20Profile/aboutBatch_Screen.dart';
 import 'package:classroombuddy/Screens/User%20Profile/about_Screen.dart';
@@ -195,6 +196,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (_) => AboutScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              _optionRow(
+                                icon: Icons.extension,
+                                text: "More from Me",
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => MyApps(),
                                     ),
                                   );
                                 },
