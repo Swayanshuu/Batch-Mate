@@ -110,7 +110,9 @@ class UserGreetingCard extends StatelessWidget {
           children: [
             SizedBox(height: 10),
             Center(
-              child: Text(
+              child: AutoSizeText(
+                maxLines: 1,
+                textAlign: TextAlign.center,
                 greeting,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -138,7 +140,13 @@ class UserGreetingCard extends StatelessWidget {
             ),
             SizedBox(height: 10),
 
-            Center(child: AutoSizeText(currentMessage, maxLines: 1,textAlign: TextAlign.center,)),
+            Center(
+              child: AutoSizeText(
+                currentMessage,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ),
       ),

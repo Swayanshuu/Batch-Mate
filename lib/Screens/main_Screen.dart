@@ -183,7 +183,7 @@ class _MainScreenState extends State<MainScreen> {
             onRefresh: fetchAllData,
             child: SafeArea(
               child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
                   children: [
@@ -212,7 +212,35 @@ class _MainScreenState extends State<MainScreen> {
                         : Column(
                             children: [
                               recentDataContainer(),
-                              const SizedBox(height: 5),
+                              SizedBox(height: 5),
+                              // Row of small circles
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 0.5,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(5, (index) {
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                      ),
+                                      width: 6,
+                                      height: 6,
+                                      decoration: const BoxDecoration(
+                                        color: Color.fromARGB(
+                                          255,
+                                          189,
+                                          189,
+                                          189,
+                                        ),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                              SizedBox(height: 5),
                               recentNoticeContainer(),
                             ],
                           ),

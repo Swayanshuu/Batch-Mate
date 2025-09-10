@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,10 +45,27 @@ class _EditScreenState extends State<EditScreen> {
       "Setname": updateName.text,
       "batchID": updateBatch.text,
     };
-    db.collection("google_users").doc(authUser!.uid).update(datToUpdate, );
+    db.collection("google_users").doc(authUser!.uid).update(datToUpdate);
     Provider.of<UserProvider>(context, listen: false).getDetails();
     setState(() {});
     Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: const [
+            Icon(Icons.check_circle_outline, color: Colors.white),
+            SizedBox(width: 10),
+            Expanded(child: Text("Data updated successfully")),
+          ],
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.green.shade600,
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        duration: const Duration(seconds: 2),
+        elevation: 5,
+      ),
+    );
   }
 
   @override
@@ -117,6 +135,15 @@ class _EditScreenState extends State<EditScreen> {
                         decoration: InputDecoration(
                           label: Text("Edit your batch"),
                         ),
+                      ),
+
+                      SizedBox(height: 50),
+
+                      AutoSizeText(
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.red, fontSize: 20),
+                        "After changing your batch, please restart the app.",
                       ),
                     ],
                   ),

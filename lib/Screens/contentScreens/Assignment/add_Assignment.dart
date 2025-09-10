@@ -64,9 +64,12 @@ class _AddAssignmentState extends State<AddAssignment> {
       );
       if (response.statusCode == 200) {
         print("Status 200Ok");
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Assignment added ✅")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text("Assignment added ✅"),
+          ),
+        );
       }
       print("Response status: ${response.statusCode}");
       print("Response body: ${response.data}");

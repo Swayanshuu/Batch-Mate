@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:classroombuddy/Screens/contentScreens/Assignment/assignment_Page.dart';
 import 'package:classroombuddy/Screens/contentScreens/Notice/notice_Screen.dart';
 import 'package:classroombuddy/Screens/contentScreens/Timetable/timetable_Page.dart';
@@ -94,32 +95,26 @@ class _ContentState extends State<Content> {
               icon: FontAwesomeIcons.tasks,
               rightPadding: 10,
               leftPadding: 0,
-              color: Color.fromRGBO(44, 44, 44, 1),
+              color: Color.fromRGBO(91, 91, 91, 1), // #C0C0C0
+              // color: Color.fromRGBO(44, 44, 44, 1),
             ),
           ],
         ),
         const SizedBox(height: 15),
         Row(
           children: [
-            content_Container(
+            notice_Container(
               onTap: () {
                 if (widget.batchID != null) {
-                  //  Ensuring batchID is available
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return NoticePage();
-                      },
-                    ),
+                    MaterialPageRoute(builder: (context) => NoticePage()),
                   ).then((value) {
-                    if (value == "refresh") {
-                      widget.onRefresh();
-                    }
+                    if (value == "refresh") widget.onRefresh();
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       behavior: SnackBarBehavior.floating,
                       backgroundColor: Colors.orange,
                       content: Text(
@@ -132,24 +127,83 @@ class _ContentState extends State<Content> {
               },
               text: "Notices",
               icon: Icons.notifications_active,
-              rightPadding: 0,
-              leftPadding: 10,
-              color: Color.fromRGBO(44, 44, 44, 1),
-            ),
-
-            const SizedBox(width: 10),
-
-            content_Container(
-              onTap: () {},
-              text: "ChitChat",
-              icon: FontAwesomeIcons.message,
-              rightPadding: 10,
-              leftPadding: 0,
-              color: Color.fromRGBO(91, 91, 91, 1),
+              color: const Color.fromARGB(105, 168, 168, 168),
             ),
           ],
         ),
       ],
+    );
+  }
+
+  Widget notice_Container({
+    required String text,
+    required VoidCallback onTap,
+    required Color color,
+    required IconData icon,
+  }) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
+            children: [
+              // Blur background
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(color: Colors.transparent),
+              ),
+
+              InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: onTap,
+                child: Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*0.5,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.6),
+                        width: 0.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: color.withOpacity(0.5),
+                          blurRadius: 15,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      // pura content center karne ke liye
+                      child: Column(
+                        mainAxisSize:
+                            MainAxisSize.min, // sirf jitni space chahiye utni
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(icon, color: Colors.white, size: 32),
+                          const SizedBox(width: 8),
+                          Text(
+                            text,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -188,7 +242,10 @@ class _ContentState extends State<Content> {
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.3), // slightly transparent
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withOpacity(0.6)),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.6),
+                      width: 0.5,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: color.withOpacity(0.5), // glow effect
@@ -210,7 +267,8 @@ class _ContentState extends State<Content> {
                         children: [
                           Icon(icon, color: Colors.white, size: 32),
                           SizedBox(height: 6),
-                          Text(
+                          AutoSizeText(
+                            maxLines: 1,
                             text,
                             style: const TextStyle(
                               color: Colors.white,

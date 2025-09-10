@@ -76,7 +76,9 @@ class _AddTimetableState extends State<AddTimetable> {
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text("Timetable added ✅")));
+        ).showSnackBar(const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text("Timetable added ✅")));
         Navigator.pop(context, "refresh");
       }
     } catch (e) {

@@ -151,7 +151,16 @@ class DetailsPage extends StatelessWidget {
                                       TextFormField(
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          label: Text("batch id"),
+                                          label: Text("Batch ID"),
+                                          hintText: "e.g batch001",
+                                          hintStyle: const TextStyle(
+                                            color: Color.fromARGB(
+                                              255,
+                                              122,
+                                              122,
+                                              122,
+                                            ),
+                                          ),
                                           border: OutlineInputBorder(),
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
@@ -186,7 +195,7 @@ class DetailsPage extends StatelessWidget {
                                             AutovalidateMode.onUserInteraction,
                                         validator: (value) {
                                           if (value.toString().length == 0) {
-                                            return "enter your batch id";
+                                            return "Enter your batch id";
                                           }
                                         },
                                       ),
@@ -213,7 +222,8 @@ class DetailsPage extends StatelessWidget {
                                                 .set({
                                                   "uid": user.uid,
                                                   "Setname": name.text,
-                                                  'name': user.displayName ?? '',
+                                                  'name':
+                                                      user.displayName ?? '',
                                                   "batchID": batchID.text,
                                                   "provider": "google",
                                                   "createdAt":
@@ -232,7 +242,7 @@ class DetailsPage extends StatelessWidget {
                                         },
 
                                         child: Text(
-                                          "LestGo",
+                                          "Let's Go",
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.black,

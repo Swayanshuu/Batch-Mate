@@ -47,9 +47,12 @@ class _AddNoticeState extends State<AddNotice> {
         },
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Assignment added ✅")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text("Assignment added ✅"),
+          ),
+        );
       }
 
       Navigator.pop(context, "refresh");

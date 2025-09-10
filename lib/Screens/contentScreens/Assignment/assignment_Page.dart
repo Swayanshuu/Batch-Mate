@@ -152,7 +152,7 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 76, 76, 76).withOpacity(0.5),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300, width: 1),
+            border: Border.all(color: Colors.grey.shade300, width: 0.5),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
@@ -394,7 +394,7 @@ class _AssignmentsPageState extends State<AssignmentsPage> {
                             "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${batchId}/assignments/${assignment['id']}.json",
                           );
                           Navigator.pop(context); // close sheet
-                          Future.delayed(Duration(milliseconds: 500));
+                          Future.delayed(Duration(milliseconds: 1000));
                           loadAssignments(); // refresh list
                         } catch (e) {
                           debugPrint("Delete error: $e");

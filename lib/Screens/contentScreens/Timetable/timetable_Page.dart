@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:classroombuddy/Animation/slideAnimation.dart';
 import 'package:classroombuddy/Provider/userProvider.dart';
 import 'package:classroombuddy/Screens/contentScreens/Timetable/add_Timetable.dart';
@@ -95,10 +96,29 @@ class _TimetablePageState extends State<TimetablePage> {
               ),
             ),
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 LinearProgressIndicator(),
                 Spacer(),
-                Text("No Time table?"),
+                Center(
+                  child: FutureBuilder(
+                    future: Future.delayed(
+                      const Duration(seconds: 7),
+                    ), // 2 sec delay
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox(); // abhi blank rakho
+                      }
+                      return const AutoSizeText(
+                        "No Timetable? \n or \n No Internet! \n Try Refresing page or Restart the App!",
+                        textAlign: TextAlign.center,
+                        maxFontSize: 20,
+                       // style: TextStyle(fontSize: 20),
+                      );
+                    },
+                  ),
+                ),
+
                 Spacer(),
               ],
             ),
@@ -210,7 +230,7 @@ class _TimetablePageState extends State<TimetablePage> {
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 76, 76, 76).withOpacity(.5),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300, width: 1),
+            border: Border.all(color: Colors.grey.shade300, width: 0.5),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
@@ -291,128 +311,7 @@ class _TimetablePageState extends State<TimetablePage> {
       ],
     ).then((value) {
       if (value == 'edit') {
-        final batchId = Provider.of<UserProvider>(
-          context,
-          listen: false,
-        ).userBatch;
-        // directly put the bottom sheet here
-        final dateController = TextEditingController(text: content['date']);
-        // final descriptionController = TextEditingController(
-        //   text: subjects['subject'],
-        // );
-        // final subjectCotroller = TextEditingController(text: subjects['room']);
-        // final duedateController = TextEditingController(text: subjects['time']);
-
-        showModalBottomSheet(
-          backgroundColor: const Color.fromARGB(255, 33, 33, 33),
-          context: context,
-          isScrollControlled: true,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          builder: (context) {
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                left: 16,
-                right: 16,
-                top: 20,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 1),
-                  Center(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.005,
-                      width: MediaQuery.of(context).size.width * 0.1,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  TextField(
-                    controller: dateController,
-                    decoration: const InputDecoration(
-                      labelText: "Date",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // TextField(
-                  //   controller: subjectCotroller,
-                  //   decoration: const InputDecoration(
-                  //     labelText: "Subject",
-                  //     border: OutlineInputBorder(),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 12),
-                  // TextField(
-                  //   controller: duedateController,
-                  //   decoration: const InputDecoration(
-                  //     labelText: "Due Date",
-                  //     border: OutlineInputBorder(),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 12),
-                  // TextField(
-                  //   controller: descriptionController,
-                  //   maxLines: 3,
-                  //   decoration: const InputDecoration(
-                  //     labelText: "Description",
-                  //     border: OutlineInputBorder(),
-                  //   ),
-                  // ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context); // close sheet
-                        },
-                        child: const Text(
-                          "Cancel",
-                          style: TextStyle(
-                            color: Color.fromARGB(150, 244, 244, 244),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            await Dio().patch(
-                              "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/${batchId}/timetable/${content["id"]}.json",
-                              data: {
-                                "date": dateController.text,
-                                // "message": descriptionController.text,
-                                // "dueDate": duedateController.text,
-                                // "subject": subjectCotroller.text,
-                              },
-                            );
-                            Navigator.pop(context); // close sheet
-                            loadTimetables(); // refresh list
-                          } catch (e) {
-                            debugPrint("Update error: $e");
-                          }
-                        },
-                        child: const Text(
-                          "Done",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                ],
-              ),
-            );
-          },
-        );
+        _editTimetable(content, subjects);
       } else if (value == 'delete') {
         final batchId = Provider.of<UserProvider>(
           context,
@@ -470,6 +369,169 @@ class _TimetablePageState extends State<TimetablePage> {
         );
       }
     });
+  }
+
+  Future<void> _editTimetable(
+    Map<String, dynamic> content,
+    List<dynamic> subjects,
+  ) {
+    final batchId = Provider.of<UserProvider>(context, listen: false).userBatch;
+
+    // controllers for date and subjects
+    final dateController = TextEditingController(text: content['date']);
+    final subjectControllers = subjects
+        .map((s) => TextEditingController(text: s['subject']))
+        .toList();
+    final roomControllers = subjects
+        .map((s) => TextEditingController(text: s['room']))
+        .toList();
+    final timeControllers = subjects
+        .map((s) => TextEditingController(text: s['time']))
+        .toList();
+
+    return showModalBottomSheet(
+      backgroundColor: const Color.fromARGB(255, 33, 33, 33),
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16,
+            right: 16,
+            top: 20,
+          ),
+          child: StatefulBuilder(
+            builder: (context, setModalState) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        height: 4,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: dateController,
+                      decoration: const InputDecoration(
+                        labelText: "Date",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Subjects list
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: subjects.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Subject ${index + 1}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            TextField(
+                              controller: subjectControllers[index],
+                              decoration: const InputDecoration(
+                                labelText: "Subject",
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            TextField(
+                              controller: roomControllers[index],
+                              decoration: const InputDecoration(
+                                labelText: "Room",
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            TextField(
+                              controller: timeControllers[index],
+                              decoration: const InputDecoration(
+                                labelText: "Time",
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                        );
+                      },
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            "Cancel",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: () async {
+                            try {
+                              // update data
+                              final updatedSubjects = List.generate(
+                                subjects.length,
+                                (i) => {
+                                  "subject": subjectControllers[i].text,
+                                  "room": roomControllers[i].text,
+                                  "time": timeControllers[i].text,
+                                },
+                              );
+
+                              await Dio().patch(
+                                "https://classroombuddy-bc928-default-rtdb.firebaseio.com/batches/$batchId/timetable/${content['id']}.json",
+                                data: {
+                                  "date": dateController.text,
+                                  "subjects": updatedSubjects,
+                                },
+                              );
+
+                              Navigator.pop(context);
+                              loadTimetables();
+                            } catch (e) {
+                              debugPrint("Update error: $e");
+                            }
+                          },
+                          child: const Text(
+                            "Done",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   Widget _timetableDetailsCard(

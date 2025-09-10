@@ -154,7 +154,7 @@ class _NoticePageState extends State<NoticePage> {
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 76, 76, 76).withOpacity(0.5),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300, width: 1),
+            border: Border.all(color: Colors.grey.shade300, width: 0.5),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),

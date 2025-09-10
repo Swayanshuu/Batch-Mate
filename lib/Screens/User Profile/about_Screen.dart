@@ -138,13 +138,12 @@ class _AboutScreenState extends State<AboutScreen> {
                           "This app is designed to make your student life easier by keeping all your assignments, timetables, and notices in one place.\n\n"
                           "With Batch Mate, you can:\n"
                           "• Stay on top of your classes and deadlines effortlessly.\n"
-                          "• Get instant notifications when new notices or assignments are posted.\n"
                           "• Organize your day and plan ahead with the built-in timetable view.\n"
                           "• Quickly find and reference past assignments or class notes.\n\n"
-                          "We believe learning should be fun, not stressful, so we’ve built this app to simplify your daily academic routine.\n\n"
-                          "Our goal is to continuously improve with your feedback, adding features that help you manage your studies smarter and faster. 🚀\n\n"
-                          "Thanks for being part of this journey — 'Batch Mate' is here to make your college experience smoother, one notification at a time!\n\n"
-                          "🐞 Found a bug or have a suggestion? Feel free to contact us anytime — your feedback helps make Batch Mate even better! 💡",
+                          "I believe learning should be fun, not stressful, so I’ve built this app to simplify your daily academic routine.\n\n"
+                          "My goal is to continuously improve with your feedback, adding features that help you manage your studies smarter and faster. 🚀\n\n"
+                          "Thanks for being part of this journey — 'Batch Mate' is here to make your college experience smoother, one step at a time!\n\n"
+                          "🐞 Found a bug or have a suggestion? Feel free to contact me anytime — your feedback helps make Batch Mate even better! 💡",
                           style: TextStyle(
                             color: Colors.white70,
                             fontSize: 16,
@@ -242,15 +241,33 @@ class _AboutScreenState extends State<AboutScreen> {
       onTap: () {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            backgroundColor: const Color.fromARGB(255, 0, 22, 40),
+            backgroundColor: const Color.fromARGB(255, 10, 25, 50),
             behavior: SnackBarBehavior.floating,
-            content: Text(
-              "You discovered the mastermind behind Batch Mate! 😏",
-              style: TextStyle(color: Colors.white),
+            duration: const Duration(seconds: 3),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
             ),
-            duration: Duration(seconds: 2),
-            shape: ContinuousRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+            elevation: 6,
+            content: Row(
+              children: [
+                const Icon(
+                  Icons.emoji_events,
+                  color: Colors.amberAccent,
+                  size: 28,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    "🎉 You discovered the mastermind behind Batch Mate! 😏",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         );
