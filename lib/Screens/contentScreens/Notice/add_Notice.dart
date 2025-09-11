@@ -50,7 +50,7 @@ class _AddNoticeState extends State<AddNotice> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             behavior: SnackBarBehavior.floating,
-            content: Text("Assignment added ✅"),
+            content: Text("Notice added ✅"),
           ),
         );
       }
@@ -86,7 +86,7 @@ class _AddNoticeState extends State<AddNotice> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Add Assignment",
+                            "Add Notice",
                             style: TextStyle(fontSize: 24),
                           ),
                           SizedBox(height: 20),
