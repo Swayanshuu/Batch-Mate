@@ -37,128 +37,126 @@ class MoreAboutAppScreen extends StatelessWidget {
         ),
       ),
       appBar: AppBar(title: Text(appName), centerTitle: true),
-      body: Expanded(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: CircleAvatar(
-                  radius: 60, // adjust size
-                  backgroundColor: Colors.white.withOpacity(0.2),
-                  child: ClipOval(
-                    child: Image.network(
-                      logo,
-                      fit: BoxFit.cover,
-                      width: 110,
-                      height: 110,
-                    ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CircleAvatar(
+                radius: 60, // adjust size
+                backgroundColor: Colors.white.withOpacity(0.2),
+                child: ClipOval(
+                  child: Image.network(
+                    logo,
+                    fit: BoxFit.cover,
+                    width: 110,
+                    height: 110,
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
-              // Tagline
-              Center(
-                child: AutoSizeText(
-                  tagline,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+            ),
+            const SizedBox(height: 15),
+            // Tagline
+            Center(
+              child: AutoSizeText(
+                tagline,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-
-              const SizedBox(height: 15),
-              // Screenshots horizontal scroll
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
-                child: screenshots.isNotEmpty
-                    ? ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: screenshots.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 10),
-                        itemBuilder: (context, index) {
-                          final screenshot = screenshots[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => FullScreenImage(
-                                    screenshot: screenshot,
-                                    tag: 'screenshot$index',
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Hero(
-                              tag: 'screenshot$index',
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.network(
-                                  screenshot,
-                                  width: 200,
-                                  height: 400,
-                                  fit: BoxFit.cover,
+            ),
+      
+            const SizedBox(height: 15),
+            // Screenshots horizontal scroll
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: screenshots.isNotEmpty
+                  ? ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: screenshots.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 10),
+                      itemBuilder: (context, index) {
+                        final screenshot = screenshots[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FullScreenImage(
+                                  screenshot: screenshot,
+                                  tag: 'screenshot$index',
                                 ),
                               ),
+                            );
+                          },
+                          child: Hero(
+                            tag: 'screenshot$index',
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                screenshot,
+                                width: 200,
+                                height: 400,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          );
-                        },
-                      )
-                    : const Center(child: Text("No screenshots available")),
+                          ),
+                        );
+                      },
+                    )
+                  : const Center(child: Text("No screenshots available")),
+            ),
+      
+            const SizedBox(height: 20),
+      
+            // Description
+            Text(
+              description,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white.withOpacity(0.8),
               ),
-
-              const SizedBox(height: 20),
-
-              // Description
-              Text(
-                description,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white.withOpacity(0.8),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Download button fixed at bottom
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Center(
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 116, 5, 212),
-                      elevation: 5,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 15,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
+            ),
+            const SizedBox(height: 20),
+            // Download button fixed at bottom
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Center(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 116, 5, 212),
+                    elevation: 5,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 15,
                     ),
-                    onPressed: () {
-                      if (link.isNotEmpty) launchUrl(Uri.parse(link));
-                    },
-                    icon: const Icon(Icons.download, color: Colors.white),
-                    label: const Text(
-                      "Download App",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                  onPressed: () {
+                    if (link.isNotEmpty) launchUrl(Uri.parse(link));
+                  },
+                  icon: const Icon(Icons.download, color: Colors.white),
+                  label: const Text(
+                    "Download App",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
                 ),
               ),
-
-              SizedBox(height: 30),
-            ],
-          ),
+            ),
+      
+            SizedBox(height: 30),
+          ],
         ),
       ),
     );
