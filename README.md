@@ -1,5 +1,5 @@
 # Batch Mate
-[![Flutter App](https://deepwiki.com/Swayanshuu/Batch-Mate)
+[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/Swayanshuu/Batch-Mate)
 
 Batch Mate is a Flutter-based mobile application designed to help students within a batch or class stay organized. It provides a centralized platform to manage assignments, timetables, and notices, ensuring that all class-related information is easily accessible.
 
